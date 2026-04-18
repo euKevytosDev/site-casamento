@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+}
+
+.hero {
+    height: 100vh;
+    background-image: url("imagens/fotodafesta.jpg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    transition: opacity 0.8s ease;
+    
+}
+
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(
+        to bottom,
+        transparent 47%,
+        rgba(255,255,255,0.8) 75%,
+        white 100% 
+    );
+}
+
+.texto {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.texto h1 {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    /* filter: blur(5px); serve pra desfocar algo */
+}
+
+.texto p {
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.site {
+    width: 100%;
+    display: none;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.foto2 {
+    height: 100vh;
+    width: 100%;
+    background-image: url("imagens/fotodafesta.jpg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.overlay2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(255,255,255,0.7) 75%,
+        white 100%
+    );
+}
+
+.conteudo {
+    padding: 40px 20px; /* espaço interno */
+    text-align: center; /* centraliza */
+    background-color: #fff; /* fundo branco */
+}
+
+.versiculo {
+    font-size: 14px; /* tamanho ideal pra leitura */
+    color: #444444; /* cor mais legível */
+  /*  max-width: 320px; /* limita largura */
+    margin: 0 auto 10px; /* centraliza + espaço embaixo */
+    line-height: 1.7; /* melhora leitura */
+
+    opacity: 0; /* começa invisível */
+    transform: translateY(20px); /* começa levemente abaixo */
+    transition: all 0.8s ease; /* animação suave */
+}
+
+.versiculo.ativo {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.bencao {
+    margin-top: 10px;
+}
+
+.frase-bencao {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.pais {
+    display: flex;
+    justify-content: space-between;
+    max-width: 320px;
+    margin: 0 auto 30px;
+    font-size: 13px;
+    color: #666;
+}
+
+.lado {
+    width: 45%;
+}
+
+.nomes-noivos {
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    margin-top: 10px;
+}
