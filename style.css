@@ -68,13 +68,13 @@ body {
     display: none;
     text-align: center;
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity 1s ease;
 }
 
 .foto2 {
     height: 100vh;
     width: 100%;
-    background-image: url("imagens/fotodafesta.jpg");
+    background-image: url("imagens/fotodafesta2.jpg");
     background-size: cover;
     background-position: center;
     position: relative;
@@ -101,10 +101,12 @@ body {
 
 .versiculo {
     font-size: clamp(18px, 4.5vw, 22px); /* tamanho ideal pra leitura */
-    color: #444444; /* cor mais legível */
+    color: #666;/* cor mais legível */
     max-width: 340px; /* limita largura */
     margin: 0 auto 15px; /* centraliza + espaço embaixo */
     line-height: 1.7; /* melhora leitura */
+    font-family: "Playfair", serif;
+    font-style: italic;
 
     opacity: 0; /* começa invisível */
     transform: translateY(20px); /* começa levemente abaixo */
@@ -121,17 +123,20 @@ body {
 }
 
 .frase-bencao {
-    font-size: clamp(13px, 3.5vw, 16px);
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(16px, 3.5vw, 16px);
     color: #666;
     margin-bottom: 10px;
 }
 
 .pais {
+    font-family: "Playfair", serif;
+    font-style: italic;
     display: flex;
     justify-content: space-between;
     max-width: 320px;
     margin: 0 auto 30px;
-    font-size: clamp(13px, 3.5vw, 15px);
+    font-size: clamp(14px, 3.5vw, 15px);
     color: #666;
 }
 
@@ -140,9 +145,11 @@ body {
 }
 
 .nomes-noivos {
-    font-size: clamp(36px, 9vw, 48px);
-    font-weight: 400;
-    letter-spacing: 2px;
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(65px, 12vw, 70px);
+    font-weight: normal;
+    line-height: 1.2;
+    letter-spacing: 0px;
     margin-top: 10px;
     
 }
