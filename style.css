@@ -25,7 +25,7 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    display: none !important; 
+    /*display: none !important; */
 }
 
 .overlay {
@@ -71,8 +71,8 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    display: block !important; 
-    opacity: 1 !important; 
+    /*display: block !important; */
+   /* opacity: 1 !important; */
 }
 
 .foto2 {
@@ -249,7 +249,7 @@ body {
 
 .fotodois {
     width: 100%;
-    max-width: 400px; /* Tamanho da foto no site */
+    max-width: 370px; /* Tamanho da foto no site */
     margin: 50px auto;
     position: relative; /* Para a overlay não fugir daqui */
     overflow: hidden;
