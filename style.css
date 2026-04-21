@@ -25,6 +25,8 @@ body {
     position: relative;
     transition: opacity 0.8s ease;
     overflow: hidden;
+
+   /*  display: none !important; */
 }
 
 .overlay {
@@ -69,6 +71,9 @@ body {
     text-align: center;
     opacity: 0;
     transition: opacity 1s ease;
+
+   /* display: block !important; */
+   /* opacity: 1 !important; */
 }
 
 .foto2 {
@@ -97,13 +102,18 @@ body {
     padding: 40px 20px; /* espaço interno */
     text-align: center; /* centraliza */
     background-color: #fff; /* fundo branco */
+    position: relative;
+    overflow: hidden;
+    
 }
 
 .versiculo {
+    position: relative;
+    z-index: 2;
     font-size: clamp(18px, 4.5vw, 22px); /* tamanho ideal pra leitura */
     color: #666;/* cor mais legível */
     max-width: 340px; /* limita largura */
-    margin: 0 auto 15px; /* centraliza + espaço embaixo */
+    margin: 0 auto 30px; /* centraliza + espaço embaixo */
     line-height: 1.7; /* melhora leitura */
     font-family: "Playfair", serif;
     font-style: italic;
@@ -152,4 +162,46 @@ body {
     letter-spacing: 0px;
     margin-top: 10px;
     
+}
+
+.decoracao-flores {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    margin-top: -10px;
+}
+
+.flor-esquerda {
+    position: absolute;
+    left: -20px;
+    bottom: -10px;
+    width: clamp(80px, 20vw, 150px);
+    opacity: 0.8; /* leve transparência */
+    transform: scaleX(-1); /* Opcional: espelha a imagem para dar simetria */
+    z-index: 1;
+}
+
+.flor-direita {
+    position: absolute;
+    right: -20px;    /* Cola no canto direito */
+    bottom: -10px;
+    width: clamp(80px, 20vw, 150px); /* Tamanho responsivo */
+    opacity: 0.8;
+    z-index: 1;
+}
+
+.flor-centro {
+    position: relative;
+    width: 40px;
+    height: auto;
+    opacity: 0.6;
+    margin: 0 auto;
+    z-index: 2;
+    transform: translateY(25px);
+
 }
