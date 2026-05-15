@@ -10,7 +10,7 @@ html, body {
     overflow-x: hidden;
 }
 
-body {
+body {    
     margin: 0;
     overflow-x: hidden;
 }
@@ -110,7 +110,7 @@ body {
     position: relative;
     z-index: 2;
     font-size: clamp(18px, 4.5vw, 22px); /* tamanho ideal pra leitura */
-    color: #666;/* cor mais legível */
+    color: #030303c9;/* cor mais legível */
     max-width: 340px; /* limita largura */
     margin: 0 auto 30px; /* centraliza + espaço embaixo */
     line-height: 1.7; /* melhora leitura */
@@ -133,8 +133,8 @@ body {
 
 .frase-bencao {
     font-family: 'Great Vibes', cursive;
-    font-size: clamp(16px, 3.5vw, 16px);
-    color: #666;
+    font-size: clamp(18px, 3.5vw, 16px);
+    color: #433f3f;
     margin-bottom: 10px;
 }
 
@@ -146,7 +146,8 @@ body {
     max-width: 320px;
     margin: 0 auto 30px;
     font-size: clamp(14px, 3.5vw, 15px);
-    color: #666;
+    color: #040303;
+    margin-bottom: 30px;
 }
 
 .lado {
@@ -154,13 +155,15 @@ body {
 }
 
 .nomes-noivos {
+    color: #616e48;
     font-family: 'Great Vibes', cursive;
     font-size: clamp(65px, 12vw, 70px);
     font-weight: normal;
     line-height: 1.2;
     letter-spacing: 0px;
     margin-top: 10px;
-    
+    margin-bottom: 28px;
+
 }
 
 .decoracao-flores {
@@ -214,7 +217,7 @@ body {
 }
 
 .retangulo {
-    background-color: #cfce9e;
+    background-color: #e0e1cf;
     width: 100%;
     max-width: 500px;
     padding: 15px 10px;
@@ -224,7 +227,7 @@ body {
 }
 
 .retangulo p {
-    color: #ffffff;
+    color: #616e48;
     font-family: "Playfair", serif;
     font-style: italic;
     font-size: clamp(16px, 4vw, 20px);
@@ -275,4 +278,46 @@ body {
         transparent 85%,     /* Mantém a foto aparecendo */
         white 100%           /* Termina branco embaixo */
     );
+}
+
+.calendario-casamento {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 40px auto;
+    font-family: "Playfair Display", serif;
+    color:#666
+}
+
+.coluna-data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.coluna-data.centro {
+    padding: 0 25px;
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+}
+
+.texto-pequeno {
+    font-size: clamp(14px, 3vw, 16px);
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.mes-ano {
+    font-size: clamp(12px, 2.5vw, 14px);
+    letter-spacing: 3px;
+    margin: 0;
+}
+
+.dia-numero {
+    font-size: clamp(45px, 10vw, 55px); /* Dia bem grande */
+    color: #616e48;
+    margin: 5px 0;
+    font-weight: 400;
 }
