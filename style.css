@@ -321,3 +321,48 @@ body {
     margin: 5px 0;
     font-weight: 400;
 }
+
+.regressiva {
+    text-align: center;
+    margin: 40px auto;
+    font-family: "Playfair Display", serif;
+    /* font-style: italic; */
+    width: 100%;
+    padding: 0 10px;
+}
+
+.frase-espera {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+#contador {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.tempo {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    align-items: center;
+    gap: 4px;
+}
+
+.tempo span {
+    font-size: clamp(24px, 5vw, 32px);
+    color: #839164; /* O verde do seu retângulo/data */
+    font-weight: 300;
+}
+
+.tempo small {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #999;
+    font-weight: 400;
+}

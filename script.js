@@ -36,3 +36,31 @@ window.addEventListener("scroll", () => {
     }
 
 });
+
+function atualizarContador() {
+    const dataCasamento = new Date("April 24, 2027 00:00:00").getTime();
+    const agora = new Date().getTime();
+    const diferenca = dataCasamento - agora;
+
+    // Cálculos de tempo
+    const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+
+    // Exibindo no HTML (Garante os dois dígitos "00")
+    document.getElementById("dias").innerText = dias < 10 ? "0" + dias : dias;
+    document.getElementById("horas").innerText = horas < 10 ? "0" + horas : horas;
+    document.getElementById("minutos").innerText = minutos < 10 ? "0" + minutos : minutos;
+    document.getElementById("segundos").innerText = segundos < 10 ? "0" + segundos : segundos;
+
+    // Se o tempo acabar
+    if (diferenca < 0) {
+        clearInterval(intervalo);
+        document.querySelector(".regressiva").innerHTML = "<p>É hoje! ✨</p>";
+    }
+}
+
+// Atualiza a cada 1 segundo
+const intervalo = setInterval(atualizarContador, 1000);
+atualizarContador();
