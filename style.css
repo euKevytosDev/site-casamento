@@ -135,6 +135,7 @@ body {
     font-family: 'Great Vibes', cursive;
     font-size: clamp(18px, 3.5vw, 16px);
     color: #433f3f;
+    margin-top: -10px;
     margin-bottom: 10px;
 }
 
@@ -161,7 +162,7 @@ body {
     font-weight: normal;
     line-height: 1.2;
     letter-spacing: 0px;
-    margin-top: 10px;
+    margin-top: -15px;
     margin-bottom: 28px;
 
 }
@@ -213,7 +214,7 @@ body {
     display: flex;
     justify-content: center;
     margin-top: -15px; /* Espaço em relação aos nomes acima */
-    
+    margin-bottom: -15px;
 }
 
 .retangulo {
@@ -235,20 +236,20 @@ body {
     letter-spacing: 1px;
 }
 
-.frase-data {
+/*.frase-data {
     width: 100%;
     text-align: center;
-    margin-bottom: 10px;
-    margin-top: 30px;
+    margin-bottom: -1px;
+    margin-top: 15px;
 
 }
 
 .frase-data p {
-    font-family: 'Great Vibes', cursive;
+    font-family: "Playfair", serif;
     font-size: clamp(20px, 5vw, 24px);
     color: #666;
     margin: 0;
-}
+} */
 
 .fotodois {
     width: 100%;
@@ -335,7 +336,7 @@ body {
     font-size: 12px;
     letter-spacing: 2px;
     color: #888;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
     text-transform: uppercase;
 }
 
@@ -365,4 +366,62 @@ body {
     letter-spacing: 1px;
     color: #999;
     font-weight: 400;
+}
+
+.local p {
+    font-family: "Playfair", serif;
+    font-size: clamp(20px, 5vw, 24px);
+    color: #666;
+    margin: 0;
+}
+
+.container-local {
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.local {
+    margin-bottom: 16px;
+}
+
+.local p {
+    font-family: "Playfair", serif;
+    font-size: clamp(20px, 5vw, 24px);
+    color: #666;
+    margin: 0;
+}
+
+.espaco-foto-wrapper {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.espaco-foto-wrapper img {
+    width: 65%;
+    max-width: 400px;
+    border-radius: 12px;
+    height: auto;
+    display: block;
+
+    /*filter: grayscale(100%); Ativar para caso queira a imagem P&B */
+}
+
+.overlay-local {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0) 62%, /* Transparente no centro, até 60% da imagem */
+        rgba(255, 255, 255, 1) 100%  /* Branco nas bordas externas */
+        );
 }
