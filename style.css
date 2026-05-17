@@ -1,3 +1,5 @@
+@import url('https://googleapis.com');
+
 html {
     font-size: 16px;
 }
@@ -6,11 +8,12 @@ html {
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     overflow-x: hidden;
 }
 
-body {    
+body {
     margin: 0;
     overflow-x: hidden;
 }
@@ -25,7 +28,8 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    /*display: none !important; */
+    display: none !important;
+    opacity: 0 !important;
 }
 
 .overlay {
@@ -33,12 +37,10 @@ body {
     width: 100%;
     height: 100%;
 
-    background: linear-gradient(
-        to bottom,
-        transparent 47%,
-        rgba(255,255,255,0.8) 75%,
-        white 100% 
-    );
+    background: linear-gradient(to bottom,
+            transparent 47%,
+            rgba(255, 255, 255, 0.8) 75%,
+            white 100%);
 }
 
 .texto {
@@ -51,11 +53,12 @@ body {
 }
 
 .texto h1 {
-    font-size: clamp(28px, 7vw, 40px); /* nome principal responsivo */
+    font-size: clamp(28px, 7vw, 40px);
+    /* nome principal responsivo */
     font-weight: 500;
     letter-spacing: 2px;
     margin-bottom: 20px;
-   /* filter: blur(5px); serve pra desfocar algo */
+    /* filter: blur(5px); serve pra desfocar algo */
 }
 
 .texto p {
@@ -71,8 +74,8 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    /*display: block !important; */
-   /* opacity: 1 !important; */
+    display: block !important;
+    opacity: 1 !important;
 }
 
 .foto2 {
@@ -89,37 +92,46 @@ body {
     width: 100%;
     height: 100%;
 
-    background: linear-gradient(
-        to bottom,
-        transparent 50%,
-        rgba(255,255,255,0.7) 75%,
-        white 100%
-    );
+    background: linear-gradient(to bottom,
+            transparent 50%,
+            rgba(255, 255, 255, 0.7) 75%,
+            white 100%);
 }
 
 .conteudo {
-    padding: 40px 20px; /* espaço interno */
-    text-align: center; /* centraliza */
-    background-color: #fff; /* fundo branco */
+    padding: 40px 20px;
+    /* espaço interno */
+    text-align: center;
+    /* centraliza */
+    background-color: #fff;
+    /* fundo branco */
     position: relative;
     overflow: hidden;
-    
+
 }
 
 .versiculo {
     position: relative;
     z-index: 2;
-    font-size: clamp(18px, 4.5vw, 22px); /* tamanho ideal pra leitura */
-    color: #030303c9;/* cor mais legível */
-    max-width: 340px; /* limita largura */
-    margin: 0 auto 30px; /* centraliza + espaço embaixo */
-    line-height: 1.7; /* melhora leitura */
+    font-size: clamp(18px, 4.5vw, 22px);
+    /* tamanho ideal pra leitura */
+    color: #030303c9;
+    /* cor mais legível */
+    max-width: 340px;
+    /* limita largura */
+    margin: 0 auto 30px;
+    /* centraliza + espaço embaixo */
+    line-height: 1.7;
+    /* melhora leitura */
     font-family: "Playfair", serif;
     font-style: italic;
 
-    opacity: 0; /* começa invisível */
-    transform: translateY(20px); /* começa levemente abaixo */
-    transition: all 0.8s ease; /* animação suave */
+    opacity: 0;
+    /* começa invisível */
+    transform: translateY(20px);
+    /* começa levemente abaixo */
+    transition: all 0.8s ease;
+    /* animação suave */
 }
 
 .versiculo.ativo {
@@ -163,7 +175,6 @@ body {
     line-height: 1.2;
     letter-spacing: 0px;
     margin-top: -15px;
-    margin-bottom: 28px;
 
 }
 
@@ -181,43 +192,49 @@ body {
 
 .flor-esquerda {
     position: absolute;
-    left: -20px;
-    bottom: -10px;
-    width: clamp(80px, 20vw, 150px);
-    opacity: 0.8; /* leve transparência */
-    transform: scaleX(-1); /* Opcional: espelha a imagem para dar simetria */
-    z-index: 1;
+    left: -42px;
+    top: -80px;
+    width: clamp(100px, 20vw, 150px);
+    /* leve transparência */
+    transform: scaleX(-1);
+    /* Opcional: espelha a imagem para dar simetria */
+    z-index: 2;
 }
 
 .flor-direita {
     position: absolute;
-    right: -20px;    /* Cola no canto direito */
-    bottom: -10px;
-    width: clamp(80px, 20vw, 150px); /* Tamanho responsivo */
-    opacity: 0.8;
+    right: -25px;
+    /* Cola no canto direito */
+    top: -170px;
+    bottom: 10px;
+    width: clamp(110px, 30vw, 150px);
+    /* Tamanho responsivo */
     z-index: 1;
 }
 
 .flor-centro {
     position: relative;
-    width: 40px;
+    width: 200px;
     height: auto;
-    opacity: 0.6;
     margin: 0 auto;
-    z-index: 2;
-    transform: translateY(25px);
+    z-index: 1;
+    /* transform: translateY(25px); */
 }
 
 .chamada-casamento {
     width: 100%;
-    padding: 20px; /* Espaço nas laterais para não encostar na borda da tela */
+    padding: 20px;
+    /* Espaço nas laterais para não encostar na borda da tela */
     display: flex;
     justify-content: center;
-    margin-top: -15px; /* Espaço em relação aos nomes acima */
+    margin-top: -95px;
+    /* Espaço em relação aos nomes acima */
     margin-bottom: -15px;
 }
 
 .retangulo {
+    position: relative;
+    z-index: 2;
     background-color: #e0e1cf;
     width: 100%;
     max-width: 500px;
@@ -253,9 +270,11 @@ body {
 
 .fotodois {
     width: 100%;
-    max-width: 370px; /* Tamanho da foto no site */
+    max-width: 370px;
+    /* Tamanho da foto no site */
     margin: 50px auto;
-    position: relative; /* Para a overlay não fugir daqui */
+    position: relative;
+    /* Para a overlay não fugir daqui */
     overflow: hidden;
 }
 
@@ -272,13 +291,16 @@ body {
     height: 100%;
     z-index: 2;
     /* ABAIXO: O degradê que faz a fumaça em cima e embaixo */
-    background: linear-gradient(
-        to bottom,
-        white 0%,            /* Começa branco no topo */
-        transparent 20%,     /* Limpa para aparecer a foto */
-        transparent 85%,     /* Mantém a foto aparecendo */
-        white 100%           /* Termina branco embaixo */
-    );
+    background: linear-gradient(to bottom,
+            white 0%,
+            /* Começa branco no topo */
+            transparent 20%,
+            /* Limpa para aparecer a foto */
+            transparent 85%,
+            /* Mantém a foto aparecendo */
+            white 100%
+            /* Termina branco embaixo */
+        );
 }
 
 .calendario-casamento {
@@ -288,7 +310,7 @@ body {
     gap: 20px;
     margin: 40px auto;
     font-family: "Playfair Display", serif;
-    color:#666
+    color: #666
 }
 
 .coluna-data {
@@ -317,7 +339,8 @@ body {
 }
 
 .dia-numero {
-    font-size: clamp(45px, 10vw, 55px); /* Dia bem grande */
+    font-size: clamp(45px, 10vw, 55px);
+    /* Dia bem grande */
     color: #616e48;
     margin: 5px 0;
     font-weight: 400;
@@ -357,7 +380,8 @@ body {
 
 .tempo span {
     font-size: clamp(24px, 5vw, 32px);
-    color: #839164; /* O verde do seu retângulo/data */
+    color: #839164;
+    /* O verde do seu retângulo/data */
     font-weight: 300;
 }
 
@@ -419,9 +443,28 @@ body {
     z-index: 2;
     pointer-events: none;
 
-    background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0) 62%, /* Transparente no centro, até 60% da imagem */
-        rgba(255, 255, 255, 1) 100%  /* Branco nas bordas externas */
+    background: radial-gradient(circle,
+            rgba(255, 255, 255, 0) 62%,
+            /* Transparente no centro, até 60% da imagem */
+            rgba(255, 255, 255, 1) 100%
+            /* Branco nas bordas externas */
         );
+}
+
+.chamada-icones p {
+    text-align: left;
+    font-size: clamp(20px, 5vw, 24px);
+    margin-left: 25px;
+    font-family: "Playfair", serif;
+    color: #666;
+    margin-top: 40px;
+}
+
+.chamada-icones h2 {
+    text-align: left;
+    font-family: "Allura", cursive;
+    font-size: clamp(30px, 3.5vw, 16px);
+    color: #616e48;
+    margin-left: 58px;
+    margin-top: -23px;
 }
