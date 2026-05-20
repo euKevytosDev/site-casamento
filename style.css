@@ -457,14 +457,95 @@ body {
     margin-left: 25px;
     font-family: "Playfair", serif;
     color: #666;
-    margin-top: 40px;
+    margin-top: -40px;
 }
 
 .chamada-icones h2 {
     text-align: left;
     font-family: "Allura", cursive;
-    font-size: clamp(30px, 3.5vw, 16px);
+    font-size: clamp(35px, 8vw, 42px);
     color: #616e48;
     margin-left: 58px;
     margin-top: -23px;
 }
+
+.flor-esquerda2 {
+    position: absolute;
+    left: 10px;
+    top: -370px;
+    width: clamp(100px, 20vw, 150px);
+    /* leve transparência */
+    transform: scaleX(-1);
+    /* Opcional: espelha a imagem para dar simetria */
+    z-index: -1;
+}
+
+.flor-direita2 {
+    position: absolute;
+    right: 45px;
+    /* Cola no canto direito */
+    top: -45px;
+    bottom: 10px;
+    width: clamp(110px, 30vw, 150px);
+    /* Tamanho responsivo */
+    z-index: -1;
+}
+
+/* abaixo está a parte dos icones clicaveis */
+
+.container-interacoes {
+    width: 100%;
+    max-width: 380px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.lista-botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-left: 35px;
+}
+
+.linha.interacao {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    bottom: 40px;
+}
+
+.botao-circulo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #616e48;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2 ease;
+    padding: 0;
+}
+
+.botao-circulo:hover {
+    background-color: #4f5a3a;
+    transform: scale(1.05);
+}
+
+.icone {
+    font-size: 22px;
+}
+
+.texto-interacao {
+    font-family: "Playfair", serif;
+    font-style: italic;
+    font-size: 18px;
+    color: #433f3f;
+    
+}
+
+/* ESTILIZAÇÃO DO MODAL (ESTUDO DE CAMADAS */
+

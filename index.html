@@ -48,7 +48,7 @@
             <div class="overlay2"></div>
         </section>
 
-        
+
 
         <div class="conteudo">
             <p class="versiculo">
@@ -57,11 +57,11 @@
             </p>
 
             <div class="decoracao-flores">
-              <!--  <img src="imagens/fotofloresatt.webp" class="flor-esquerda"> -->
+                <!--  <img src="imagens/fotofloresatt.webp" class="flor-esquerda"> -->
 
                 <img src="imagens/flor-central2.png" class="flor-centro">
 
-            <!--    <img src="imagens/fotofloresatt.webp" class="flor-direita"> -->
+                <!--    <img src="imagens/fotofloresatt.webp" class="flor-direita"> -->
 
             </div>
 
@@ -96,11 +96,11 @@
         </h2>
 
         <div class="decoracao-flores">
-                <img src="imagens/floresquerda2.png" class="flor-esquerda">
+            <img src="imagens/floresquerda2.png" class="flor-esquerda">
 
-                <img src="imagens/flordireita2.png" class="flor-direita">
+            <img src="imagens/flordireita2.png" class="flor-direita">
 
-            </div>
+        </div>
 
         <section class="chamada-casamento">
             <div class="retangulo">
@@ -163,10 +163,71 @@
             </div>
         </div>
 
-        <div class="chamada-icones">
-            <p>Toque nos ícones</p>
-            <h2>para interagir !</h2>
+        <div class="decoracao-flores">
+            <img src="imagens/floresquerda2.png" class="flor-esquerda2">
+            <img src="imagens/flordireita2.png" class="flor-direita2">
         </div>
+
+        <div class="container-interacoes">
+
+            <div class="chamada-icones">
+                <p>Toque nos ícones</p>
+                <h2>para interagir !</h2>
+            </div>
+
+            <div class="lista-botoes">
+
+                <div class="linha-interacao">
+                    <button class="botao-circulo" id="btn-chegar">
+                        <span class="icone">📍</span>
+                    </button>
+                    <span class="texto-interacao">Saiba como chegar</span>
+                </div>
+
+                <div class="linha-interacao">
+                    <button class="botao-circulo" id="btn-presenca">
+                        <span class="icone">👤</span>
+                    </button>
+                    <span class="texto-interacao">Confirmar presença</span>
+                </div>
+
+                <div class="linha-interacao">
+                    <button class="botao-circulo" id="btn-presentes">
+                        <span class="icone">🎁</span>
+                    </button>
+                    <span class="texto-interacao">Para nos presentear</span>
+                </div>
+
+                <div class="linha-interacao">
+                    <button class="botao-circulo" id="btn-dresscode">
+                        <span class="icone">👔</span>
+                    </button>
+                    <span class="texto-interacao">Dress code</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="modal-presenca" class="modal-backdrope">
+
+            <div class="modal-conteudo">
+                <button id="fechar-modal" class="botao-fechar">&times;</button>
+
+                <h3>Confirmar Presença</h3>
+                <p class="subtitulo-modal">Será uma honra ter você conosco</p>
+
+                <form id="form-presenca">
+                    <div class="grupo-campo">
+                        <label for="nome-convidado">Nome Completo:</label>
+                        <input type="text" id="nome-convidado" placeholder="Digite seu nome e sobrenome" required>
+                    </div>
+
+                    <button type="submit" class="btn-enviar-presenca">Confirmar</button>
+                </form>
+            </div>
+        </div>
+
+
 
 
         <div class="fotodois">
