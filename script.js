@@ -64,3 +64,46 @@ function atualizarContador() {
 // Atualiza a cada 1 segundo
 const intervalo = setInterval(atualizarContador, 1000);
 atualizarContador();
+
+/* =======================================================
+   LÓGICA DO MODAL DE CONFIRMAÇÃO DE PRESENÇA
+   ======================================================= */
+
+// SELEÇÃO DE ELEMENTOS: Dizemos para o JS quem é quem no HTML usando o ID
+const botaoPresenca = document.getElementById("btn-presenca"); // Captura o botão verde redondo de presença
+const modalPresenca = document.getElementById("modal-presenca"); // Captura a camada escura de fundo do modal
+const botaoFechar = document.getElementById("fechar-modal"); // Captura o botão "X" de fechar dentro do modal
+const formulario = document.getElementById("form-presenca"); // Captura o formulário de dentro do modal
+
+// FUNÇÃO PARA ABRIR O MODAL
+botaoPresenca.addEventListener("click", () => {
+    modalPresenca.style.display = "flex"; // Altera o CSS do modal de 'none' para 'flex', fazendo ele surgir na tela
+});
+
+// FUNÇÃO PARA FECHAR O MODAL CLICANDO NO X
+botaoFechar.addEventListener("click", () => {
+    modalPresenca.style.display = "none"; // Altera o CSS de volta para 'none', escondendo o modal e o fundo escuro
+});
+
+// FUNÇÃO PARA FECHAR O MODAL CLICANDO FORA DA CAIXA BRANCA
+window.addEventListener("click", (evento) => {
+    // Se o clique do usuário aconteceu na cortina escura e não na caixinha branca de dentro...
+    if (evento.target === modalPresenca) {
+        modalPresenca.style.display = "none"; // ...esconde o modal (ótimo para a experiência no celular!)
+    }
+});
+
+// INTERCEPTAR O ENVIO DO FORMULÁRIO (Para testes iniciais)
+formulario.addEventListener("submit", (evento) => {
+    evento.preventDefault(); // Evita que a página recarregue (comportamento padrão do HTML que estragaria o app)
+    
+    // Captura o que o convidado digitou no campo de texto
+    const nomeDigitado = document.getElementById("nome-convidado").value;
+    
+    // Mostra um aviso na tela simulando o sucesso (depois vamos trocar isso pelo envio para o Spring Boot)
+    alert(`Obrigado, ${nomeDigitado}! Sua presença foi registrada com sucesso.`);
+    
+    // Limpa o formulário e fecha o modal automaticamente após o envio
+    formulario.reset(); // Apaga o nome que ficou escrito no campo de texto
+    modalPresenca.style.display = "none"; // Esconde o modal para o usuário voltar a ver o convite
+});

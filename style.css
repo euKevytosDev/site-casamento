@@ -495,25 +495,26 @@ body {
 
 .container-interacoes {
     width: 100%;
-    max-width: 380px;
+    max-width: 390px;
     margin: 30px auto;
     display: flex;
     flex-direction: column;
     gap: 25px;
+    padding: 0 10px;
 }
 
 .lista-botoes {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    padding-left: 35px;
+    padding-left: 20px;
 }
 
-.linha.interacao {
+.linha-interacao {
     display: flex;
     align-items: center;
     gap: 15px;
-    bottom: 40px;
+    width: 100%;
 }
 
 .botao-circulo {
@@ -526,8 +527,9 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2 ease;
+    transition: transform 0.2s ease, background-color 0.2s ease;
     padding: 0;
+    flex-shrink: 0;
 }
 
 .botao-circulo:hover {
@@ -542,10 +544,92 @@ body {
 .texto-interacao {
     font-family: "Playfair", serif;
     font-style: italic;
-    font-size: 18px;
+    font-size: 20px;
     color: #433f3f;
-    
+    white-space: nowrap;
 }
 
 /* ESTILIZAÇÃO DO MODAL (ESTUDO DE CAMADAS */
 
+.modal-backdrope {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo preto (0,0,0) com 40% de opacidade (0.4) para o efeito transparente */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-conteudo {
+    background-color: #ffffff;
+    width: 85%;
+    max-width: 340px;
+    padding: 30px 20px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.botao-fechar {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+}
+
+.modal-conteudo h3 {
+    font-family: "Playfair", serif;
+    color: #616e48;
+    margin: 0 0 5px 0;
+}
+
+.subtitulo-modal {
+    font-family: "Playfair", serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px
+}
+
+.grupo-campo {
+    display: block;
+    font-family: "Playfair", serif;
+    font-size: 14px;
+    color: #433f3f;
+    margin-bottom: 5px;
+}
+
+.grupo-campo input {
+    width: 100%; /* Faz a caixinha de texto ocupar toda a largura disponível dentro do modal */
+    padding: 10px; /* Espaço interno na caixinha para o texto digitado não encostar nas bordas */
+    border: 1px solid #ccc; /* Cria uma borda fina cinza claro ao redor do campo de texto */
+    border-radius: 6px; /* Arredonda levemente os cantos do campo de digitação */
+    font-family: sans-serif; /* Altera para uma fonte limpa sem serifa para facilitar a digitação do nome */
+    font-size: 14px; /* Define o tamanho da letra do texto que o convidado vai digitar */
+}
+
+.btn-enviar-presenca {
+    background-color: #616e48;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: "Playfair", serif;
+    font-size: 16px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.btn-enviar-presenca:hover {
+    background-color: #4f5a3a; /* Aplica um tom verde oliva mais escuro no efeito de passar o mouse */
+}
