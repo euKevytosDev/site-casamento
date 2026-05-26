@@ -21,16 +21,15 @@ body {
 .hero {
     height: 100vh;
     width: 100%;
-    /*background-image: url(imagens/fotodafesta.jpg); */
-    background-image: url(imagens/rafa1.jpg); /* apagar essa linha dps */
+    background-image: url(imagens/fotodafesta.jpg);
     background-size: cover;
     background-position: center;
     position: relative;
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    /* display: none !important; */
-    /* opacity: 0 !important; */
+   /* display: none !important;
+    opacity: 0 !important; */
 }
 
 .overlay {
@@ -75,15 +74,14 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    /* display: block !important; */
-    /* opacity: 1 !important; */
+    /* display: block !important;
+    opacity: 1 !important; */
 }
 
 .foto2 {
     height: 100vh;
     width: 100%;
-    /* background-image: url("imagens/fotodafesta2.jpg");*/
-    background-image: url(imagens/rafa3.jpg); /* apagar essa linha dps */
+    background-image: url("imagens/fotodafesta2.jpg");
     background-size: cover;
     background-position: center;
     position: relative;
@@ -106,10 +104,8 @@ body {
     text-align: center;
     /* centraliza */
     background-color: #fff;
-    /* fundo branco */
     position: relative;
     overflow: hidden;
-
 }
 
 .versiculo {
@@ -118,9 +114,7 @@ body {
     font-size: clamp(18px, 4.5vw, 22px);
     /* tamanho ideal pra leitura */
     color: #030303c9;
-    /* cor mais legível */
     max-width: 340px;
-    /* limita largura */
     margin: 0 auto 30px;
     /* centraliza + espaço embaixo */
     line-height: 1.7;
@@ -134,6 +128,7 @@ body {
     /* começa levemente abaixo */
     transition: all 0.8s ease;
     /* animação suave */
+
 }
 
 .versiculo.ativo {
@@ -210,7 +205,6 @@ body {
     top: -170px;
     bottom: 10px;
     width: clamp(110px, 30vw, 150px);
-    /* Tamanho responsivo */
     z-index: 1;
 }
 
@@ -261,7 +255,7 @@ body {
     margin-bottom: -1px;
     margin-top: 15px;
 
-}
+}                           Decidi eliminar essa parte !!!!
 
 .frase-data p {
     font-family: "Playfair", serif;
@@ -383,7 +377,6 @@ body {
 .tempo span {
     font-size: clamp(24px, 5vw, 32px);
     color: #839164;
-    /* O verde do seu retângulo/data */
     font-weight: 300;
 }
 
@@ -560,7 +553,8 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4); /* Fundo preto (0,0,0) com 40% de opacidade (0.4) para o efeito transparente */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Fundo preto (0,0,0) com 40% de opacidade (0.4) para o efeito transparente */
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -608,15 +602,28 @@ body {
     font-size: 14px;
     color: #433f3f;
     margin-bottom: 5px;
+    top: -50px;
+}
+
+.grupo-campo label {
+    display: block;
+    margin-top: -9px;
+    margin-bottom: 5px;
 }
 
 .grupo-campo input {
-    width: 100%; /* Faz a caixinha de texto ocupar toda a largura disponível dentro do modal */
-    padding: 10px; /* Espaço interno na caixinha para o texto digitado não encostar nas bordas */
-    border: 1px solid #ccc; /* Cria uma borda fina cinza claro ao redor do campo de texto */
-    border-radius: 6px; /* Arredonda levemente os cantos do campo de digitação */
-    font-family: sans-serif; /* Altera para uma fonte limpa sem serifa para facilitar a digitação do nome */
-    font-size: 14px; /* Define o tamanho da letra do texto que o convidado vai digitar */
+    width: 100%;
+    /* Faz a caixinha de texto ocupar toda a largura disponível dentro do modal */
+    padding: 10px;
+    /* Espaço interno na caixinha para o texto digitado não encostar nas bordas */
+    border: 1px solid #ccc;
+    /* Cria uma borda fina cinza claro ao redor do campo de texto */
+    border-radius: 6px;
+    /* Arredonda levemente os cantos do campo de digitação */
+    font-family: sans-serif;
+    /* Altera para uma fonte limpa sem serifa para facilitar a digitação do nome */
+    font-size: 14px;
+    /* Define o tamanho da letra do texto que o convidado vai digitar */
 }
 
 .btn-enviar-presenca {
@@ -633,7 +640,8 @@ body {
 }
 
 .btn-enviar-presenca:hover {
-    background-color: #4f5a3a; /* Aplica um tom verde oliva mais escuro no efeito de passar o mouse */
+    background-color: #4f5a3a;
+    /* Aplica um tom verde oliva mais escuro no efeito de passar o mouse */
 }
 
 .link-mapa {
@@ -642,6 +650,8 @@ body {
 }
 
 .link-mapa:hover .botao-circulo {
-    background-color: #4f5a3a; /* Muda o verde para o tom mais escuro */
-    transform: scale(1.05); /* Dá o leve zoom na bolinha */
+    background-color: #4f5a3a;
+    /* Muda o verde para o tom mais escuro */
+    transform: scale(1.05);
+    /* Dá o leve zoom na bolinha */
 }

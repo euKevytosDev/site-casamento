@@ -1,7 +1,12 @@
 const hero = document.querySelector(".hero");
 const site = document.querySelector(".site");
 
+const musica = document.getElementById("musica");
+musica.volume = 0.3;
+
 hero.addEventListener("click", () => {
+
+    musica.play();
 
     // fade out da tela inicial
     hero.style.opacity = "0";
