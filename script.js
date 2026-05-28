@@ -98,17 +98,97 @@ window.addEventListener("click", (evento) => {
     }
 });
 
-// INTERCEPTAR O ENVIO DO FORMULÁRIO (Para testes iniciais)
-formulario.addEventListener("submit", (evento) => {
-    evento.preventDefault(); // Evita que a página recarregue (comportamento padrão do HTML que estragaria o app)
+/*LÓGICA EVOLUÍDA DO FORMULÁRIO DINÂMICO DE FAMÍLIA*/
+
+// 1. CAPTURA DOS NOVOS ELEMENTOS DO HTML
+const btnAdicionarMembro = document.getElementById("btn-adicionar-membro");
+const btnEnviarFamilia = document.getElementById("btn-enviar-familia");
+const listaFamiliaVisual = document.getElementById("lista-familia-visual");
+
+const campoNome = document.getElementById("nome-convidado");
+const campoIdade = document.getElementById("idade-convidado");
+
+// 2. A NOSSA BANDEJA (O ARRAY NA MEMÓRIA)
+// É aqui que os familiares vão ficar guardados temporariamente antes de irem pro Spring Boot
+let listaFamilia = [];
+
+// 3. FUNÇÃO QUE ATUALIZA A TELA (IMPRIME OS NOMES NA CAIXINHA)
+function atualizarInterfaceLista() {
+    // Limpa a lista visual para não duplicar os nomes antigos
+    listaFamiliaVisual.innerHTML = "";
+
+    // Se a lista estiver vazia, recoloca o aviso cinza e bloqueia o botão final
+    if (listaFamilia.length === 0) {
+        listaFamiliaVisual.innerHTML = `<p class="lista-vazia-aviso">Nenhum membro adicionado ainda</p>`;
+        btnEnviarFamilia.disabled = true;
+        return;
+    } 
+
+    // Se tiver gente na lista, libera o botão de confirmar a família inteira
+    btnEnviarFamilia.disabled = false;
+
+    // Roda cada membro da nossa memória e desenha ele na tela com um botão de "X" para remover
+    listaFamilia.forEach((membro, index) => {
+        const li = document.createElement("li");
+        
+        // Formata o texto bonito para o usuário ler
+        const statusTexto = membro.confirmado ? "Confirmado" : "Não vai";
+        li.innerHTML = `
+            <span><strong>${membro.nomeConvidado}</strong> (${membro.idade} anos) - ${statusTexto}</span>
+            <button class="btn-remover-membro" onclick="removerMembroDaLista(${index})">&times;</button>
+        `;
+        
+        listaFamiliaVisual.appendChild(li);
+    });
+}
+
+// 4. AÇÃO DO BOTÃO "➕ ADICIONAR À LISTA"
+btnAdicionarMembro.addEventListener("click", () => {
+    // Validação básica do próprio HTML (Garante que ninguém adicione campos vazios)
+    if (!campoNome.value || !campoIdade.value) {
+        alert("Por favor, preencha o Nome e a Idade antes de adicionar!");
+        return;
+    }
+
+    // Captura qual rádio button está marcado (Sim ou Não)
+    const radioStatus = document.querySelector('input[name="status-presenca"]:checked').value;
+    const estaConfirmado = radioStatus === "sim";
+
+    // Cria o objeto exatamente com as mesmas variáveis que o seu Model Java espera receber!
+    const novoMembro = {
+        nomeConvidado: campoNome.value,
+        idade: parseInt(campoIdade.value),
+        confirmado: estaConfirmado
+    };
+
+    // Empurra o objeto para dentro do nosso Array de memória
+    listaFamilia.push(novoMembro);
+
+    // Atualiza a tela com o novo integrante
+    atualizarInterfaceLista();
+
+    // Limpa os campos do formulário para o usuário digitar o próximo familiar
+    campoNome.value = "";
+    campoIdade.value = "";
+    document.querySelector('input[name="status-presenca"][value="sim"]').checked = true; // Reseta pro "Sim"
+});
+
+// 5. FUNÇÃO PARA REMOVER ALGUÉM CASO O USUÁRIO DIGITE ERRADO
+// Usamos o 'window.' para garantir que o HTML encontre a função pelo 'onclick'
+window.removerMembroDaLista = function(index) {
+    listaFamilia.splice(index, 1); // Remove o elemento da memória usando a posição dele (index)
+    atualizarInterfaceLista(); // Atualiza a tela instantaneamente
+};
+
+// 6. AÇÃO DO BOTÃO FINAL "🚀 CONFIRMAR FAMÍLIA INTEIRA"
+btnEnviarFamilia.addEventListener("click", () => {
+    // Por enquanto, vamos simular no console para ver se a nossa bandeja está montada perfeitamente
+    console.log("BANDEJA PRONTA PARA VIAJAR PARA O SPRING BOOT:", listaFamilia);
     
-    // Captura o que o convidado digitou no campo de texto
-    const nomeDigitado = document.getElementById("nome-convidado").value;
+    alert(`Sucesso! Enviando a confirmação de ${listaFamilia.length} pessoas da família.`);
     
-    // Mostra um aviso na tela simulando o sucesso (depois vamos trocar isso pelo envio para o Spring Boot)
-    alert(`Obrigado, ${nomeDigitado}! Sua presença foi registrada com sucesso.`);
-    
-    // Limpa o formulário e fecha o modal automaticamente após o envio
-    formulario.reset(); // Apaga o nome que ficou escrito no campo de texto
-    modalPresenca.style.display = "none"; // Esconde o modal para o usuário voltar a ver o convite
+    // Reseta tudo e fecha o modal
+    listaFamilia = [];
+    atualizarInterfaceLista();
+    modalPresenca.style.display = "none";
 });

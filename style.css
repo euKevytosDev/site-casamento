@@ -19,8 +19,11 @@ body {
 }
 
 .hero {
+    background: white;
     height: 100vh;
     width: 100%;
+    max-width: 445px;
+    margin: 0 auto;
     background-image: url(imagens/fotodafesta.jpg);
     background-size: cover;
     background-position: center;
@@ -28,8 +31,8 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-   /* display: none !important;
-    opacity: 0 !important; */
+    /*display: none !important;
+    opacity: 0 !important;*/
 }
 
 .overlay {
@@ -67,15 +70,18 @@ body {
 }
 
 .site {
+    background: white;
     overflow: hidden;
     width: 100%;
+    max-width: 445px;
+    margin: 0 auto;
     display: none;
     text-align: center;
     opacity: 0;
     transition: opacity 1s ease;
 
-    /* display: block !important;
-    opacity: 1 !important; */
+    /*display: block !important;
+    opacity: 1 !important;*/
 }
 
 .foto2 {
@@ -266,7 +272,6 @@ body {
 
 .fotodois {
     width: 100%;
-    max-width: 370px;
     /* Tamanho da foto no site */
     margin: 50px auto;
     position: relative;
@@ -601,8 +606,7 @@ body {
     font-family: "Playfair", serif;
     font-size: 14px;
     color: #433f3f;
-    margin-bottom: 5px;
-    top: -50px;
+    margin-bottom: 15px;
 }
 
 .grupo-campo label {
@@ -654,4 +658,150 @@ body {
     /* Muda o verde para o tom mais escuro */
     transform: scale(1.05);
     /* Dá o leve zoom na bolinha */
+}
+
+.linha-campos-duplos {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    text-align: left;
+    align-items: flex-start;
+}
+
+.campo-idade {
+    width: 30%;
+}
+
+.campo-status {
+    width: 70%;
+}
+
+/* Organiza os botoes de sim e nao */
+.opcoes-radio {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.opcoes-radio label.radio-label-item,
+.opcoes-radio label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    cursor: pointer;
+    font-size: 15px;
+    white-space: nowrap;
+    width: auto !important;
+
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+}
+
+.opcoes-radio input[type="radio"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer;
+}
+
+
+/* Botao de adicionar membro */
+.btn-adicionar {
+    background-color: #e0e1cf;
+    color: #616e48;
+    border: 1px solid #616e48;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: "Playfair", serif;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+}
+
+.btn-adicionar:hover {
+    background-color: #616e48;
+    color: white;
+}
+
+/* Painel visual da Família Adicionada */
+.container-familia-adicionada {
+    text-align: left;
+    background-color: #f9f9f9;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px dashed #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    /* Se a família for grande, cria barra de rolagem interna */
+}
+
+.container-familia-adicionada h4 {
+    margin: 0 0 8px 0;
+    font-family: "Playfair", serif;
+    color: #616e48;
+    font-size: 14px;
+}
+
+.container-familia-adicionada ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilo de cada linha de parente adicionado */
+.container-familia-adicionada li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    font-family: sans-serif;
+    color: #333;
+}
+
+.container-familia-adicionada li:last-child {
+    border-bottom: none;
+}
+
+/* Botãozinho de remover o parente caso o usuário erre */
+.btn-remover-membro {
+    background: none;
+    border: none;
+    color: #cc0000;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.lista-vazia-aviso {
+    margin: 0;
+    font-size: 13px;
+    color: #999;
+    font-style: italic;
+}
+
+/* Estado desabilitado do botão de confirmação final */
+.btn-enviar-presenca:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+.radio-label-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    cursor: pointer;
+    font-size: 15px;
+    white-space: nowrap;
+    width: auto !important;
+    margin: 0 !important;
 }

@@ -10,9 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,20 +24,16 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
         rel="stylesheet">
-
 </head>
 
 <body>
 
     <div class="hero">
-
         <div class="overlay"></div>
-
         <div class="texto">
             <h1>Rafaella & Kevin</h1>
             <p>Clique para abrir</p>
         </div>
-
     </div>
 
     <div class="site">
@@ -48,47 +42,26 @@
             <div class="overlay2"></div>
         </section>
 
-
-
         <div class="conteudo">
             <p class="versiculo">
                 "Assim, eles já não são dois, mas sim uma só carne. Portanto, o que Deus uniu, ninguém separe." Mateus
                 19:6
             </p>
-
             <div class="decoracao-flores">
-                <!--  <img src="imagens/fotofloresatt.webp" class="flor-esquerda"> -->
-
                 <img src="imagens/flor-central2.png" class="flor-centro">
-
-                <!--    <img src="imagens/fotofloresatt.webp" class="flor-direita"> -->
-
             </div>
-
         </div>
 
-
-
-
-
-
         <div class="bencao">
-            <p class="frase-bencao">
-                Com a bênção de nossos pais
-            </p>
-
+            <p class="frase-bencao">Com a bênção de nossos pais</p>
             <div class="pais">
-
                 <div class="lado">
                     <p>Warlen e Rosimar</p>
                 </div>
-
                 <div class="lado">
                     <p>Ricardo e Luiza</p>
                 </div>
-
             </div>
-
         </div>
 
         <h2 class="nomes-noivos">
@@ -97,9 +70,7 @@
 
         <div class="decoracao-flores">
             <img src="imagens/floresquerda2.png" class="flor-esquerda">
-
             <img src="imagens/flordireita2.png" class="flor-direita">
-
         </div>
 
         <section class="chamada-casamento">
@@ -108,23 +79,15 @@
             </div>
         </section>
 
-
-        <!-- <div class="frase-data">
-            <p>A realizar-se em...</p>
-        </div>
-            -->
         <div class="calendario-casamento">
-
             <div class="coluna-data">
                 <p class="texto-pequeno">SÁBADO</p>
             </div>
-
             <div class="coluna-data centro">
                 <p class="mes-ano">ABRIL</p>
                 <h3 class="dia-numero">24</h3>
                 <p class="mes-ano">2027</p>
             </div>
-
             <div class="coluna-data">
                 <p class="texto-pequeno">16:30H</p>
             </div>
@@ -152,13 +115,12 @@
             </div>
         </div>
 
-        <div class="container-local"> <!-- Nova div container para centralizar -->
+        <div class="container-local">
             <div class="local">
                 <p>Local: Espaço Salaberry</p>
             </div>
-
-            <div class="espaco-foto-wrapper"> <!-- Div container exclusiva da foto -->
-                <div class="overlay-local"></div> <!-- Div para o degradê suave -->
+            <div class="espaco-foto-wrapper">
+                <div class="overlay-local"></div>
                 <img src="imagens/fotoespaço.jpg" alt="piscina">
             </div>
         </div>
@@ -169,14 +131,12 @@
         </div>
 
         <div class="container-interacoes">
-
             <div class="chamada-icones">
                 <p>Toque nos ícones</p>
                 <h2>para interagir !</h2>
             </div>
 
             <div class="lista-botoes">
-
                 <a href="https://www.google.com/maps/dir/?api=1&destination=Espaço+Salaberry" target="_blank"
                     class="linha-interacao link-mapa">
                     <div class="botao-circulo">
@@ -205,43 +165,84 @@
                     </button>
                     <span class="texto-interacao">Dress code</span>
                 </div>
-
             </div>
         </div>
 
+        <!-- MODAL DE CONFIRMAÇÃO DE PRESENÇA -->
         <div id="modal-presenca" class="modal-backdrope">
-
             <div class="modal-conteudo">
-
                 <button id="fechar-modal" class="botao-fechar">&times;</button>
 
                 <h3>Confirmar Presença</h3>
                 <p class="subtitulo-modal">Será uma honra ter você conosco!</p>
 
+                <!-- 1. Formulário para capturar UM membro por vez -->
                 <form id="form-presenca">
                     <div class="grupo-campo">
                         <label for="nome-convidado">Nome Completo:</label>
                         <input type="text" id="nome-convidado" placeholder="Digite seu nome e sobrenome" required>
                     </div>
 
-                    <button type="submit" class="btn-enviar-presenca">Confirmar</button>
+                    <div class="linha-campos-duplos">
+                        <div class="grupo-campo campo-idade">
+                            <label for="idade-convidado">Idade:</label>
+                            <input type="number" id="idade-convidado" placeholder="Ex: 25" required min="0" max="120">
+                        </div>
+
+                        <div class="grupo-campo campo-status">
+                            <label>Vai ao evento?</label>
+                            <div class="opcoes-radio"
+                                style="display: flex !important; flex-direction: column !important; gap: 12px !important; margin-top: 10px !important; text-align: left !important;">
+
+                                <label class="radio-label-item"
+                                    style="display: flex !important; align-items: center !important; justify-content: flex-start !important; gap: 8px !important; margin-top: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; width: auto !important; cursor: pointer !important;">
+                                    <input type="radio" name="status-presenca" value="sim" checked
+                                        style="margin: 0 !important; padding: 0 !important; width: auto !important;">
+                                    <span
+                                        style="font-family: 'Playfair', serif !important; font-size: 15px !important; color: #433f3f !important; margin-left: 4px !important;">Sim</span>
+                                </label>
+
+                                <label class="radio-label-item"
+                                    style="display: flex !important; align-items: center !important; justify-content: flex-start !important; gap: 8px !important; margin-top: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; width: auto !important; cursor: pointer !important;">
+                                    <input type="radio" name="status-presenca" value="nao"
+                                        style="margin: 0 !important; padding: 0 !important; width: auto !important;">
+                                    <span
+                                        style="font-family: 'Playfair', serif !important; font-size: 15px !important; color: #433f3f !important; margin-left: 4px !important;">Não</span>
+                                </label>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="btn-adicionar-membro" class="btn-adicionar">
+                        ➕ Adicionar à Lista
+                    </button>
                 </form>
+
+                <!-- 2. Área visual onde a família vai aparecendo -->
+                <div class="container-familia-adicionada">
+                    <h4>Família Adicionada</h4>
+                    <ul id="lista-familia-visual">
+                        <p class="lista-vazia-aviso">Nenhum membro adicionado ainda</p>
+                    </ul>
+                </div>
+
+                <!-- 3. Botão final que dispara a bandeja inteira para o Spring Boot -->
+                <button type="button" id="btn-enviar-familia" class="btn-enviar-presenca" disabled>
+                    🚀 Confirmar Família Inteira
+                </button>
             </div>
         </div>
 
-
-
-
         <div class="fotodois">
             <div class="overlay-meio"></div>
-          <img src="imagens/fotodafesta.jpg" class="fotomeio"> 
+            <img src="imagens/fotofesta.jpg" class="fotomeio">
         </div>
-
 
     </div>
 
     <audio id="musica" loop>
-        <source src="musicas/Idea 22 (Slowed + Reverb).mp3" type="audio/mpeg"> 
+        <source src="musicas/Idea 22 (Slowed + Reverb).mp3" type="audio/mpeg">
     </audio>
 
     <script src="script.js"></script>
