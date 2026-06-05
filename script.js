@@ -177,38 +177,46 @@ window.removerMembroDaLista = function (index) {
     atualizarInterfaceLista(); // Atualiza a tela instantaneamente
 };
 
-// 6. AÇÃO DO BOTÃO FINAL "🚀 CONFIRMAR FAMÍLIA INTEIRA" (CONEXÃO REAL BACK-END)
+// 6. AÇÃO DO BOTÃO FINAL "🚀 CONFIRMAR FAMÍLIA INTEIRA" (COM SPINNER DE CARREGAMENTO)
 btnEnviarFamilia.addEventListener("click", () => {
+    
+    // Captura os elementos do spinner e do texto de dentro do botão
+    const spinner = document.getElementById("spinner");
+    const btnTexto = document.getElementById("btn-texto");
 
-    // Mostra no console para você inspecionar se quiser
+    // 1. ATIVA O MODO CARREGANDO: Mostra o spinner, muda o texto e desativa o botão para evitar cliques duplos
+    spinner.classList.remove("escondido");
+    btnTexto.innerText = "Confirmando presença, aguarde...";
+    btnEnviarFamilia.disabled = true;
+
     console.log("Enviando para o Spring Boot:", listaFamilia);
 
-    // 🌐 ENSINAMENTO DETALHADO (A REQUISIÇÃO AJAX/FETCH):
-    // Chamamos a rota exata que criamos no PresencaController do Java
-    fetch("http://localhost:8080/api/presenca/confirmar-familia", {
-        method: "POST", // Avisa ao garçom que estamos enviando dados novos
+    fetch("https://site-casamento-backend-nrfb.onrender.com/api/presenca/confirmar-familia", {
+        method: "POST",
         headers: {
-            "Content-Type": "application/json" // Avisa ao Java que estamos entregando o formato JSON (texto estruturado)
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify(listaFamilia) // Transforma o nosso Array do JS em uma String de texto JSON pro Java conseguir ler
+        body: JSON.stringify(listaFamilia)
     })
         .then(resposta => {
             if (resposta.ok) {
-                // Se o status HTTP for 200 (Sucesso)
                 alert("Presença da família confirmada com sucesso! Muito obrigado. ✨");
-
-                // Reseta a lista e fecha o modal
                 listaFamilia = [];
                 atualizarInterfaceLista();
                 modalPresenca.style.display = "none";
             } else {
-                // Se o servidor responder com algum erro (Ex: 400, 500)
                 alert("Ops! Ocorreu um erro ao enviar os dados. Tente novamente.");
             }
         })
         .catch(erro => {
-            // Se o back-end estiver desligado ou a rede falhar
             console.error("Erro de conexão:", erro);
-            alert("Não foi possível conectar ao servidor. O seu Back-end está rodando?");
+            alert("Não foi possível conectar ao servidor. O servidor pode estar iniciando, tente novamente em instantes.");
+        })
+        .finally(() => {
+            // 2. DESATIVA O MODO CARREGANDO: O bloco '.finally' roda SEMPRE (se der certo ou se der erro)
+            // Aqui nós restauramos o botão para o estado original caso o usuário precise tentar de novo
+            spinner.classList.add("escondido");
+            btnTexto.innerText = "🚀 Confirmar Família Inteira";
+            btnEnviarFamilia.disabled = false;
         });
 });
