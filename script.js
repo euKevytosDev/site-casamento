@@ -2,7 +2,7 @@ const hero = document.querySelector(".hero");
 const site = document.querySelector(".site");
 
 const musica = document.getElementById("musica");
-musica.volume = 0.4;
+musica.volume = 0.7;
 
 hero.addEventListener("click", () => {
 
