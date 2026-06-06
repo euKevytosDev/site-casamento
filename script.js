@@ -8,7 +8,12 @@ hero.addEventListener("click", () => {
 
     musica.play();
 
-    // fade out da tela inicial
+    // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
+    // Como não colocamos o ".then", o JS só faz a chamada e continua rodando o resto do site sem travar nada.
+    fetch("https://site-casamento-backend-nrfb.onrender.com/api/presenca")
+        .then(() => console.log("Servidor alertado com sucesso nos bastidores! ⏰"))    // fade out da tela inicial
+        .catch(() => console.log("Servidor já deve estar acordado ou processando."));
+
     hero.style.opacity = "0";
 
     setTimeout(() => {
@@ -179,7 +184,7 @@ window.removerMembroDaLista = function (index) {
 
 // 6. AÇÃO DO BOTÃO FINAL "🚀 CONFIRMAR FAMÍLIA INTEIRA" (COM SPINNER DE CARREGAMENTO)
 btnEnviarFamilia.addEventListener("click", () => {
-    
+
     // Captura os elementos do spinner e do texto de dentro do botão
     const spinner = document.getElementById("spinner");
     const btnTexto = document.getElementById("btn-texto");
