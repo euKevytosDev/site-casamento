@@ -817,14 +817,15 @@ body {
     height: 20px;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: #fff;  /* Cor da ponta que gira */
+    border-top-color: #fff;
+    /* Cor da ponta que gira */
     animation: rodar 1s linear infinite;
     display: inline-block;
     vertical-align: middle;
     margin-left: 10px;
 }
 
-/* Animação que faz o circulo girar 360 graus */ 
+/* Animação que faz o circulo girar 360 graus */
 @keyframes rodar {
     to {
         transform: rotate(360deg);
@@ -834,4 +835,26 @@ body {
 /* Classe utilitária para esconder o spinner quando não estiver enviando */
 .escondido {
     display: none;
+}
+
+.setabaixo p {
+    font-family: "Playfair Display", serif;
+    font-size: 21px;
+    position: absolute;
+    z-index: 3;
+   
+    left: 50%;
+    transform: translate(-50%);
+
+    bottom: 22px;
+
+    text-align: center;
+    animation: piscarPretoBranco 1.5s infinite;
+    
+}
+
+@keyframes piscarPretoBranco {
+  0% { color: rgba(87, 89, 86, 0.856); }
+  50% { color: rgba(255, 255, 255, 0); }
+  100% { color: rgba(87, 89, 87, 0.784); }
 }
