@@ -16,11 +16,13 @@ body {
 body {
     margin: 0;
     overflow-x: hidden;
+    background-color: #ffffff;
 }
 
 .hero {
     background: white;
-    height: 100vh;
+    height: 100dvh;
+    min-height: 100dvh;
     width: 100%;
     max-width: 445px;
     margin: 0 auto;
@@ -85,7 +87,8 @@ body {
 }
 
 .foto2 {
-    height: 100vh;
+    height: 100dvh;
+    min-height: 100dvh; /* 👈 Adicionado para garantir o preenchimento total */
     width: 100%;
     background-image: url("imagens/ajoelhado.jpg");
     background-size: cover;
