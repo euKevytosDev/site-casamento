@@ -33,8 +33,8 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    display: none !important;
-    opacity: 0 !important;
+    /*display: none !important;
+    opacity: 0 !important;*/
 }
 
 .overlay {
@@ -82,8 +82,8 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    display: block !important;
-    opacity: 1 !important;
+    /*display: block !important;
+    opacity: 1 !important;*/
 }
 
 .foto2 {
@@ -869,10 +869,189 @@ body {
 
 .flor-direita3 {
     position: absolute;
-    right: -32px;
+    right: -36px;
     /* Cola no canto direito */
     top: -190px;
     bottom: 10px;
     width: clamp(125px, 30vw, 150px);
     z-index: 0;
+}
+
+/* MODAL DE PRESENTES */
+
+.modal-presentes {
+    width: 92%;
+    max-width: 380px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 28px 18px 22px;
+}
+
+.loading-presentes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 30px 0;
+    font-family: "Playfair", serif;
+    color: #888;
+    font-size: 14px;
+}
+
+.spinner-presentes {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(97, 110, 72, 0.2);
+    border-radius: 50%;
+    border-top-color: #616e48;
+    animation: rodar 1s linear infinite;
+}
+
+.lista-presentes {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.aviso-presentes {
+    font-family: "Playfair", serif;
+    font-style: italic;
+    color: #999;
+    font-size: 14px;
+    padding: 20px 10px;
+}
+
+.card-presente {
+    background: #f9f9f7;
+    border: 1px solid #e0e1cf;
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: left;
+}
+
+.card-presente.comprado {
+    opacity: 0.75;
+}
+
+.card-presente img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.card-presente-corpo {
+    padding: 14px;
+}
+
+.card-presente h4 {
+    margin: 0 0 6px;
+    font-family: "Playfair", serif;
+    color: #616e48;
+    font-size: 18px;
+}
+
+.card-presente .descricao-presente {
+    margin: 0 0 10px;
+    font-family: "Playfair", serif;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.card-presente .valor-presente {
+    margin: 0 0 12px;
+    font-family: "Playfair", serif;
+    font-size: 20px;
+    color: #433f3f;
+    font-weight: 600;
+}
+
+.badge-comprado {
+    display: inline-block;
+    background: #e0e1cf;
+    color: #616e48;
+    font-family: "Playfair", serif;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+}
+
+.btn-presentear {
+    background-color: #616e48;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: "Playfair", serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-presentear:hover {
+    background-color: #4f5a3a;
+}
+
+.btn-presentear:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.painel-compra {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed #ccc;
+    text-align: left;
+}
+
+.titulo-compra {
+    font-family: "Playfair", serif;
+    color: #616e48;
+    margin: 0 0 10px;
+    font-size: 15px;
+}
+
+.painel-compra input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.botoes-compra {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-cancelar-compra,
+.btn-confirmar-compra {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: "Playfair", serif;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-cancelar-compra {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-confirmar-compra {
+    background: #616e48;
+    color: white;
+}
+
+.btn-confirmar-compra:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Painel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="layout-admin">
+        <header class="topo-admin">
+            <div>
+                <h1>Painel Admin</h1>
+                <span id="usuario-logado"></span>
+            </div>
+            <div class="topo-acoes">
+                <button class="btn-sair" id="btn-sair">Sair</button>
+            </div>
+        </header>
+
+        <main class="conteudo-admin">
+            <div class="abas">
+                <button class="aba ativa" data-aba="presentes">Presentes</button>
+                <button class="aba" data-aba="presenca">Presenças</button>
+            </div>
+
+            <!-- ABA PRESENTES -->
+            <section id="aba-presentes" class="painel-aba ativo">
+                <div class="grid-admin">
+                    <div class="card-painel">
+                        <h2 id="titulo-form-presente">Novo presente</h2>
+                        <form id="form-presente">
+                            <input type="hidden" id="presente-id">
+
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" required>
+
+                            <label for="descricao">Descrição</label>
+                            <textarea id="descricao"></textarea>
+
+                            <label for="valor">Valor (R$)</label>
+                            <input type="number" id="valor" step="0.01" min="0" required>
+
+                            <label for="imagem">Foto</label>
+                            <input type="file" id="imagem" accept="image/jpeg,image/png,image/webp,image/gif">
+                            <img id="preview" class="preview-imagem" alt="Pré-visualização">
+
+                            <div style="display:flex; gap:8px;">
+                                <button type="submit" class="btn-primario" id="btn-salvar" style="flex:1">Salvar</button>
+                                <button type="button" class="btn-secundario escondido" id="btn-cancelar-edicao">Cancelar</button>
+                            </div>
+                        </form>
+                        <p id="msg-presente" class="mensagem"></p>
+                    </div>
+
+                    <div class="card-painel">
+                        <h2>Presentes cadastrados</h2>
+                        <div id="lista-presentes" class="lista-itens">
+                            <p class="vazio">Carregando...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA PRESENÇA -->
+            <section id="aba-presenca" class="painel-aba">
+                <div class="card-painel">
+                    <h2>Confirmações de presença</h2>
+
+                    <div class="resumo" id="resumo-presenca"></div>
+
+                    <div style="overflow-x:auto;">
+                        <table class="tabela-presenca">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Idade</th>
+                                    <th>Status</th>
+                                    <th>Data</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-presenca"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        if (!getToken()) {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("usuario-logado").textContent = `Logado como ${getLogin()}`;
+        document.getElementById("btn-sair").addEventListener("click", logout);
+
+        // Abas
+        document.querySelectorAll(".aba").forEach(aba => {
+            aba.addEventListener("click", () => {
+                document.querySelectorAll(".aba").forEach(a => a.classList.remove("ativa"));
+                document.querySelectorAll(".painel-aba").forEach(p => p.classList.remove("ativo"));
+                aba.classList.add("ativa");
+                document.getElementById(`aba-${aba.dataset.aba}`).classList.add("ativo");
+
+                if (aba.dataset.aba === "presenca") carregarPresencas();
+            });
+        });
+
+        // ===== PRESENTES =====
+        const formPresente = document.getElementById("form-presente");
+        const inputImagem = document.getElementById("imagem");
+        const preview = document.getElementById("preview");
+        const listaPresentes = document.getElementById("lista-presentes");
+        const msgPresente = document.getElementById("msg-presente");
+        const btnCancelarEdicao = document.getElementById("btn-cancelar-edicao");
+        const tituloForm = document.getElementById("titulo-form-presente");
+        const btnSalvar = document.getElementById("btn-salvar");
+
+        inputImagem.addEventListener("change", () => {
+            const arquivo = inputImagem.files[0];
+            if (!arquivo) {
+                preview.style.display = "none";
+                return;
+            }
+            preview.src = URL.createObjectURL(arquivo);
+            preview.style.display = "block";
+        });
+
+        function limparFormPresente() {
+            formPresente.reset();
+            document.getElementById("presente-id").value = "";
+            preview.style.display = "none";
+            tituloForm.textContent = "Novo presente";
+            btnSalvar.textContent = "Salvar";
+            btnCancelarEdicao.classList.add("escondido");
+            inputImagem.required = true;
+        }
+
+        btnCancelarEdicao.addEventListener("click", limparFormPresente);
+
+        async function carregarPresentes() {
+            try {
+                const resposta = await apiFetch("/api/admin/presentes");
+                if (!resposta.ok) throw new Error(await lerErro(resposta));
+                const presentes = await resposta.json();
+                renderizarPresentes(presentes);
+            } catch (erro) {
+                listaPresentes.innerHTML = `<p class="vazio">${erro.message}</p>`;
+            }
+        }
+
+        function renderizarPresentes(presentes) {
+            if (!presentes.length) {
+                listaPresentes.innerHTML = `<p class="vazio">Nenhum presente cadastrado.</p>`;
+                return;
+            }
+
+            listaPresentes.innerHTML = presentes.map(p => `
+                <article class="item-card">
+                    <img src="${urlImagem(p.imagem)}" alt="${p.nome}">
+                    <div class="item-info">
+                        <strong>${p.nome}</strong>
+                        <p>${p.descricao || ""}</p>
+                        <p>${formatarValor(p.valor)}</p>
+                        <span class="badge ${p.comprado ? "comprado" : ""}">
+                            ${p.comprado ? `Comprado${p.nomeComprador ? ` por ${p.nomeComprador}` : ""}` : "Disponível"}
+                        </span>
+                        <div class="acoes-item">
+                            <button class="btn-secundario" onclick="editarPresente(${p.id})">Editar</button>
+                            ${p.comprado ? `<button class="btn-aviso" onclick="liberarPresente(${p.id})">Liberar</button>` : ""}
+                            <button class="btn-perigo" onclick="excluirPresente(${p.id})">Excluir</button>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        window.editarPresente = async function(id) {
+            const resposta = await apiFetch(`/api/admin/presentes/${id}`);
+            const presente = await resposta.json();
+
+            document.getElementById("presente-id").value = presente.id;
+            document.getElementById("nome").value = presente.nome;
+            document.getElementById("descricao").value = presente.descricao || "";
+            document.getElementById("valor").value = presente.valor;
+            preview.src = urlImagem(presente.imagem);
+            preview.style.display = "block";
+            inputImagem.required = false;
+
+            tituloForm.textContent = "Editar presente";
+            btnSalvar.textContent = "Atualizar";
+            btnCancelarEdicao.classList.remove("escondido");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+
+        window.excluirPresente = async function(id) {
+            if (!confirm("Excluir este presente?")) return;
+            const resposta = await apiFetch(`/api/admin/presentes/${id}`, { method: "DELETE" });
+            if (!resposta.ok) {
+                alert(await lerErro(resposta));
+                return;
+            }
+            carregarPresentes();
+        };
+
+        window.liberarPresente = async function(id) {
+            if (!confirm("Liberar este presente para nova compra?")) return;
+            const resposta = await apiFetch(`/api/admin/presentes/${id}/liberar`, { method: "PATCH" });
+            if (!resposta.ok) {
+                alert(await lerErro(resposta));
+                return;
+            }
+            carregarPresentes();
+        };
+
+        formPresente.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            msgPresente.className = "mensagem";
+            msgPresente.textContent = "";
+
+            const id = document.getElementById("presente-id").value;
+            const dados = new FormData();
+            dados.append("nome", document.getElementById("nome").value.trim());
+            dados.append("descricao", document.getElementById("descricao").value.trim());
+            dados.append("valor", document.getElementById("valor").value);
+
+            if (inputImagem.files[0]) {
+                dados.append("imagem", inputImagem.files[0]);
+            } else if (!id) {
+                msgPresente.className = "mensagem erro";
+                msgPresente.textContent = "Selecione uma imagem.";
+                return;
+            }
+
+            btnSalvar.disabled = true;
+
+            try {
+                const resposta = await apiFetch(
+                    id ? `/api/admin/presentes/${id}` : "/api/admin/presentes",
+                    { method: id ? "PUT" : "POST", body: dados }
+                );
+
+                if (!resposta.ok) throw new Error(await lerErro(resposta));
+
+                msgPresente.className = "mensagem sucesso";
+                msgPresente.textContent = id ? "Presente atualizado!" : "Presente cadastrado!";
+                limparFormPresente();
+                carregarPresentes();
+            } catch (erro) {
+                msgPresente.className = "mensagem erro";
+                msgPresente.textContent = erro.message;
+            } finally {
+                btnSalvar.disabled = false;
+            }
+        });
+
+        // ===== PRESENÇA =====
+        async function carregarPresencas() {
+            const tbody = document.getElementById("tabela-presenca");
+            const resumo = document.getElementById("resumo-presenca");
+
+            try {
+                const resposta = await apiFetch("/api/admin/presenca");
+                if (!resposta.ok) throw new Error(await lerErro(resposta));
+                const lista = await resposta.json();
+
+                const confirmados = lista.filter(p => p.confirmado).length;
+                const naoConfirmados = lista.length - confirmados;
+
+                resumo.innerHTML = `
+                    <div class="resumo-card"><strong>${lista.length}</strong><span>Total</span></div>
+                    <div class="resumo-card"><strong>${confirmados}</strong><span>Confirmados</span></div>
+                    <div class="resumo-card"><strong>${naoConfirmados}</strong><span>Não vão</span></div>
+                `;
+
+                if (!lista.length) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="vazio">Nenhuma confirmação ainda.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = lista.map(p => `
+                    <tr>
+                        <td>${p.nomeConvidado}</td>
+                        <td>${p.idade ?? "-"}</td>
+                        <td class="${p.confirmado ? "status-sim" : "status-nao"}">
+                            ${p.confirmado ? "Sim" : "Não"}
+                        </td>
+                        <td>${formatarData(p.dataCadastro)}</td>
+                        <td>
+                            <button class="btn-perigo" onclick="excluirPresenca(${p.id})">Excluir</button>
+                        </td>
+                    </tr>
+                `).join("");
+            } catch (erro) {
+                tbody.innerHTML = `<tr><td colspan="5" class="vazio">${erro.message}</td></tr>`;
+            }
+        }
+
+        window.excluirPresenca = async function(id) {
+            if (!confirm("Excluir esta confirmação?")) return;
+            const resposta = await apiFetch(`/api/admin/presenca/${id}`, { method: "DELETE" });
+            if (!resposta.ok) {
+                alert(await lerErro(resposta));
+                return;
+            }
+            carregarPresencas();
+        };
+
+        carregarPresentes();
+    </script>
+</body>
+</html>

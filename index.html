@@ -243,6 +243,35 @@
             </div>
         </div>
 
+        <!-- MODAL DE PRESENTES -->
+        <div id="modal-presentes" class="modal-backdrope">
+            <div class="modal-conteudo modal-presentes">
+                <button id="fechar-modal-presentes" class="botao-fechar">&times;</button>
+
+                <h3>Para nos presentear</h3>
+                <p class="subtitulo-modal">Escolha um presente com carinho!</p>
+
+                <div id="loading-presentes" class="loading-presentes">
+                    <div class="spinner-presentes"></div>
+                    <p>Carregando presentes...</p>
+                </div>
+
+                <div id="lista-presentes" class="lista-presentes"></div>
+
+                <div id="painel-compra" class="painel-compra escondido">
+                    <p class="titulo-compra">Quem está presenteando?</p>
+                    <input type="text" id="nome-comprador" placeholder="Digite seu nome completo">
+                    <div class="botoes-compra">
+                        <button type="button" id="btn-cancelar-compra" class="btn-cancelar-compra">Cancelar</button>
+                        <button type="button" id="btn-confirmar-compra" class="btn-confirmar-compra">
+                            <span id="texto-confirmar-compra">Confirmar presente</span>
+                            <div id="spinner-compra" class="spinner escondido"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="fotodois">
             <div class="overlay-meio"></div>
             <img src="imagens/olhandoumparaooutro.jpg" class="fotomeio">

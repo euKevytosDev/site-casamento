@@ -1,0 +1,346 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Playfair", Georgia, serif;
+    background: #f4f4ef;
+    color: #433f3f;
+}
+
+a {
+    color: #616e48;
+}
+
+.pagina-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.card-login {
+    width: 100%;
+    max-width: 380px;
+    background: white;
+    border-radius: 14px;
+    padding: 32px 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.card-login h1 {
+    margin: 0 0 6px;
+    text-align: center;
+    color: #616e48;
+    font-size: 28px;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 14px;
+    font-family: inherit;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+button, .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primario {
+    background: #616e48;
+    color: white;
+    width: 100%;
+}
+
+.btn-primario:hover { background: #4f5a3a; }
+.btn-primario:disabled { background: #ccc; cursor: not-allowed; }
+
+.btn-secundario {
+    background: #e0e1cf;
+    color: #616e48;
+}
+
+.btn-perigo {
+    background: #c0392b;
+    color: white;
+}
+
+.btn-aviso {
+    background: #d4a017;
+    color: white;
+}
+
+.mensagem {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.mensagem.erro { color: #b00020; }
+.mensagem.sucesso { color: #616e48; }
+
+/* Painel */
+
+.layout-admin {
+    min-height: 100vh;
+}
+
+.topo-admin {
+    background: #616e48;
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.topo-admin h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.topo-admin span {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.topo-acoes {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-sair {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.conteudo-admin {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+}
+
+.abas {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.aba {
+    flex: 1;
+    background: white;
+    border: 1px solid #ddd;
+    color: #666;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.aba.ativa {
+    background: #616e48;
+    color: white;
+    border-color: #616e48;
+}
+
+.painel-aba {
+    display: none;
+}
+
+.painel-aba.ativo {
+    display: block;
+}
+
+.grid-admin {
+    display: grid;
+    gap: 20px;
+}
+
+@media (min-width: 800px) {
+    .grid-admin {
+        grid-template-columns: 1fr 1.2fr;
+    }
+}
+
+.card-painel {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.card-painel h2 {
+    margin: 0 0 16px;
+    color: #616e48;
+    font-size: 18px;
+}
+
+.preview-imagem {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    display: none;
+}
+
+.lista-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    align-items: flex-start;
+}
+
+.item-card img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-info strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 15px;
+}
+
+.item-info p {
+    margin: 0 0 4px;
+    font-size: 13px;
+    color: #666;
+}
+
+.badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: #e0e1cf;
+    color: #616e48;
+}
+
+.badge.comprado {
+    background: #fdebd0;
+    color: #9a7b0a;
+}
+
+.acoes-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.acoes-item button {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.tabela-presenca {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.tabela-presenca th,
+.tabela-presenca td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.tabela-presenca th {
+    color: #616e48;
+    font-weight: 600;
+}
+
+.status-sim { color: #2e7d32; }
+.status-nao { color: #c0392b; }
+
+.resumo {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.resumo-card {
+    flex: 1;
+    min-width: 120px;
+    background: #f9f9f7;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+}
+
+.resumo-card strong {
+    display: block;
+    font-size: 22px;
+    color: #616e48;
+}
+
+.resumo-card span {
+    font-size: 12px;
+    color: #888;
+}
+
+.vazio {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 24px;
+}
+
+.escondido { display: none !important; }
+
+.link-voltar {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+}

@@ -1,6 +1,8 @@
 const hero = document.querySelector(".hero");
 const site = document.querySelector(".site");
 
+const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
+
 const musica = document.getElementById("musica");
 musica.volume = 0.9;
 musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
@@ -12,7 +14,7 @@ hero.addEventListener("click", () => {
 
     // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
     // Como não colocamos o ".then", o JS só faz a chamada e continua rodando o resto do site sem travar nada.
-    fetch("https://site-casamento-backend-nrfb.onrender.com/api/presenca")
+    fetch(`${API_BASE}/api/presenca`)
         .then(() => console.log("Servidor alertado com sucesso nos bastidores! ⏰"))    // fade out da tela inicial
         .catch(() => console.log("Servidor já deve estar acordado ou processando."));
 
@@ -143,7 +145,7 @@ function atualizarInterfaceLista() {
         // Formata o texto bonito para o usuário ler
         const statusTexto = membro.confirmado ? "Confirmado" : "Não vai";
         li.innerHTML = `
-            <span><strong>${membro.nome}</strong> (${membro.idade} anos) - ${statusTexto}</span>
+            <span><strong>${membro.nomeConvidado}</strong> (${membro.idade} anos) - ${statusTexto}</span>
             <button class="btn-remover-membro" onclick="removerMembroDaLista(${index})">&times;</button>
         `;
 
@@ -163,9 +165,8 @@ btnAdicionarMembro.addEventListener("click", () => {
     const radioStatus = document.querySelector('input[name="status-presenca"]:checked').value;
     const estaConfirmado = radioStatus === "sim";
 
-    // 🚨 AJUSTE AQUI: Mudamos de nomeConvidado para nome
     const novoMembro = {
-        nome: campoNome.value,
+        nomeConvidado: campoNome.value,
         idade: parseInt(campoIdade.value),
         confirmado: estaConfirmado
     };
@@ -200,7 +201,7 @@ btnEnviarFamilia.addEventListener("click", () => {
 
     console.log("Enviando para o Spring Boot:", listaFamilia);
 
-    fetch("https://site-casamento-backend-nrfb.onrender.com/api/presenca/confirmar-familia", {
+    fetch(`${API_BASE}/api/presenca/confirmar-familia`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -227,5 +228,160 @@ btnEnviarFamilia.addEventListener("click", () => {
             spinner.classList.add("escondido");
             btnTexto.innerText = "🚀 Confirmar Família Inteira";
             btnEnviarFamilia.disabled = false;
+        });
+});
+
+/* =======================================================
+   LÓGICA DO MODAL DE PRESENTES
+   ======================================================= */
+
+const botaoPresentes = document.getElementById("btn-presentes");
+const modalPresentes = document.getElementById("modal-presentes");
+const botaoFecharPresentes = document.getElementById("fechar-modal-presentes");
+const listaPresentes = document.getElementById("lista-presentes");
+const loadingPresentes = document.getElementById("loading-presentes");
+const painelCompra = document.getElementById("painel-compra");
+const campoNomeComprador = document.getElementById("nome-comprador");
+const btnCancelarCompra = document.getElementById("btn-cancelar-compra");
+const btnConfirmarCompra = document.getElementById("btn-confirmar-compra");
+const spinnerCompra = document.getElementById("spinner-compra");
+const textoConfirmarCompra = document.getElementById("texto-confirmar-compra");
+
+let presenteSelecionadoId = null;
+
+function urlImagem(caminho) {
+    if (!caminho) return "imagens/flor-central2.png";
+    if (caminho.startsWith("http://") || caminho.startsWith("https://")) return caminho;
+    return `${API_BASE}${caminho}`;
+}
+
+function formatarValor(valor) {
+    return Number(valor).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
+
+function fecharPainelCompra() {
+    presenteSelecionadoId = null;
+    painelCompra.classList.add("escondido");
+    campoNomeComprador.value = "";
+}
+
+function abrirModalPresentes() {
+    modalPresentes.style.display = "flex";
+    fecharPainelCompra();
+    carregarPresentes();
+}
+
+function fecharModalPresentes() {
+    modalPresentes.style.display = "none";
+    fecharPainelCompra();
+}
+
+function renderizarPresentes(presentes) {
+    loadingPresentes.style.display = "none";
+    listaPresentes.innerHTML = "";
+
+    if (!presentes.length) {
+        listaPresentes.innerHTML = `<p class="aviso-presentes">Nenhum presente cadastrado ainda. Em breve!</p>`;
+        return;
+    }
+
+    presentes.forEach(presente => {
+        const card = document.createElement("article");
+        card.className = `card-presente${presente.comprado ? " comprado" : ""}`;
+
+        const badge = presente.comprado
+            ? `<span class="badge-comprado">Já presenteado${presente.nomeComprador ? ` por ${presente.nomeComprador}` : ""}</span>`
+            : "";
+
+        card.innerHTML = `
+            <img src="${urlImagem(presente.imagem)}" alt="${presente.nome}" onerror="this.src='imagens/flor-central2.png'">
+            <div class="card-presente-corpo">
+                ${badge}
+                <h4>${presente.nome}</h4>
+                <p class="descricao-presente">${presente.descricao || ""}</p>
+                <p class="valor-presente">${formatarValor(presente.valor)}</p>
+                <button class="btn-presentear" ${presente.comprado ? "disabled" : ""} data-id="${presente.id}">
+                    ${presente.comprado ? "Indisponível" : "Quero presentear"}
+                </button>
+            </div>
+        `;
+
+        listaPresentes.appendChild(card);
+    });
+
+    document.querySelectorAll(".btn-presentear:not(:disabled)").forEach(botao => {
+        botao.addEventListener("click", () => {
+            presenteSelecionadoId = botao.dataset.id;
+            painelCompra.classList.remove("escondido");
+            campoNomeComprador.focus();
+            painelCompra.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+    });
+}
+
+function carregarPresentes() {
+    loadingPresentes.style.display = "flex";
+    listaPresentes.innerHTML = "";
+
+    fetch(`${API_BASE}/api/presentes`)
+        .then(resposta => {
+            if (!resposta.ok) throw new Error("Erro ao buscar presentes");
+            return resposta.json();
+        })
+        .then(renderizarPresentes)
+        .catch(() => {
+            loadingPresentes.style.display = "none";
+            listaPresentes.innerHTML = `<p class="aviso-presentes">Não foi possível carregar os presentes. Tente novamente em instantes.</p>`;
+        });
+}
+
+botaoPresentes.addEventListener("click", abrirModalPresentes);
+botaoFecharPresentes.addEventListener("click", fecharModalPresentes);
+
+window.addEventListener("click", (evento) => {
+    if (evento.target === modalPresentes) {
+        fecharModalPresentes();
+    }
+});
+
+btnCancelarCompra.addEventListener("click", fecharPainelCompra);
+
+btnConfirmarCompra.addEventListener("click", () => {
+    if (!presenteSelecionadoId) return;
+
+    const nome = campoNomeComprador.value.trim();
+    if (!nome) {
+        alert("Por favor, digite seu nome antes de confirmar.");
+        return;
+    }
+
+    spinnerCompra.classList.remove("escondido");
+    textoConfirmarCompra.textContent = "Confirmando...";
+    btnConfirmarCompra.disabled = true;
+
+    fetch(`${API_BASE}/api/presentes/${presenteSelecionadoId}/comprar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nomeComprador: nome })
+    })
+        .then(async resposta => {
+            const corpo = await resposta.json().catch(() => ({}));
+            if (!resposta.ok) {
+                throw new Error(typeof corpo === "string" ? corpo : "Erro ao confirmar presente");
+            }
+            alert("Obrigado pelo carinho! Presente confirmado com sucesso. 💚");
+            fecharPainelCompra();
+            carregarPresentes();
+        })
+        .catch(erro => {
+            alert(erro.message || "Não foi possível confirmar o presente. Tente novamente.");
+        })
+        .finally(() => {
+            spinnerCompra.classList.add("escondido");
+            textoConfirmarCompra.textContent = "Confirmar presente";
+            btnConfirmarCompra.disabled = false;
         });
 });

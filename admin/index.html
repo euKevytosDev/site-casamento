@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="pagina-login">
+        <div class="card-login">
+            <h1>Área Admin</h1>
+            <p class="subtitulo">Rafaella & Kevin</p>
+
+            <form id="form-login">
+                <label for="login">Login</label>
+                <input type="text" id="login" autocomplete="username" required>
+
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" autocomplete="current-password" required>
+
+                <button type="submit" class="btn-primario" id="btn-login">Entrar</button>
+            </form>
+
+            <p id="mensagem" class="mensagem"></p>
+            <a href="../index.html" class="link-voltar">← Voltar ao site</a>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        if (getToken()) {
+            window.location.href = "painel.html";
+        }
+
+        const form = document.getElementById("form-login");
+        const mensagem = document.getElementById("mensagem");
+        const btnLogin = document.getElementById("btn-login");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            mensagem.className = "mensagem";
+            mensagem.textContent = "";
+            btnLogin.disabled = true;
+            btnLogin.textContent = "Entrando...";
+
+            try {
+                const resposta = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        login: document.getElementById("login").value.trim(),
+                        senha: document.getElementById("senha").value
+                    })
+                });
+
+                const texto = await resposta.text();
+                let dados;
+                try { dados = JSON.parse(texto); } catch { dados = texto; }
+
+                if (!resposta.ok) {
+                    throw new Error(typeof dados === "string" ? dados : (dados.message || "Login ou senha inválidos"));
+                }
+
+                setAuth(dados.token, dados.login);
+                window.location.href = "painel.html";
+            } catch (erro) {
+                mensagem.className = "mensagem erro";
+                mensagem.textContent = erro.message || "Erro ao fazer login.";
+            } finally {
+                btnLogin.disabled = false;
+                btnLogin.textContent = "Entrar";
+            }
+        });
+    </script>
+</body>
+</html>
