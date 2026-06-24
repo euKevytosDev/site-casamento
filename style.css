@@ -33,8 +33,8 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    /*display: none !important;
-    opacity: 0 !important;*/
+    display: none !important;
+    opacity: 0 !important;
 }
 
 .overlay {
@@ -82,8 +82,8 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    /*display: block !important;
-    opacity: 1 !important;*/
+    display: block !important;
+    opacity: 1 !important;
 }
 
 .foto2 {
@@ -174,6 +174,7 @@ body {
 }
 
 .nomes-noivos {
+    position: relative;
     color: #616e48;
     font-family: 'Great Vibes', cursive;
     font-size: clamp(65px, 12vw, 70px);
@@ -181,6 +182,7 @@ body {
     line-height: 1.2;
     letter-spacing: 0px;
     margin-top: -15px;
+    z-index: 2;
 
 }
 
@@ -204,7 +206,7 @@ body {
     /* leve transparência */
     transform: scaleX(-1);
     /* Opcional: espelha a imagem para dar simetria */
-    z-index: 2;
+    z-index: 1;
 }
 
 .flor-direita {
@@ -245,8 +247,8 @@ body {
     max-width: 500px;
     padding: 15px 10px;
     text-align: center;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 0px;
+    box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.15);
 }
 
 .retangulo p {
@@ -359,11 +361,11 @@ body {
     font-family: "Playfair Display", serif;
     /* font-style: italic; */
     width: 100%;
-    padding: 0 10px;
+    padding: 15px auto;
 }
 
 .frase-espera {
-    font-size: 12px;
+    font-size: 18px;
     letter-spacing: 2px;
     color: #888;
     margin-bottom: 6px;
@@ -431,6 +433,7 @@ body {
 }
 
 .espaco-foto-wrapper img {
+    z-index: 2;
     width: 65%;
     max-width: 400px;
     border-radius: 12px;
@@ -440,22 +443,22 @@ body {
     /*filter: grayscale(100%); Ativar para caso queira a imagem P&B */
 }
 
-.overlay-local {
+/*.overlay-local {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 0;                esse style adiciona vinheta branca
+    width: 100%;                    na imagem do espaco
     height: 100%;
-    z-index: 2;
+    z-index: 3;
     pointer-events: none;
 
     background: radial-gradient(circle,
             rgba(255, 255, 255, 0) 62%,
-            /* Transparente no centro, até 60% da imagem */
+            /* Transparente no centro, até 60% da imagem 
             rgba(255, 255, 255, 1) 100%
             /* Branco nas bordas externas */
-        );
-}
+      /*  );
+} */
 
 .chamada-icones p {
     text-align: left;
@@ -483,7 +486,7 @@ body {
     /* leve transparência */
     transform: scaleX(-1);
     /* Opcional: espelha a imagem para dar simetria */
-    z-index: -1;
+    z-index: 1;
 }
 
 .flor-direita2 {
@@ -494,7 +497,7 @@ body {
     bottom: 10px;
     width: clamp(110px, 30vw, 150px);
     /* Tamanho responsivo */
-    z-index: -1;
+    z-index: 1;
 }
 
 /* abaixo está a parte dos icones clicaveis */
@@ -514,6 +517,8 @@ body {
     flex-direction: column;
     gap: 18px;
     padding-left: 20px;
+    position: relative;
+    z-index: 2;
 }
 
 .linha-interacao {
@@ -860,4 +865,14 @@ body {
   0% { color: rgba(87, 89, 86, 0.856); }
   50% { color: rgba(255, 255, 255, 0); }
   100% { color: rgba(87, 89, 87, 0.784); }
+}
+
+.flor-direita3 {
+    position: absolute;
+    right: -32px;
+    /* Cola no canto direito */
+    top: -190px;
+    bottom: 10px;
+    width: clamp(125px, 30vw, 150px);
+    z-index: 0;
 }
