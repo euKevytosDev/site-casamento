@@ -2,10 +2,12 @@ const hero = document.querySelector(".hero");
 const site = document.querySelector(".site");
 
 const musica = document.getElementById("musica");
-musica.volume = 0.7;
+musica.volume = 0.9;
+musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
 
 hero.addEventListener("click", () => {
 
+    musica.currentTime = 70; // Força o início no minuto 1:10 (70 segundos)
     musica.play();
 
     // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
@@ -28,10 +30,12 @@ hero.addEventListener("click", () => {
         }, 50);
 
     }, 800); // tempo igual ao CSS
+});
 
-
-
-
+// EVENTO DE LOOP RECOBRANDO DE 1:39
+musica.addEventListener("ended", () => {
+    musica.currentTime = 99; // Reseta o áudio para 1:39 ao invés do zero
+    musica.play();           // Toca novamente
 });
 
 const versiculo = document.querySelector(".versiculo");
