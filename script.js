@@ -53,6 +53,22 @@ window.addEventListener("scroll", () => {
 
 });
 
+// Animação suave ao rolar até seções marcadas com .revelar-scroll
+const elementosRevelar = document.querySelectorAll(".revelar-scroll");
+
+if (elementosRevelar.length > 0) {
+    const observadorScroll = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada) => {
+            if (entrada.isIntersecting) {
+                entrada.target.classList.add("visivel");
+                observadorScroll.unobserve(entrada.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    elementosRevelar.forEach((el) => observadorScroll.observe(el));
+}
+
 function atualizarContador() {
     const dataCasamento = new Date("April 24, 2027 00:00:00").getTime();
     const agora = new Date().getTime();
@@ -226,7 +242,7 @@ btnEnviarFamilia.addEventListener("click", () => {
             // 2. DESATIVA O MODO CARREGANDO: O bloco '.finally' roda SEMPRE (se der certo ou se der erro)
             // Aqui nós restauramos o botão para o estado original caso o usuário precise tentar de novo
             spinner.classList.add("escondido");
-            btnTexto.innerText = "🚀 Confirmar Família Inteira";
+            btnTexto.innerText = "Confirmar pessoa(s)";
             btnEnviarFamilia.disabled = false;
         });
 });
@@ -256,7 +272,9 @@ function urlImagem(caminho) {
 }
 
 function formatarValor(valor) {
-    return Number(valor).toLocaleString("pt-BR", {
+    const numero = Number(valor);
+    if (Number.isNaN(numero)) return "R$ 0,00";
+    return numero.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
     });

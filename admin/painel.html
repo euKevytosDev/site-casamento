@@ -39,8 +39,8 @@
                             <label for="descricao">Descrição</label>
                             <textarea id="descricao"></textarea>
 
-                            <label for="valor">Valor (R$)</label>
-                            <input type="number" id="valor" step="0.01" min="0" required>
+                            <label for="valor">Valor</label>
+                            <input type="text" id="valor" inputmode="numeric" placeholder="R$ 0,00" required>
 
                             <label for="imagem">Foto</label>
                             <input type="file" id="imagem" accept="image/jpeg,image/png,image/webp,image/gif">
@@ -119,6 +119,9 @@
         const btnCancelarEdicao = document.getElementById("btn-cancelar-edicao");
         const tituloForm = document.getElementById("titulo-form-presente");
         const btnSalvar = document.getElementById("btn-salvar");
+        const inputValor = document.getElementById("valor");
+
+        aplicarMascaraMoeda(inputValor);
 
         inputImagem.addEventListener("change", () => {
             const arquivo = inputImagem.files[0];
@@ -186,7 +189,7 @@
             document.getElementById("presente-id").value = presente.id;
             document.getElementById("nome").value = presente.nome;
             document.getElementById("descricao").value = presente.descricao || "";
-            document.getElementById("valor").value = presente.valor;
+            definirValorComMascara(inputValor, presente.valor);
             preview.src = urlImagem(presente.imagem);
             preview.style.display = "block";
             inputImagem.required = false;
@@ -222,11 +225,19 @@
             msgPresente.className = "mensagem";
             msgPresente.textContent = "";
 
+            const valorNumerico = parseMoedaParaNumero(inputValor.value);
+
+            if (valorNumerico <= 0) {
+                msgPresente.className = "mensagem erro";
+                msgPresente.textContent = "Informe um valor válido.";
+                return;
+            }
+
             const id = document.getElementById("presente-id").value;
             const dados = new FormData();
             dados.append("nome", document.getElementById("nome").value.trim());
             dados.append("descricao", document.getElementById("descricao").value.trim());
-            dados.append("valor", document.getElementById("valor").value);
+            dados.append("valor", valorNumerico.toFixed(2));
 
             if (inputImagem.files[0]) {
                 dados.append("imagem", inputImagem.files[0]);

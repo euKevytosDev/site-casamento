@@ -4,26 +4,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>Casamento</title>
+    <title>Rafaella & Kevin · 24.04.2027</title>
     <link rel="stylesheet" href="style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
-        rel="stylesheet">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -42,7 +28,7 @@
             <div class="overlay2"></div>
         </section>
 
-      <div class="setabaixo">
+        <div class="setabaixo">
             <p>Role para baixo ↓</p>
         </div>
 
@@ -69,7 +55,7 @@
         </div>
 
         <h2 class="nomes-noivos">
-            Rafaella <br>& <br>  Kevin
+            Rafaella <br>& <br> Kevin
         </h2>
 
         <div class="decoracao-flores">
@@ -77,13 +63,13 @@
             <img src="imagens/flordireita2.png" class="flor-direita">
         </div>
 
-        <section class="chamada-casamento">
+        <section class="chamada-casamento revelar-scroll">
             <div class="retangulo">
                 <p>Convidamos você para o nosso casamento!</p>
             </div>
         </section>
 
-        <div class="calendario-casamento">
+        <div class="calendario-casamento revelar-scroll">
             <div class="coluna-data">
                 <p class="texto-pequeno">SÁBADO</p>
             </div>
@@ -97,7 +83,7 @@
             </div>
         </div>
 
-        <div class="regressiva">
+        <div class="regressiva revelar-scroll">
             <p class="frase-espera">Contagem regressiva:</p>
             <div id="contador">
                 <div class="tempo">
@@ -134,7 +120,7 @@
             <img src="imagens/flordireita2.png" class="flor-direita2">
         </div>
 
-        <div class="container-interacoes">
+        <div class="container-interacoes revelar-scroll">
             <div class="chamada-icones">
                 <p>Toque nos ícones</p>
                 <h2>para interagir !</h2>
@@ -144,35 +130,47 @@
                 <a href="https://www.google.com/maps/dir/?api=1&destination=Espaço+Salaberry" target="_blank"
                     class="linha-interacao link-mapa">
                     <div class="botao-circulo">
-                        <span class="icone">🚗</span>
+                        <svg class="icone-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M7 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm10 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M5 17h1l1.2-5.2a1 1 0 0 1 1-.8h9.6a1 1 0 0 1 1 .8L19 17h1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M7.5 11.2 9 6h6l1.5 5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </div>
                     <span class="texto-interacao">Saiba como chegar</span>
                 </a>
 
                 <div class="linha-interacao">
                     <button class="botao-circulo" id="btn-presenca">
-                        <span class="icone">✔️</span>
+                        <svg class="icone-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M5 12.5 10 17.5 19 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </button>
                     <span class="texto-interacao">Confirmar presença</span>
                 </div>
 
                 <div class="linha-interacao">
                     <button class="botao-circulo" id="btn-presentes">
-                        <span class="icone">🎁</span>
+                        <svg class="icone-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <rect x="4" y="9" width="16" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M12 9v11M4 13h16" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M12 9c-1.8-2.8-4.5-2.8-4.5 0S10.2 9 12 9s4.5-2.8 4.5 0-2.7 0-4.5 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
                     </button>
                     <span class="texto-interacao">Para nos presentear</span>
                 </div>
 
                 <div class="linha-interacao">
                     <button class="botao-circulo" id="btn-dresscode">
-                        <span class="icone">👔</span>
+                        <svg class="icone-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 3 9 7H5l3 14h8l3-14h-4l-3-4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                        </svg>
                     </button>
                     <span class="texto-interacao">Dress code</span>
                 </div>
             </div>
         </div>
 
-                <div class="decoracao-flores">
+        <div class="decoracao-flores">
             <img src="imagens/flor-rosa-vermelha.png" class="flor-direita3">
         </div>
 
@@ -199,31 +197,21 @@
 
                         <div class="grupo-campo campo-status">
                             <label>Vai ao evento?</label>
-                            <div class="opcoes-radio"
-                                style="display: flex !important; flex-direction: column !important; gap: 12px !important; margin-top: 10px !important; text-align: left !important;">
-
-                                <label class="radio-label-item"
-                                    style="display: flex !important; align-items: center !important; justify-content: flex-start !important; gap: 8px !important; margin-top: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; width: auto !important; cursor: pointer !important;">
-                                    <input type="radio" name="status-presenca" value="sim" checked
-                                        style="margin: 0 !important; padding: 0 !important; width: auto !important;">
-                                    <span
-                                        style="font-family: 'Playfair', serif !important; font-size: 15px !important; color: #433f3f !important; margin-left: 4px !important;">Sim</span>
+                            <div class="opcoes-radio">
+                                <label class="radio-label-item">
+                                    <input type="radio" name="status-presenca" value="sim" checked>
+                                    <span class="radio-texto">Sim</span>
                                 </label>
-
-                                <label class="radio-label-item"
-                                    style="display: flex !important; align-items: center !important; justify-content: flex-start !important; gap: 8px !important; margin-top: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; width: auto !important; cursor: pointer !important;">
-                                    <input type="radio" name="status-presenca" value="nao"
-                                        style="margin: 0 !important; padding: 0 !important; width: auto !important;">
-                                    <span
-                                        style="font-family: 'Playfair', serif !important; font-size: 15px !important; color: #433f3f !important; margin-left: 4px !important;">Não</span>
+                                <label class="radio-label-item">
+                                    <input type="radio" name="status-presenca" value="nao">
+                                    <span class="radio-texto">Não</span>
                                 </label>
-
                             </div>
                         </div>
                     </div>
 
                     <button type="button" id="btn-adicionar-membro" class="btn-adicionar">
-                        ➕ Adicionar à Lista
+                        Adicionar à lista
                     </button>
                 </form>
 
@@ -237,7 +225,7 @@
 
                 <!-- 3. Botão final que dispara a bandeja inteira para o Spring Boot -->
                 <button type="button" id="btn-enviar-familia" class="btn-enviar-presenca" disabled>
-                    <span id="btn-texto">🚀 Confirmar Pessoa(s)</span>
+                    <span id="btn-texto">Confirmar pessoa(s)</span>
                     <div id="spinner" class="spinner escondido"></div>
                 </button>
             </div>
@@ -275,13 +263,22 @@
         <div class="fotodois">
             <div class="overlay-meio"></div>
             <img src="imagens/olhandoumparaooutro.jpg" class="fotomeio">
+
+            <p class="desenvolvedor-rodape">
+                Desenvolvido pelo noivo @raiankevin10
+            </p>
+
         </div>
+
+
 
     </div>
 
     <audio id="musica" loop>
         <source src="musicas/Blessings (feat. Steven Sharp Nelson) - David Tolk (youtube).mp3" type="audio/mpeg">
     </audio>
+
+
 
     <script src="script.js"></script>
 

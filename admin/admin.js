@@ -31,6 +31,35 @@ function formatarValor(valor) {
     return Number(valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function aplicarMascaraMoeda(input) {
+    input.addEventListener("input", () => {
+        const apenasNumeros = input.value.replace(/\D/g, "");
+
+        if (!apenasNumeros) {
+            input.value = "";
+            return;
+        }
+
+        const numero = Number(apenasNumeros) / 100;
+        input.value = formatarValor(numero);
+    });
+}
+
+function parseMoedaParaNumero(valorMascarado) {
+    if (!valorMascarado) return 0;
+    const apenasNumeros = valorMascarado.replace(/\D/g, "");
+    return Number(apenasNumeros || 0) / 100;
+}
+
+function definirValorComMascara(input, valor) {
+    if (valor === null || valor === undefined || valor === "") {
+        input.value = "";
+        return;
+    }
+
+    input.value = formatarValor(valor);
+}
+
 function formatarData(data) {
     if (!data) return "-";
     return new Date(data).toLocaleString("pt-BR");

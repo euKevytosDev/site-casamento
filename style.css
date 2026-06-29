@@ -1,5 +1,3 @@
-@import url('https://googleapis.com');
-
 html {
     font-size: 16px;
 }
@@ -16,7 +14,7 @@ body {
 body {
     margin: 0;
     overflow-x: hidden;
-    background-color: #ffffff;
+    background-color: #faf9f6;
 }
 
 .hero {
@@ -33,8 +31,8 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    /*display: none !important;
-    opacity: 0 !important;*/
+    display: none !important;
+    opacity: 0 !important;
 }
 
 .overlay {
@@ -72,7 +70,7 @@ body {
 }
 
 .site {
-    background: white;
+    background: #faf9f6;
     overflow: hidden;
     width: 100%;
     max-width: 445px;
@@ -82,8 +80,8 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    /*display: block !important;
-    opacity: 1 !important;*/
+    display: block !important;
+    opacity: 1 !important;
 }
 
 .foto2 {
@@ -109,10 +107,8 @@ body {
 
 .conteudo {
     padding: 40px 20px;
-    /* espaço interno */
     text-align: center;
-    /* centraliza */
-    background-color: #fff;
+    background-color: #faf9f6;
     position: relative;
     overflow: hidden;
 }
@@ -283,6 +279,7 @@ body {
     /* Para a overlay não fugir daqui */
     overflow: hidden;
     min-height: 240px;
+    z-index: 1;
 }
 
 .fotomeio {
@@ -318,7 +315,7 @@ body {
     align-items: center;
     gap: 20px;
     margin: 40px auto;
-    font-family: "Playfair Display", serif;
+    font-family: "Playfair", serif;
     color: #666
 }
 
@@ -358,8 +355,7 @@ body {
 .regressiva {
     text-align: center;
     margin: 40px auto;
-    font-family: "Playfair Display", serif;
-    /* font-style: italic; */
+    font-family: "Playfair", serif;
     width: 100%;
     padding: 15px auto;
 }
@@ -376,28 +372,35 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .tempo {
     display: flex;
-    flex-direction: row;
-    align-items: baseline;
+    flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    min-width: 68px;
+    padding: 14px 12px;
+    border: 1px solid #e0e1cf;
+    border-radius: 10px;
+    background-color: #fff;
 }
 
 .tempo span {
-    font-size: clamp(24px, 5vw, 32px);
-    color: #839164;
-    font-weight: 300;
+    font-size: clamp(26px, 5vw, 34px);
+    color: #616e48;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 6px;
 }
 
 .tempo small {
-    font-size: 11px;
-    letter-spacing: 1px;
+    font-size: 10px;
+    letter-spacing: 2px;
     color: #999;
     font-weight: 400;
+    text-transform: uppercase;
 }
 
 .local p {
@@ -471,7 +474,7 @@ body {
 
 .chamada-icones h2 {
     text-align: left;
-    font-family: "Allura", cursive;
+    font-family: 'Great Vibes', cursive;
     font-size: clamp(35px, 8vw, 42px);
     color: #616e48;
     margin-left: 58px;
@@ -548,8 +551,11 @@ body {
     transform: scale(1.05);
 }
 
-.icone {
-    font-size: 22px;
+.icone-svg {
+    width: 22px;
+    height: 22px;
+    color: #ffffff;
+    display: block;
 }
 
 .texto-interacao {
@@ -560,8 +566,6 @@ body {
     white-space: nowrap;
 }
 
-/* ESTILIZAÇÃO DO MODAL (ESTUDO DE CAMADAS */
-
 .modal-backdrope {
     display: none;
     position: fixed;
@@ -570,7 +574,6 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.4);
-    /* Fundo preto (0,0,0) com 40% de opacidade (0.4) para o efeito transparente */
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -581,7 +584,7 @@ body {
     width: 85%;
     max-width: 340px;
     padding: 30px 20px;
-    border-radius: 12px;
+    border-radius: 16px;
     position: relative;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -695,20 +698,18 @@ body {
     margin-top: 10px;
 }
 
-.opcoes-radio label.radio-label-item,
-.opcoes-radio label {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 8px !important;
+.opcoes-radio label.radio-label-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
-    font-size: 15px;
-    white-space: nowrap;
-    width: auto !important;
+    margin: 0;
+}
 
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    margin-left: 0 !important;
+.radio-texto {
+    font-family: "Playfair", serif;
+    font-size: 15px;
+    color: #433f3f;
 }
 
 .opcoes-radio input[type="radio"] {
@@ -846,7 +847,7 @@ body {
 }
 
 .setabaixo p {
-    font-family: "Playfair Display", serif;
+    font-family: "Playfair", serif;
     font-size: 21px;
     position: absolute;
     z-index: 3;
@@ -885,6 +886,7 @@ body {
     max-height: 85vh;
     overflow-y: auto;
     padding: 28px 18px 22px;
+    border-radius: 16px;
 }
 
 .loading-presentes {
@@ -1054,4 +1056,30 @@ body {
 .btn-confirmar-compra:disabled {
     background: #ccc;
     cursor: not-allowed;
+}
+
+.desenvolvedor-rodape {
+    text-align: center;
+    margin: 0;
+    color: rgb(169, 169, 169);
+    font-size: 15px;
+    position: absolute;
+    font-family: "Playfair", serif;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    z-index: 3;
+    bottom: 20px;
+    left: 0;    
+    right: 0;
+}
+
+/* Animação de entrada ao rolar a página */
+.revelar-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.revelar-scroll.visivel {
+    opacity: 1;
+    transform: translateY(0);
 }
