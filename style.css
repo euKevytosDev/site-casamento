@@ -14,7 +14,7 @@ body {
 body {
     margin: 0;
     overflow-x: hidden;
-    background-color: #faf9f6;
+    background-color: #ffffff;
 }
 
 .hero {
@@ -70,7 +70,7 @@ body {
 }
 
 .site {
-    background: #faf9f6;
+    background: white;
     overflow: hidden;
     width: 100%;
     max-width: 445px;
@@ -108,7 +108,7 @@ body {
 .conteudo {
     padding: 40px 20px;
     text-align: center;
-    background-color: #faf9f6;
+    background-color: #ffffff;
     position: relative;
     overflow: hidden;
 }
