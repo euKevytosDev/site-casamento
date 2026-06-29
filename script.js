@@ -41,8 +41,20 @@ musica.addEventListener("ended", () => {
 });
 
 const versiculo = document.querySelector(".versiculo");
+const indicadorScroll = document.getElementById("indicador-scroll");
+let indicadorScrollOculto = false;
+
+function ocultarIndicadorScroll() {
+    if (indicadorScrollOculto || !indicadorScroll) return;
+    indicadorScrollOculto = true;
+    indicadorScroll.classList.add("oculto");
+}
 
 window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 40) {
+        ocultarIndicadorScroll();
+    }
 
     const posicao = versiculo.getBoundingClientRect().top; /* posição do elemento */
     const alturaTela = window.innerHeight; /* altura da tela */
@@ -51,7 +63,7 @@ window.addEventListener("scroll", () => {
         versiculo.classList.add("ativo"); /* ativa animação */
     }
 
-});
+}, { passive: true });
 
 // Animação suave ao rolar até seções marcadas com .revelar-scroll
 const elementosRevelar = document.querySelectorAll(".revelar-scroll");
@@ -242,7 +254,7 @@ btnEnviarFamilia.addEventListener("click", () => {
             // 2. DESATIVA O MODO CARREGANDO: O bloco '.finally' roda SEMPRE (se der certo ou se der erro)
             // Aqui nós restauramos o botão para o estado original caso o usuário precise tentar de novo
             spinner.classList.add("escondido");
-            btnTexto.innerText = "Confirmar pessoa(s)";
+            btnTexto.innerText = "🚀 Confirmar Família Inteira";
             btnEnviarFamilia.disabled = false;
         });
 });

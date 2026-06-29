@@ -9,7 +9,14 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -26,11 +33,13 @@
 
         <section class="foto2">
             <div class="overlay2"></div>
+            <div class="setabaixo" id="indicador-scroll" aria-hidden="true">
+                <span class="setabaixo-texto">Role</span>
+                <svg class="setabaixo-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
         </section>
-
-        <div class="setabaixo">
-            <p>Role para baixo ↓</p>
-        </div>
 
         <div class="conteudo">
             <p class="versiculo">
@@ -197,21 +206,31 @@
 
                         <div class="grupo-campo campo-status">
                             <label>Vai ao evento?</label>
-                            <div class="opcoes-radio">
-                                <label class="radio-label-item">
-                                    <input type="radio" name="status-presenca" value="sim" checked>
-                                    <span class="radio-texto">Sim</span>
+                            <div class="opcoes-radio"
+                                style="display: flex !important; flex-direction: column !important; gap: 12px !important; margin-top: 10px !important; text-align: left !important;">
+
+                                <label class="radio-label-item"
+                                    style="display: flex !important; align-items: center !important; justify-content: flex-start !important; gap: 8px !important; margin-top: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; width: auto !important; cursor: pointer !important;">
+                                    <input type="radio" name="status-presenca" value="sim" checked
+                                        style="margin: 0 !important; padding: 0 !important; width: auto !important;">
+                                    <span
+                                        style="font-family: 'Playfair', serif !important; font-size: 15px !important; color: #433f3f !important; margin-left: 4px !important;">Sim</span>
                                 </label>
-                                <label class="radio-label-item">
-                                    <input type="radio" name="status-presenca" value="nao">
-                                    <span class="radio-texto">Não</span>
+
+                                <label class="radio-label-item"
+                                    style="display: flex !important; align-items: center !important; justify-content: flex-start !important; gap: 8px !important; margin-top: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; width: auto !important; cursor: pointer !important;">
+                                    <input type="radio" name="status-presenca" value="nao"
+                                        style="margin: 0 !important; padding: 0 !important; width: auto !important;">
+                                    <span
+                                        style="font-family: 'Playfair', serif !important; font-size: 15px !important; color: #433f3f !important; margin-left: 4px !important;">Não</span>
                                 </label>
+
                             </div>
                         </div>
                     </div>
 
                     <button type="button" id="btn-adicionar-membro" class="btn-adicionar">
-                        Adicionar à lista
+                        ➕ Adicionar à Lista
                     </button>
                 </form>
 
@@ -225,7 +244,7 @@
 
                 <!-- 3. Botão final que dispara a bandeja inteira para o Spring Boot -->
                 <button type="button" id="btn-enviar-familia" class="btn-enviar-presenca" disabled>
-                    <span id="btn-texto">Confirmar pessoa(s)</span>
+                    <span id="btn-texto">🚀 Confirmar Pessoa(s)</span>
                     <div id="spinner" class="spinner escondido"></div>
                 </button>
             </div>
