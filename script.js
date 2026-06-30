@@ -121,7 +121,8 @@ const formulario = document.getElementById("form-presenca"); // Captura o formul
 
 // FUNÇÃO PARA ABRIR O MODAL
 botaoPresenca.addEventListener("click", () => {
-    modalPresenca.style.display = "flex"; // Altera o CSS do modal de 'none' para 'flex', fazendo ele surgir na tela
+    modalPresenca.style.display = "flex";
+    atualizarInterfaceLista();
 });
 
 // FUNÇÃO PARA FECHAR O MODAL CLICANDO NO X
@@ -238,7 +239,7 @@ btnEnviarFamilia.addEventListener("click", () => {
     })
         .then(resposta => {
             if (resposta.ok) {
-                alert("Presença da família confirmada com sucesso! Muito obrigado. ✨");
+                alert("Presença confirmada com sucesso! Muito obrigado. ✨");
                 listaFamilia = [];
                 atualizarInterfaceLista();
                 modalPresenca.style.display = "none";
@@ -251,11 +252,9 @@ btnEnviarFamilia.addEventListener("click", () => {
             alert("Não foi possível conectar ao servidor. O servidor pode estar iniciando, tente novamente em instantes.");
         })
         .finally(() => {
-            // 2. DESATIVA O MODO CARREGANDO: O bloco '.finally' roda SEMPRE (se der certo ou se der erro)
-            // Aqui nós restauramos o botão para o estado original caso o usuário precise tentar de novo
             spinner.classList.add("escondido");
-            btnTexto.innerText = "🚀 Confirmar Família Inteira";
-            btnEnviarFamilia.disabled = false;
+            btnTexto.innerText = "Confirmar Pessoa(s)!";
+            btnEnviarFamilia.disabled = listaFamilia.length === 0;
         });
 });
 
