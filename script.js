@@ -1,5 +1,6 @@
 const hero = document.querySelector(".hero");
 const site = document.querySelector(".site");
+const btnAbrirConvite = document.getElementById("btn-abrir-convite");
 
 const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 
@@ -7,8 +8,7 @@ const musica = document.getElementById("musica");
 musica.volume = 0.9;
 musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
 
-hero.addEventListener("click", () => {
-
+btnAbrirConvite.addEventListener("click", () => {
     musica.currentTime = 70; // Força o início no minuto 1:10 (70 segundos)
     musica.play();
 
