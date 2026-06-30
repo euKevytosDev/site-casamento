@@ -33,8 +33,8 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    /*display: none !important;
-    opacity: 0 !important; */
+    display: none !important;
+    opacity: 0 !important; 
 }
 
 .overlay {
@@ -75,8 +75,8 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    /*display: block !important;
-    opacity: 1 !important;*/
+    display: block !important;
+    opacity: 1 !important;
 }
 
 .foto2 {
@@ -503,6 +503,12 @@ body {
     flex-direction: column;
     gap: 28px;
     padding: 0 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.container-interacoes + .decoracao-flores {
+    z-index: 1;
 }
 
 .lista-botoes {
@@ -554,6 +560,8 @@ body {
     font-size: 20px;
     color: #433f3f;
     white-space: nowrap;
+    position: relative;
+    z-index: 2;
 }
 
 .modal-backdrope {
