@@ -841,7 +841,7 @@ body {
 .setabaixo {
     position: absolute;
     left: 50%;
-    bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
     transform: translateX(-50%);
     z-index: 3;
     display: flex;
