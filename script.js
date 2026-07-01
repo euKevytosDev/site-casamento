@@ -4,6 +4,27 @@ const btnAbrirConvite = document.getElementById("btn-abrir-convite");
 
 const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 
+/* Mantém a barra do Chrome/Android branca ao rolar (não herda verde/bege da página) */
+(function fixarBarraNavegadorBranca() {
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+        meta = document.createElement("meta");
+        meta.name = "theme-color";
+        document.head.appendChild(meta);
+    }
+
+    const branco = "#ffffff";
+
+    function aplicar() {
+        meta.setAttribute("content", branco);
+    }
+
+    aplicar();
+    window.addEventListener("scroll", aplicar, { passive: true });
+    window.addEventListener("resize", aplicar, { passive: true });
+    document.addEventListener("visibilitychange", aplicar);
+})();
+
 const musica = document.getElementById("musica");
 musica.volume = 0.9;
 musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
