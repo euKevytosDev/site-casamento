@@ -1127,6 +1127,9 @@ body {
     z-index: 3;
     bottom: 20px;
     left: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
     right: 0;
 }
 

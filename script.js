@@ -9,7 +9,7 @@ musica.volume = 0.9;
 musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
 
 btnAbrirConvite.addEventListener("click", () => {
-    musica.currentTime = 72; // Força o início no minuto 1:12 (72 segundos)
+    musica.currentTime = 70; // Força o início no minuto 1:10 (70 segundos)
     musica.play();
 
     // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
@@ -414,3 +414,37 @@ btnConfirmarCompra.addEventListener("click", () => {
             btnConfirmarCompra.disabled = false;
         });
 });
+
+/* Acesso discreto ao admin: segurar o rodapé por ~2,5s (só vocês precisam saber) */
+(function initAcessoAdminOculto() {
+    const rodape = document.querySelector(".desenvolvedor-rodape");
+    if (!rodape) return;
+
+    const TEMPO_SEGURAR_MS = 2500;
+    let timer = null;
+
+    function irParaAdmin() {
+        const token = localStorage.getItem("casamento_admin_token");
+        window.location.href = token ? "admin/painel.html" : "admin/index.html";
+    }
+
+    function iniciarSegurar() {
+        cancelarSegurar();
+        timer = setTimeout(irParaAdmin, TEMPO_SEGURAR_MS);
+    }
+
+    function cancelarSegurar() {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+    }
+
+    rodape.addEventListener("touchstart", iniciarSegurar, { passive: true });
+    rodape.addEventListener("touchend", cancelarSegurar);
+    rodape.addEventListener("touchcancel", cancelarSegurar);
+    rodape.addEventListener("touchmove", cancelarSegurar);
+    rodape.addEventListener("mousedown", iniciarSegurar);
+    rodape.addEventListener("mouseup", cancelarSegurar);
+    rodape.addEventListener("mouseleave", cancelarSegurar);
+})();

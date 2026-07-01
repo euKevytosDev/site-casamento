@@ -147,6 +147,19 @@ button, .btn {
     border: 1px solid rgba(255,255,255,0.3);
 }
 
+.link-site {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.link-site:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 .conteudo-admin {
     max-width: 960px;
     margin: 0 auto;
