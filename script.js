@@ -9,7 +9,7 @@ musica.volume = 0.9;
 musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
 
 btnAbrirConvite.addEventListener("click", () => {
-    musica.currentTime = 70; // Força o início no minuto 1:10 (70 segundos)
+    musica.currentTime = 72; // Força o início no minuto 1:12 (72 segundos)
     musica.play();
 
     // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
