@@ -428,7 +428,10 @@ btnConfirmarCompra.addEventListener("click", () => {
         window.location.href = token ? "admin/painel.html" : "admin/index.html";
     }
 
-    function iniciarSegurar() {
+    function iniciarSegurar(evento) {
+        if (evento.cancelable) {
+            evento.preventDefault();
+        }
         cancelarSegurar();
         timer = setTimeout(irParaAdmin, TEMPO_SEGURAR_MS);
     }
@@ -440,7 +443,8 @@ btnConfirmarCompra.addEventListener("click", () => {
         }
     }
 
-    rodape.addEventListener("touchstart", iniciarSegurar, { passive: true });
+    rodape.addEventListener("contextmenu", (evento) => evento.preventDefault());
+    rodape.addEventListener("touchstart", iniciarSegurar, { passive: false });
     rodape.addEventListener("touchend", cancelarSegurar);
     rodape.addEventListener("touchcancel", cancelarSegurar);
     rodape.addEventListener("touchmove", cancelarSegurar);
