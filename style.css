@@ -390,6 +390,7 @@ body {
     align-items: baseline;
     align-items: center;
     gap: 4px;
+    cursor: pointer;
 }
 
 .tempo span {

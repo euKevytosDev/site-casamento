@@ -492,6 +492,5 @@ btnConfirmarCompra.addEventListener("click", () => {
         }
     }
 
-    gatilho.style.cursor = "default";
     gatilho.addEventListener("click", registrarToque);
 })();
