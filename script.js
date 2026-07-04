@@ -461,40 +461,37 @@ btnConfirmarCompra.addEventListener("click", () => {
         });
 });
 
-/* Acesso discreto ao admin: segurar o rodapé por ~2,5s (só vocês precisam saber) */
+/* Acesso discreto ao admin: tocar 3 vezes seguidas no número de dias */
 (function initAcessoAdminOculto() {
-    const rodape = document.querySelector(".desenvolvedor-rodape");
-    if (!rodape) return;
+    const gatilho = document.getElementById("dias");
+    if (!gatilho) return;
 
-    const TEMPO_SEGURAR_MS = 2500;
-    let timer = null;
+    const TOQUES_NECESSARIOS = 3;
+    const TEMPO_ENTRE_TOQUES_MS = 800;
+    let contagem = 0;
+    let ultimoToque = 0;
 
     function irParaAdmin() {
         const token = localStorage.getItem("casamento_admin_token");
         window.location.href = token ? "admin/painel.html" : "admin/index.html";
     }
 
-    function iniciarSegurar(evento) {
-        if (evento.cancelable) {
-            evento.preventDefault();
+    function registrarToque() {
+        const agora = Date.now();
+
+        if (agora - ultimoToque > TEMPO_ENTRE_TOQUES_MS) {
+            contagem = 0;
         }
-        cancelarSegurar();
-        timer = setTimeout(irParaAdmin, TEMPO_SEGURAR_MS);
+
+        contagem += 1;
+        ultimoToque = agora;
+
+        if (contagem >= TOQUES_NECESSARIOS) {
+            contagem = 0;
+            irParaAdmin();
+        }
     }
 
-    function cancelarSegurar() {
-        if (timer) {
-            clearTimeout(timer);
-            timer = null;
-        }
-    }
-
-    rodape.addEventListener("contextmenu", (evento) => evento.preventDefault());
-    rodape.addEventListener("touchstart", iniciarSegurar, { passive: false });
-    rodape.addEventListener("touchend", cancelarSegurar);
-    rodape.addEventListener("touchcancel", cancelarSegurar);
-    rodape.addEventListener("touchmove", cancelarSegurar);
-    rodape.addEventListener("mousedown", iniciarSegurar);
-    rodape.addEventListener("mouseup", cancelarSegurar);
-    rodape.addEventListener("mouseleave", cancelarSegurar);
+    gatilho.style.cursor = "default";
+    gatilho.addEventListener("click", registrarToque);
 })();
