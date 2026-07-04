@@ -397,6 +397,31 @@ window.addEventListener("click", (evento) => {
     }
 });
 
+/* =======================================================
+   LÓGICA DO MODAL DE DRESS CODE
+   ======================================================= */
+
+const botaoDresscode = document.getElementById("btn-dresscode");
+const modalDresscode = document.getElementById("modal-dresscode");
+const botaoFecharDresscode = document.getElementById("fechar-modal-dresscode");
+
+function abrirModalDresscode() {
+    modalDresscode.style.display = "flex";
+}
+
+function fecharModalDresscode() {
+    modalDresscode.style.display = "none";
+}
+
+botaoDresscode.addEventListener("click", abrirModalDresscode);
+botaoFecharDresscode.addEventListener("click", fecharModalDresscode);
+
+window.addEventListener("click", (evento) => {
+    if (evento.target === modalDresscode) {
+        fecharModalDresscode();
+    }
+});
+
 btnCancelarCompra.addEventListener("click", fecharPainelCompra);
 
 btnConfirmarCompra.addEventListener("click", () => {
