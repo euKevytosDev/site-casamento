@@ -288,14 +288,18 @@ const modalPresentes = document.getElementById("modal-presentes");
 const botaoFecharPresentes = document.getElementById("fechar-modal-presentes");
 const listaPresentes = document.getElementById("lista-presentes");
 const loadingPresentes = document.getElementById("loading-presentes");
-const painelCompra = document.getElementById("painel-compra");
+const painelCarrinho = document.getElementById("painel-carrinho");
+const listaCarrinho = document.getElementById("lista-carrinho");
+const totalCarrinhoEl = document.getElementById("total-carrinho");
 const campoNomeComprador = document.getElementById("nome-comprador");
-const btnCancelarCompra = document.getElementById("btn-cancelar-compra");
-const btnConfirmarCompra = document.getElementById("btn-confirmar-compra");
+const btnLimparCarrinho = document.getElementById("btn-limpar-carrinho");
+const btnFinalizarCarrinho = document.getElementById("btn-finalizar-carrinho");
 const spinnerCompra = document.getElementById("spinner-compra");
-const textoConfirmarCompra = document.getElementById("texto-confirmar-compra");
+const textoFinalizarCarrinho = document.getElementById("texto-finalizar-carrinho");
 
-let presenteSelecionadoId = null;
+let presentesCache = [];
+let carrinho = [];
+const quantidadesSelecionadas = {};
 
 function urlImagem(caminho) {
     if (!caminho) return "imagens/flor-central2.png";
@@ -312,26 +316,78 @@ function formatarValor(valor) {
     });
 }
 
-function fecharPainelCompra() {
-    presenteSelecionadoId = null;
-    painelCompra.classList.add("escondido");
-    campoNomeComprador.value = "";
+function cotasDisponiveis(presente) {
+    if (presente.comprado && (!presente.cotasVendidas || presente.cotasVendidas === 0)) {
+        return 0;
+    }
+    const total = presente.cotasTotal || 1;
+    const vendidas = presente.cotasVendidas || 0;
+    return Math.max(0, total - vendidas);
+}
+
+function quantidadeNoCarrinho(presenteId) {
+    const item = carrinho.find(i => i.presenteId === presenteId);
+    return item ? item.quantidade : 0;
+}
+
+function limparCarrinho() {
+    carrinho = [];
+    atualizarPainelCarrinho();
+    renderizarPresentes(presentesCache);
+}
+
+function atualizarPainelCarrinho() {
+    if (!carrinho.length) {
+        painelCarrinho.classList.add("escondido");
+        listaCarrinho.innerHTML = "";
+        totalCarrinhoEl.textContent = formatarValor(0);
+        return;
+    }
+
+    painelCarrinho.classList.remove("escondido");
+
+    let total = 0;
+    listaCarrinho.innerHTML = carrinho.map(item => {
+        const subtotal = Number(item.valor) * item.quantidade;
+        total += subtotal;
+        return `
+            <li class="item-carrinho">
+                <div class="item-carrinho-info">
+                    <span>${item.nome}</span>
+                    <small>${item.quantidade} cota${item.quantidade > 1 ? "s" : ""} × ${formatarValor(item.valor)}</small>
+                </div>
+                <span>${formatarValor(subtotal)}</span>
+                <button type="button" class="btn-remover-carrinho" data-id="${item.presenteId}" aria-label="Remover">×</button>
+            </li>
+        `;
+    }).join("");
+
+    totalCarrinhoEl.textContent = formatarValor(total);
+
+    listaCarrinho.querySelectorAll(".btn-remover-carrinho").forEach(botao => {
+        botao.addEventListener("click", () => {
+            const id = Number(botao.dataset.id);
+            carrinho = carrinho.filter(i => i.presenteId !== id);
+            delete quantidadesSelecionadas[id];
+            atualizarPainelCarrinho();
+            renderizarPresentes(presentesCache);
+        });
+    });
 }
 
 function abrirModalPresentes() {
     modalPresentes.style.display = "flex";
-    fecharPainelCompra();
     carregarPresentes();
 }
 
 function fecharModalPresentes() {
     modalPresentes.style.display = "none";
-    fecharPainelCompra();
 }
 
 function renderizarPresentes(presentes) {
     loadingPresentes.style.display = "none";
     listaPresentes.innerHTML = "";
+    presentesCache = presentes;
 
     if (!presentes.length) {
         listaPresentes.innerHTML = `<p class="aviso-presentes">Nenhum presente cadastrado ainda. Em breve!</p>`;
@@ -339,22 +395,43 @@ function renderizarPresentes(presentes) {
     }
 
     presentes.forEach(presente => {
-        const card = document.createElement("article");
-        card.className = `card-presente${presente.comprado ? " comprado" : ""}`;
+        const disponiveis = cotasDisponiveis(presente);
+        const noCarrinho = quantidadeNoCarrinho(presente.id);
+        const restantes = disponiveis - noCarrinho;
+        const esgotado = restantes <= 0;
+        const qtd = quantidadesSelecionadas[presente.id] || 1;
+        const qtdMax = Math.max(restantes, 1);
 
-        const badge = presente.comprado
-            ? `<span class="badge-comprado">Já presenteado${presente.nomeComprador ? ` por ${presente.nomeComprador}` : ""}</span>`
-            : "";
+        if (!quantidadesSelecionadas[presente.id]) {
+            quantidadesSelecionadas[presente.id] = 1;
+        } else if (quantidadesSelecionadas[presente.id] > restantes && restantes > 0) {
+            quantidadesSelecionadas[presente.id] = restantes;
+        }
+
+        const card = document.createElement("article");
+        card.className = `card-presente${esgotado ? " comprado" : ""}`;
+        card.dataset.id = presente.id;
+
+        const cotasTotal = presente.cotasTotal || 1;
+        const cotasVendidas = presente.cotasVendidas || 0;
+        const infoCotas = esgotado
+            ? `<span class="badge-comprado">${disponiveis === 0 && presente.comprado ? "Esgotado" : "No carrinho"}</span>`
+            : `<p class="cotas-info">${disponiveis}/${cotasTotal} cotas livres</p>`;
 
         card.innerHTML = `
             <img src="${urlImagem(presente.imagem)}" alt="${presente.nome}" onerror="this.src='imagens/flor-central2.png'">
             <div class="card-presente-corpo">
-                ${badge}
+                ${infoCotas}
                 <h4>${presente.nome}</h4>
                 <p class="descricao-presente">${presente.descricao || ""}</p>
-                <p class="valor-presente">${formatarValor(presente.valor)}</p>
-                <button class="btn-presentear" ${presente.comprado ? "disabled" : ""} data-id="${presente.id}">
-                    ${presente.comprado ? "Indisponível" : "Quero presentear"}
+                <p class="valor-presente">${formatarValor(presente.valor)}<small style="font-size:10px;font-weight:400;color:#888"> / cota</small></p>
+                <div class="controle-quantidade">
+                    <button type="button" class="btn-qtd btn-menos" data-id="${presente.id}" ${esgotado ? "disabled" : ""}>−</button>
+                    <span class="qtd-valor" data-id="${presente.id}">${Math.min(qtd, qtdMax)}</span>
+                    <button type="button" class="btn-qtd btn-mais" data-id="${presente.id}" ${esgotado || qtd >= restantes ? "disabled" : ""}>+</button>
+                </div>
+                <button type="button" class="btn-presentear" data-id="${presente.id}" ${esgotado ? "disabled" : ""}>
+                    ${esgotado ? "Indisponível" : "Adicionar"}
                 </button>
             </div>
         `;
@@ -362,12 +439,57 @@ function renderizarPresentes(presentes) {
         listaPresentes.appendChild(card);
     });
 
-    document.querySelectorAll(".btn-presentear:not(:disabled)").forEach(botao => {
+    listaPresentes.querySelectorAll(".btn-menos").forEach(botao => {
         botao.addEventListener("click", () => {
-            presenteSelecionadoId = botao.dataset.id;
-            painelCompra.classList.remove("escondido");
-            campoNomeComprador.focus();
-            painelCompra.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            const id = Number(botao.dataset.id);
+            const atual = quantidadesSelecionadas[id] || 1;
+            quantidadesSelecionadas[id] = Math.max(1, atual - 1);
+            renderizarPresentes(presentesCache);
+        });
+    });
+
+    listaPresentes.querySelectorAll(".btn-mais").forEach(botao => {
+        botao.addEventListener("click", () => {
+            const id = Number(botao.dataset.id);
+            const presente = presentesCache.find(p => p.id === id);
+            if (!presente) return;
+            const max = cotasDisponiveis(presente) - quantidadeNoCarrinho(id);
+            const atual = quantidadesSelecionadas[id] || 1;
+            quantidadesSelecionadas[id] = Math.min(max, atual + 1);
+            renderizarPresentes(presentesCache);
+        });
+    });
+
+    listaPresentes.querySelectorAll(".btn-presentear:not(:disabled)").forEach(botao => {
+        botao.addEventListener("click", () => {
+            const id = Number(botao.dataset.id);
+            const presente = presentesCache.find(p => p.id === id);
+            if (!presente) return;
+
+            const qtd = quantidadesSelecionadas[id] || 1;
+            const max = cotasDisponiveis(presente) - quantidadeNoCarrinho(id);
+
+            if (qtd > max) {
+                alert(`Só restam ${max} cota(s) para "${presente.nome}".`);
+                return;
+            }
+
+            const existente = carrinho.find(i => i.presenteId === id);
+            if (existente) {
+                existente.quantidade += qtd;
+            } else {
+                carrinho.push({
+                    presenteId: id,
+                    nome: presente.nome,
+                    valor: presente.valor,
+                    quantidade: qtd
+                });
+            }
+
+            quantidadesSelecionadas[id] = 1;
+            atualizarPainelCarrinho();
+            renderizarPresentes(presentesCache);
+            painelCarrinho.scrollIntoView({ behavior: "smooth", block: "nearest" });
         });
     });
 }
@@ -397,6 +519,59 @@ window.addEventListener("click", (evento) => {
     }
 });
 
+btnLimparCarrinho.addEventListener("click", limparCarrinho);
+
+btnFinalizarCarrinho.addEventListener("click", () => {
+    if (!carrinho.length) {
+        alert("Adicione pelo menos uma cota ao carrinho.");
+        return;
+    }
+
+    const nome = campoNomeComprador.value.trim();
+    if (!nome) {
+        alert("Por favor, digite seu nome antes de finalizar.");
+        campoNomeComprador.focus();
+        return;
+    }
+
+    spinnerCompra.classList.remove("escondido");
+    textoFinalizarCarrinho.textContent = "Finalizando...";
+    btnFinalizarCarrinho.disabled = true;
+
+    const itens = carrinho.map(item => ({
+        presenteId: item.presenteId,
+        quantidade: item.quantidade
+    }));
+
+    fetch(`${API_BASE}/api/presentes/finalizar-carrinho`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nomeComprador: nome, itens })
+    })
+        .then(async resposta => {
+            const corpo = await resposta.json().catch(() => ({}));
+            if (!resposta.ok) {
+                const msg = typeof corpo === "string" ? corpo : corpo.message || "Erro ao finalizar carrinho";
+                throw new Error(msg);
+            }
+            const total = corpo.total != null ? formatarValor(corpo.total) : "";
+            alert(corpo.mensagem || `Obrigado pelo carinho! Total: ${total} 💚`);
+            carrinho = [];
+            campoNomeComprador.value = "";
+            Object.keys(quantidadesSelecionadas).forEach(k => delete quantidadesSelecionadas[k]);
+            atualizarPainelCarrinho();
+            carregarPresentes();
+        })
+        .catch(erro => {
+            alert(erro.message || "Não foi possível finalizar. Tente novamente.");
+        })
+        .finally(() => {
+            spinnerCompra.classList.add("escondido");
+            textoFinalizarCarrinho.textContent = "Finalizar";
+            btnFinalizarCarrinho.disabled = false;
+        });
+});
+
 /* =======================================================
    LÓGICA DO MODAL DE DRESS CODE
    ======================================================= */
@@ -420,45 +595,6 @@ window.addEventListener("click", (evento) => {
     if (evento.target === modalDresscode) {
         fecharModalDresscode();
     }
-});
-
-btnCancelarCompra.addEventListener("click", fecharPainelCompra);
-
-btnConfirmarCompra.addEventListener("click", () => {
-    if (!presenteSelecionadoId) return;
-
-    const nome = campoNomeComprador.value.trim();
-    if (!nome) {
-        alert("Por favor, digite seu nome antes de confirmar.");
-        return;
-    }
-
-    spinnerCompra.classList.remove("escondido");
-    textoConfirmarCompra.textContent = "Confirmando...";
-    btnConfirmarCompra.disabled = true;
-
-    fetch(`${API_BASE}/api/presentes/${presenteSelecionadoId}/comprar`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nomeComprador: nome })
-    })
-        .then(async resposta => {
-            const corpo = await resposta.json().catch(() => ({}));
-            if (!resposta.ok) {
-                throw new Error(typeof corpo === "string" ? corpo : "Erro ao confirmar presente");
-            }
-            alert("Obrigado pelo carinho! Presente confirmado com sucesso. 💚");
-            fecharPainelCompra();
-            carregarPresentes();
-        })
-        .catch(erro => {
-            alert(erro.message || "Não foi possível confirmar o presente. Tente novamente.");
-        })
-        .finally(() => {
-            spinnerCompra.classList.add("escondido");
-            textoConfirmarCompra.textContent = "Confirmar presente";
-            btnConfirmarCompra.disabled = false;
-        });
 });
 
 /* Acesso discreto ao admin: tocar 3 vezes seguidas no número de dias */

@@ -40,8 +40,11 @@
                             <label for="descricao">Descrição</label>
                             <textarea id="descricao"></textarea>
 
-                            <label for="valor">Valor</label>
+                            <label for="valor">Valor (por cota)</label>
                             <input type="text" id="valor" inputmode="numeric" placeholder="R$ 0,00" required>
+
+                            <label for="cotas-total">Quantidade de cotas</label>
+                            <input type="number" id="cotas-total" min="1" value="10" required>
 
                             <label for="imagem">Foto</label>
                             <input type="file" id="imagem" accept="image/jpeg,image/png,image/webp,image/gif">
@@ -169,9 +172,9 @@
                     <div class="item-info">
                         <strong>${p.nome}</strong>
                         <p>${p.descricao || ""}</p>
-                        <p>${formatarValor(p.valor)}</p>
+                        <p>${formatarValor(p.valor)} / cota</p>
                         <span class="badge ${p.comprado ? "comprado" : ""}">
-                            ${p.comprado ? `Comprado${p.nomeComprador ? ` por ${p.nomeComprador}` : ""}` : "Disponível"}
+                            ${p.cotasVendidas || 0}/${p.cotasTotal || 1} cotas${p.comprado ? " · esgotado" : ""}
                         </span>
                         <div class="acoes-item">
                             <button class="btn-secundario" onclick="editarPresente(${p.id})">Editar</button>
@@ -191,6 +194,7 @@
             document.getElementById("nome").value = presente.nome;
             document.getElementById("descricao").value = presente.descricao || "";
             definirValorComMascara(inputValor, presente.valor);
+            document.getElementById("cotas-total").value = presente.cotasTotal || 10;
             preview.src = urlImagem(presente.imagem);
             preview.style.display = "block";
             inputImagem.required = false;
@@ -239,6 +243,7 @@
             dados.append("nome", document.getElementById("nome").value.trim());
             dados.append("descricao", document.getElementById("descricao").value.trim());
             dados.append("valor", valorNumerico.toFixed(2));
+            dados.append("cotasTotal", document.getElementById("cotas-total").value || "10");
 
             if (inputImagem.files[0]) {
                 dados.append("imagem", inputImagem.files[0]);
