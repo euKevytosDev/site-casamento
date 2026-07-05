@@ -296,6 +296,15 @@ const btnLimparCarrinho = document.getElementById("btn-limpar-carrinho");
 const btnFinalizarCarrinho = document.getElementById("btn-finalizar-carrinho");
 const spinnerCompra = document.getElementById("spinner-compra");
 const textoFinalizarCarrinho = document.getElementById("texto-finalizar-carrinho");
+const painelPix = document.getElementById("painel-pix");
+const totalPixEl = document.getElementById("total-pix");
+const canvasQrPix = document.getElementById("qrcode-pix");
+const campoPixCopiaCola = document.getElementById("pix-copia-cola");
+const btnCopiarPix = document.getElementById("btn-copiar-pix");
+const btnVoltarCarrinho = document.getElementById("btn-voltar-carrinho");
+const btnConfirmarPagamento = document.getElementById("btn-confirmar-pagamento");
+const spinnerPagamento = document.getElementById("spinner-pagamento");
+const textoConfirmarPagamento = document.getElementById("texto-confirmar-pagamento");
 
 let presentesCache = [];
 let carrinho = [];
@@ -332,8 +341,41 @@ function quantidadeNoCarrinho(presenteId) {
 
 function limparCarrinho() {
     carrinho = [];
+    esconderPainelPix();
     atualizarPainelCarrinho();
     renderizarPresentes(presentesCache);
+}
+
+function esconderPainelPix() {
+    painelPix.classList.add("escondido");
+    painelCarrinho.classList.remove("escondido");
+    campoPixCopiaCola.value = "";
+    const ctx = canvasQrPix.getContext("2d");
+    ctx.clearRect(0, 0, canvasQrPix.width, canvasQrPix.height);
+}
+
+function montarItensCarrinho() {
+    return carrinho.map(item => ({
+        presenteId: item.presenteId,
+        quantidade: item.quantidade
+    }));
+}
+
+function exibirPainelPix(dadosPix) {
+    painelCarrinho.classList.add("escondido");
+    painelPix.classList.remove("escondido");
+    totalPixEl.textContent = formatarValor(dadosPix.total);
+    campoPixCopiaCola.value = dadosPix.pixCopiaCola;
+
+    QRCode.toCanvas(canvasQrPix, dadosPix.pixCopiaCola, {
+        width: 200,
+        margin: 1,
+        color: { dark: "#433f3f", light: "#ffffff" }
+    }).catch(() => {
+        alert("Não foi possível gerar o QR Code. Use o código copia e cola.");
+    });
+
+    painelPix.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function atualizarPainelCarrinho() {
@@ -382,6 +424,7 @@ function abrirModalPresentes() {
 
 function fecharModalPresentes() {
     modalPresentes.style.display = "none";
+    esconderPainelPix();
 }
 
 function renderizarPresentes(presentes) {
@@ -529,29 +572,79 @@ btnFinalizarCarrinho.addEventListener("click", () => {
 
     const nome = campoNomeComprador.value.trim();
     if (!nome) {
-        alert("Por favor, digite seu nome antes de finalizar.");
+        alert("Por favor, digite seu nome antes de pagar.");
         campoNomeComprador.focus();
         return;
     }
 
     spinnerCompra.classList.remove("escondido");
-    textoFinalizarCarrinho.textContent = "Finalizando...";
+    textoFinalizarCarrinho.textContent = "Gerando PIX...";
     btnFinalizarCarrinho.disabled = true;
 
-    const itens = carrinho.map(item => ({
-        presenteId: item.presenteId,
-        quantidade: item.quantidade
-    }));
-
-    fetch(`${API_BASE}/api/presentes/finalizar-carrinho`, {
+    fetch(`${API_BASE}/api/presentes/gerar-pix`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nomeComprador: nome, itens })
+        body: JSON.stringify({ nomeComprador: nome, itens: montarItensCarrinho() })
     })
         .then(async resposta => {
             const corpo = await resposta.json().catch(() => ({}));
             if (!resposta.ok) {
-                const msg = typeof corpo === "string" ? corpo : corpo.message || "Erro ao finalizar carrinho";
+                const msg = typeof corpo === "string" ? corpo : corpo.message || "Erro ao gerar PIX";
+                throw new Error(msg);
+            }
+            exibirPainelPix(corpo);
+        })
+        .catch(erro => {
+            alert(erro.message || "Não foi possível gerar o PIX. Tente novamente.");
+        })
+        .finally(() => {
+            spinnerCompra.classList.add("escondido");
+            textoFinalizarCarrinho.textContent = "Pagar com PIX";
+            btnFinalizarCarrinho.disabled = false;
+        });
+});
+
+btnVoltarCarrinho.addEventListener("click", esconderPainelPix);
+
+btnCopiarPix.addEventListener("click", async () => {
+    const codigo = campoPixCopiaCola.value;
+    if (!codigo) return;
+
+    try {
+        await navigator.clipboard.writeText(codigo);
+        btnCopiarPix.textContent = "Código copiado!";
+        setTimeout(() => {
+            btnCopiarPix.textContent = "Copiar código PIX";
+        }, 2000);
+    } catch {
+        campoPixCopiaCola.select();
+        document.execCommand("copy");
+        alert("Código selecionado — use Ctrl+C ou Cmd+C para copiar.");
+    }
+});
+
+btnConfirmarPagamento.addEventListener("click", () => {
+    if (!carrinho.length) return;
+
+    const nome = campoNomeComprador.value.trim();
+    if (!nome) {
+        alert("Informe seu nome antes de confirmar.");
+        return;
+    }
+
+    spinnerPagamento.classList.remove("escondido");
+    textoConfirmarPagamento.textContent = "Confirmando...";
+    btnConfirmarPagamento.disabled = true;
+
+    fetch(`${API_BASE}/api/presentes/finalizar-carrinho`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nomeComprador: nome, itens: montarItensCarrinho() })
+    })
+        .then(async resposta => {
+            const corpo = await resposta.json().catch(() => ({}));
+            if (!resposta.ok) {
+                const msg = typeof corpo === "string" ? corpo : corpo.message || "Erro ao confirmar pagamento";
                 throw new Error(msg);
             }
             const total = corpo.total != null ? formatarValor(corpo.total) : "";
@@ -559,16 +652,17 @@ btnFinalizarCarrinho.addEventListener("click", () => {
             carrinho = [];
             campoNomeComprador.value = "";
             Object.keys(quantidadesSelecionadas).forEach(k => delete quantidadesSelecionadas[k]);
+            esconderPainelPix();
             atualizarPainelCarrinho();
             carregarPresentes();
         })
         .catch(erro => {
-            alert(erro.message || "Não foi possível finalizar. Tente novamente.");
+            alert(erro.message || "Não foi possível confirmar. Tente novamente.");
         })
         .finally(() => {
-            spinnerCompra.classList.add("escondido");
-            textoFinalizarCarrinho.textContent = "Finalizar";
-            btnFinalizarCarrinho.disabled = false;
+            spinnerPagamento.classList.add("escondido");
+            textoConfirmarPagamento.textContent = "Já paguei, confirmar";
+            btnConfirmarPagamento.disabled = false;
         });
 });
 

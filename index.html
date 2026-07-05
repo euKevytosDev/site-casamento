@@ -282,8 +282,27 @@
                     <div class="botoes-carrinho">
                         <button type="button" id="btn-limpar-carrinho" class="btn-cancelar-compra">Limpar</button>
                         <button type="button" id="btn-finalizar-carrinho" class="btn-confirmar-compra">
-                            <span id="texto-finalizar-carrinho">Finalizar</span>
+                            <span id="texto-finalizar-carrinho">Pagar com PIX</span>
                             <div id="spinner-compra" class="spinner escondido"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="painel-pix" class="painel-pix escondido">
+                    <p class="titulo-carrinho">Pague com PIX</p>
+                    <p class="total-carrinho">Total: <strong id="total-pix">R$ 0,00</strong></p>
+                    <div class="qrcode-pix-wrapper">
+                        <canvas id="qrcode-pix"></canvas>
+                    </div>
+                    <p class="instrucao-pix">Escaneie o QR Code ou copie o código abaixo:</p>
+                    <textarea id="pix-copia-cola" class="pix-copia-cola" readonly rows="3"></textarea>
+                    <button type="button" id="btn-copiar-pix" class="btn-presentear btn-copiar-pix">Copiar código PIX</button>
+                    <p class="aviso-pix">Após concluir o pagamento no app do banco, confirme abaixo para reservar suas cotas.</p>
+                    <div class="botoes-carrinho">
+                        <button type="button" id="btn-voltar-carrinho" class="btn-cancelar-compra">Voltar</button>
+                        <button type="button" id="btn-confirmar-pagamento" class="btn-confirmar-compra">
+                            <span id="texto-confirmar-pagamento">Já paguei, confirmar</span>
+                            <div id="spinner-pagamento" class="spinner escondido"></div>
                         </button>
                     </div>
                 </div>
@@ -344,6 +363,7 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
     <script src="script.js"></script>
 
 </body>

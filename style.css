@@ -1208,6 +1208,48 @@ body {
     gap: 10px;
 }
 
+.painel-pix {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed #ccc;
+    text-align: center;
+}
+
+.qrcode-pix-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 12px 0;
+    padding: 12px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e0e1cf;
+}
+
+.instrucao-pix,
+.aviso-pix {
+    font-family: "Playfair", serif;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.45;
+    margin: 10px 0;
+}
+
+.pix-copia-cola {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: monospace;
+    resize: none;
+    margin-bottom: 10px;
+    word-break: break-all;
+}
+
+.btn-copiar-pix {
+    margin-bottom: 12px;
+}
+
 .btn-cancelar-compra,
 .btn-confirmar-compra {
     flex: 1;
