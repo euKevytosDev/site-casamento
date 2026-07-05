@@ -140,11 +140,48 @@
         function limparFormPresente() {
             formPresente.reset();
             document.getElementById("presente-id").value = "";
+            document.getElementById("nome").value = "";
+            document.getElementById("descricao").value = "";
+            inputValor.value = "";
+            document.getElementById("cotas-total").value = "10";
+            inputImagem.value = "";
+            preview.removeAttribute("src");
             preview.style.display = "none";
+
+            ["nome", "descricao", "valor", "cotas-total", "imagem"].forEach(idCampo => {
+                const campo = document.getElementById(idCampo);
+                if (!campo) return;
+                campo.disabled = false;
+                campo.readOnly = false;
+            });
+
+            formPresente.classList.remove("modo-edicao");
             tituloForm.textContent = "Novo presente";
             btnSalvar.textContent = "Salvar";
+            btnSalvar.disabled = false;
             btnCancelarEdicao.classList.add("escondido");
             inputImagem.required = true;
+        }
+
+        function entrarModoEdicao(presente) {
+            document.getElementById("presente-id").value = presente.id;
+            document.getElementById("nome").value = presente.nome;
+            document.getElementById("descricao").value = presente.descricao || "";
+            definirValorComMascara(inputValor, presente.valor);
+            document.getElementById("cotas-total").value = presente.cotasTotal || 10;
+            preview.src = urlImagem(presente.imagem);
+            preview.style.display = "block";
+            inputImagem.required = false;
+            inputImagem.value = "";
+
+            formPresente.classList.add("modo-edicao");
+            tituloForm.textContent = "Editar presente";
+            btnSalvar.textContent = "Atualizar";
+            btnSalvar.disabled = false;
+            btnCancelarEdicao.classList.remove("escondido");
+
+            document.getElementById("nome").focus();
+            document.querySelector(".card-painel")?.scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
         btnCancelarEdicao.addEventListener("click", limparFormPresente);
@@ -177,45 +214,56 @@
                             ${p.cotasVendidas || 0}/${p.cotasTotal || 1} cotas${p.comprado ? " · esgotado" : ""}
                         </span>
                         <div class="acoes-item">
-                            <button class="btn-secundario" onclick="editarPresente(${p.id})">Editar</button>
-                            ${p.comprado ? `<button class="btn-aviso" onclick="liberarPresente(${p.id})">Liberar</button>` : ""}
-                            <button class="btn-perigo" onclick="excluirPresente(${p.id})">Excluir</button>
+                            <button type="button" class="btn-secundario" data-acao="editar" data-id="${p.id}">Editar</button>
+                            ${p.comprado ? `<button type="button" class="btn-aviso" data-acao="liberar" data-id="${p.id}">Liberar</button>` : ""}
+                            <button type="button" class="btn-perigo" data-acao="excluir" data-id="${p.id}">Excluir</button>
                         </div>
                     </div>
                 </article>
             `).join("");
         }
 
-        window.editarPresente = async function(id) {
-            const resposta = await apiFetch(`/api/admin/presentes/${id}`);
-            const presente = await resposta.json();
+        listaPresentes.addEventListener("click", async (evento) => {
+            const botao = evento.target.closest("[data-acao]");
+            if (!botao) return;
 
-            document.getElementById("presente-id").value = presente.id;
-            document.getElementById("nome").value = presente.nome;
-            document.getElementById("descricao").value = presente.descricao || "";
-            definirValorComMascara(inputValor, presente.valor);
-            document.getElementById("cotas-total").value = presente.cotasTotal || 10;
-            preview.src = urlImagem(presente.imagem);
-            preview.style.display = "block";
-            inputImagem.required = false;
+            const id = Number(botao.dataset.id);
+            const acao = botao.dataset.acao;
 
-            tituloForm.textContent = "Editar presente";
-            btnSalvar.textContent = "Atualizar";
-            btnCancelarEdicao.classList.remove("escondido");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        };
+            if (acao === "editar") {
+                await editarPresente(id);
+            } else if (acao === "excluir") {
+                await excluirPresente(id);
+            } else if (acao === "liberar") {
+                await liberarPresente(id);
+            }
+        });
 
-        window.excluirPresente = async function(id) {
+        async function editarPresente(id) {
+            try {
+                const resposta = await apiFetch(`/api/admin/presentes/${id}`);
+                if (!resposta.ok) throw new Error(await lerErro(resposta));
+                const presente = await resposta.json();
+                entrarModoEdicao(presente);
+            } catch (erro) {
+                alert(erro.message || "Não foi possível carregar o presente.");
+            }
+        }
+
+        async function excluirPresente(id) {
             if (!confirm("Excluir este presente?")) return;
             const resposta = await apiFetch(`/api/admin/presentes/${id}`, { method: "DELETE" });
             if (!resposta.ok) {
                 alert(await lerErro(resposta));
                 return;
             }
+            if (String(document.getElementById("presente-id").value) === String(id)) {
+                limparFormPresente();
+            }
             carregarPresentes();
-        };
+        }
 
-        window.liberarPresente = async function(id) {
+        async function liberarPresente(id) {
             if (!confirm("Liberar este presente para nova compra?")) return;
             const resposta = await apiFetch(`/api/admin/presentes/${id}/liberar`, { method: "PATCH" });
             if (!resposta.ok) {
@@ -223,7 +271,11 @@
                 return;
             }
             carregarPresentes();
-        };
+        }
+
+        window.editarPresente = editarPresente;
+        window.excluirPresente = excluirPresente;
+        window.liberarPresente = liberarPresente;
 
         formPresente.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -266,7 +318,8 @@
                 msgPresente.className = "mensagem sucesso";
                 msgPresente.textContent = id ? "Presente atualizado!" : "Presente cadastrado!";
                 limparFormPresente();
-                carregarPresentes();
+                await carregarPresentes();
+                document.getElementById("nome").focus();
             } catch (erro) {
                 msgPresente.className = "mensagem erro";
                 msgPresente.textContent = erro.message;

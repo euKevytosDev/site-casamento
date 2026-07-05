@@ -219,6 +219,11 @@ button, .btn {
     font-size: 18px;
 }
 
+#form-presente.modo-edicao {
+    border-left: 3px solid #616e48;
+    padding-left: 12px;
+}
+
 .preview-imagem {
     width: 100%;
     max-height: 180px;
