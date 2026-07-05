@@ -79,7 +79,7 @@ async function apiFetch(caminho, opcoes = {}) {
 
     const resposta = await fetch(`${API_BASE}${caminho}`, { ...opcoes, headers });
 
-    if (resposta.status === 401) {
+    if (resposta.status === 401 || resposta.status === 403) {
         logout();
         throw new Error("Sessão expirada. Faça login novamente.");
     }
