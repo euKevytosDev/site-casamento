@@ -367,12 +367,21 @@ function exibirPainelPix(dadosPix) {
     totalPixEl.textContent = formatarValor(dadosPix.total);
     campoPixCopiaCola.value = dadosPix.pixCopiaCola;
 
+    const ctx = canvasQrPix.getContext("2d");
+    ctx.clearRect(0, 0, canvasQrPix.width, canvasQrPix.height);
+
+    if (typeof QRCode === "undefined") {
+        alert("QR Code indisponível no momento. Use o código copia e cola abaixo para pagar.");
+        painelPix.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        return;
+    }
+
     QRCode.toCanvas(canvasQrPix, dadosPix.pixCopiaCola, {
         width: 200,
         margin: 1,
         color: { dark: "#433f3f", light: "#ffffff" }
     }).catch(() => {
-        alert("Não foi possível gerar o QR Code. Use o código copia e cola.");
+        alert("Não foi possível gerar o QR Code. Use o código copia e cola abaixo.");
     });
 
     painelPix.scrollIntoView({ behavior: "smooth", block: "nearest" });
