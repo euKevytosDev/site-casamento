@@ -321,10 +321,20 @@ button, .btn {
 .status-nao { color: #c0392b; }
 
 .resumo {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 640px) {
+    .resumo {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.tabela-historico td strong {
+    color: #616e48;
 }
 
 .resumo-card {

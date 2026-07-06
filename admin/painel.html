@@ -23,6 +23,7 @@
         <main class="conteudo-admin">
             <div class="abas">
                 <button class="aba ativa" data-aba="presentes">Presentes</button>
+                <button class="aba" data-aba="historico">Histórico de cotas</button>
                 <button class="aba" data-aba="presenca">Presenças</button>
             </div>
 
@@ -63,6 +64,31 @@
                         <div id="lista-presentes" class="lista-itens">
                             <p class="vazio">Carregando...</p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA HISTÓRICO DE COTAS -->
+            <section id="aba-historico" class="painel-aba">
+                <div class="card-painel">
+                    <h2>Histórico de cotas compradas</h2>
+
+                    <div class="resumo" id="resumo-historico"></div>
+
+                    <div style="overflow-x:auto;">
+                        <table class="tabela-presenca tabela-historico">
+                            <thead>
+                                <tr>
+                                    <th>Comprador</th>
+                                    <th>Presente</th>
+                                    <th>Cotas</th>
+                                    <th>Valor/cota</th>
+                                    <th>Total</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-historico"></tbody>
+                        </table>
                     </div>
                 </div>
             </section>
@@ -111,6 +137,7 @@
                 document.getElementById(`aba-${aba.dataset.aba}`).classList.add("ativo");
 
                 if (aba.dataset.aba === "presenca") carregarPresencas();
+                if (aba.dataset.aba === "historico") carregarHistorico();
             });
         });
 
@@ -327,6 +354,48 @@
                 btnSalvar.disabled = false;
             }
         });
+
+        // ===== HISTÓRICO DE COTAS =====
+        async function carregarHistorico() {
+            const tbody = document.getElementById("tabela-historico");
+            const resumo = document.getElementById("resumo-historico");
+
+            try {
+                const resposta = await apiFetch("/api/admin/historico-compras");
+                if (!resposta.ok) throw new Error(await lerErro(resposta));
+                const lista = await resposta.json();
+
+                const totalCotas = lista.reduce((soma, item) => soma + (item.quantidade || 0), 0);
+                const totalArrecadado = lista.reduce((soma, item) => soma + Number(item.valorTotal || 0), 0);
+                const compradores = new Set(lista.map(item => item.nomeComprador)).size;
+
+                resumo.innerHTML = `
+                    <div class="resumo-card"><strong>${lista.length}</strong><span>Compras</span></div>
+                    <div class="resumo-card"><strong>${totalCotas}</strong><span>Cotas</span></div>
+                    <div class="resumo-card"><strong>${compradores}</strong><span>Compradores</span></div>
+                    <div class="resumo-card"><strong>${formatarValor(totalArrecadado)}</strong><span>Total</span></div>
+                `;
+
+                if (!lista.length) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="vazio">Nenhuma cota confirmada ainda.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = lista.map(item => `
+                    <tr>
+                        <td><strong>${item.nomeComprador}</strong></td>
+                        <td>${item.nomePresente}</td>
+                        <td>${item.quantidade}</td>
+                        <td>${formatarValor(item.valorCota)}</td>
+                        <td>${formatarValor(item.valorTotal)}</td>
+                        <td>${formatarData(item.dataCompra)}</td>
+                    </tr>
+                `).join("");
+            } catch (erro) {
+                tbody.innerHTML = `<tr><td colspan="6" class="vazio">${erro.message}</td></tr>`;
+                resumo.innerHTML = "";
+            }
+        }
 
         // ===== PRESENÇA =====
         async function carregarPresencas() {
