@@ -21,11 +21,6 @@ body {
     min-height: 100%;
 }
 
-/* Oculto no celular — ambiente lateral só no desktop.css */
-.ambiente-desktop {
-    display: none;
-}
-
 .hero {
     background: white;
     height: 100dvh;
