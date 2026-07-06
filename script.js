@@ -491,7 +491,7 @@ function renderizarPresentes(presentes) {
                     <button type="button" class="btn-qtd btn-mais" data-id="${presente.id}" ${esgotado || qtd >= restantes ? "disabled" : ""}>+</button>
                 </div>
                 <button type="button" class="btn-presentear" data-id="${presente.id}" ${esgotado ? "disabled" : ""}>
-                    ${esgotado ? "Indisponível" : "Adicionar"}
+                    ${esgotado ? "Indisponível" : "Presentear"}
                 </button>
             </div>
         `;
