@@ -21,9 +21,17 @@ function logout() {
     window.location.href = "index.html";
 }
 
-function urlImagem(caminho) {
+function urlImagem(caminho, tamanho = "admin") {
     if (!caminho) return "";
-    if (caminho.startsWith("http")) return caminho;
+    if (caminho.startsWith("http")) {
+        if (caminho.includes("res.cloudinary.com") && caminho.includes("/image/upload/") && !caminho.includes("/image/upload/w_")) {
+            const transform = tamanho === "lista"
+                ? "w_320,h_176,c_fill,q_auto:good,f_auto"
+                : "w_480,h_264,c_fill,q_auto:good,f_auto";
+            return caminho.replace("/image/upload/", `/image/upload/${transform}/`);
+        }
+        return caminho;
+    }
     return `${API_BASE}${caminho}`;
 }
 

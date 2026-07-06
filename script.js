@@ -310,9 +310,17 @@ let presentesCache = [];
 let carrinho = [];
 const quantidadesSelecionadas = {};
 
-function urlImagem(caminho) {
+function urlImagem(caminho, tamanho = "card") {
     if (!caminho) return "imagens/flor-central2.png";
-    if (caminho.startsWith("http://") || caminho.startsWith("https://")) return caminho;
+    if (caminho.startsWith("http://") || caminho.startsWith("https://")) {
+        if (caminho.includes("res.cloudinary.com") && caminho.includes("/image/upload/") && !caminho.includes("/image/upload/w_")) {
+            const transform = tamanho === "admin"
+                ? "w_480,h_264,c_fill,q_auto:good,f_auto"
+                : "w_320,h_176,c_fill,q_auto:good,f_auto";
+            return caminho.replace("/image/upload/", `/image/upload/${transform}/`);
+        }
+        return caminho;
+    }
     return `${API_BASE}${caminho}`;
 }
 

@@ -232,7 +232,7 @@
 
             listaPresentes.innerHTML = presentes.map(p => `
                 <article class="item-card">
-                    <img src="${urlImagem(p.imagem)}" alt="${p.nome}">
+                    <img src="${urlImagem(p.imagem, "lista")}" alt="${p.nome}">
                     <div class="item-info">
                         <strong>${p.nome}</strong>
                         <p>${p.descricao || ""}</p>
