@@ -35,8 +35,8 @@ body {
     transition: opacity 0.8s ease;
     overflow: hidden;
 
-    /*display: none !important;
-    opacity: 0 !important; */
+    display: none !important;
+    opacity: 0 !important; 
 }
 
 .overlay {
@@ -84,8 +84,8 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 
-    /*display: block !important;
-    opacity: 1 !important;*/
+    display: block !important;
+    opacity: 1 !important;
 }
 
 .foto2 {
@@ -417,6 +417,14 @@ body {
     width: 100%;
     text-align: center;
     margin-top: 48px;
+    position: relative;
+    z-index: 2;
+}
+
+.container-local + .decoracao-flores {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .local {
@@ -439,12 +447,13 @@ body {
 }
 
 .espaco-foto-wrapper img {
-    z-index: 2;
     width: 65%;
     max-width: 400px;
     border-radius: 12px;
     height: auto;
     display: block;
+    position: relative;
+    z-index: 1;
 
     /*filter: grayscale(100%); Ativar para caso queira a imagem P&B */
 }
@@ -489,21 +498,19 @@ body {
     left: 10px;
     top: -370px;
     width: clamp(100px, 20vw, 150px);
-    /* leve transparência */
     transform: scaleX(-1);
-    /* Opcional: espelha a imagem para dar simetria */
-    z-index: 1;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .flor-direita2 {
     position: absolute;
     right: 45px;
-    /* Cola no canto direito */
     top: -45px;
     bottom: 10px;
     width: clamp(110px, 30vw, 150px);
-    /* Tamanho responsivo */
-    z-index: 1;
+    z-index: 0;
+    pointer-events: none;
 }
 
 /* abaixo está a parte dos icones clicaveis */
@@ -517,7 +524,12 @@ body {
     gap: 28px;
     padding: 0 10px;
     position: relative;
-    z-index: 2;
+    z-index: 3;
+}
+
+.chamada-icones {
+    position: relative;
+    z-index: 1;
 }
 
 .container-interacoes + .decoracao-flores {
