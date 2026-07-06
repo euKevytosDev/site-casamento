@@ -26,7 +26,7 @@ const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 })();
 
 const musica = document.getElementById("musica");
-musica.volume = 0.9;
+musica.volume = 0.5;
 musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
 
 btnAbrirConvite.addEventListener("click", () => {
@@ -102,6 +102,28 @@ if (elementosRevelar.length > 0) {
     elementosRevelar.forEach((el) => observadorScroll.observe(el));
 }
 
+const DURACAO_MODAL_MS = 280;
+
+function abrirModal(modalEl) {
+    if (!modalEl) return;
+    modalEl.style.display = "flex";
+    requestAnimationFrame(() => modalEl.classList.add("modal-aberto"));
+}
+
+function fecharModal(modalEl) {
+    if (!modalEl) return;
+    if (!modalEl.classList.contains("modal-aberto")) {
+        modalEl.style.display = "none";
+        return;
+    }
+    modalEl.classList.remove("modal-aberto");
+    window.setTimeout(() => {
+        if (!modalEl.classList.contains("modal-aberto")) {
+            modalEl.style.display = "none";
+        }
+    }, DURACAO_MODAL_MS);
+}
+
 function atualizarContador() {
     const dataCasamento = new Date("April 24, 2027 00:00:00").getTime();
     const agora = new Date().getTime();
@@ -142,20 +164,20 @@ const formulario = document.getElementById("form-presenca"); // Captura o formul
 
 // FUNÇÃO PARA ABRIR O MODAL
 botaoPresenca.addEventListener("click", () => {
-    modalPresenca.style.display = "flex";
+    abrirModal(modalPresenca);
     atualizarInterfaceLista();
 });
 
 // FUNÇÃO PARA FECHAR O MODAL CLICANDO NO X
 botaoFechar.addEventListener("click", () => {
-    modalPresenca.style.display = "none"; // Altera o CSS de volta para 'none', escondendo o modal e o fundo escuro
+    fecharModal(modalPresenca);
 });
 
 // FUNÇÃO PARA FECHAR O MODAL CLICANDO FORA DA CAIXA BRANCA
 window.addEventListener("click", (evento) => {
     // Se o clique do usuário aconteceu na cortina escura e não na caixinha branca de dentro...
     if (evento.target === modalPresenca) {
-        modalPresenca.style.display = "none"; // ...esconde o modal (ótimo para a experiência no celular!)
+        fecharModal(modalPresenca);
     }
 });
 
@@ -263,7 +285,7 @@ btnEnviarFamilia.addEventListener("click", () => {
                 alert("Presença confirmada com sucesso! Muito obrigado. ✨");
                 listaFamilia = [];
                 atualizarInterfaceLista();
-                modalPresenca.style.display = "none";
+                fecharModal(modalPresenca);
             } else {
                 alert("Ops! Ocorreu um erro ao enviar os dados. Tente novamente.");
             }
@@ -435,12 +457,12 @@ function atualizarPainelCarrinho() {
 }
 
 function abrirModalPresentes() {
-    modalPresentes.style.display = "flex";
+    abrirModal(modalPresentes);
     carregarPresentes();
 }
 
 function fecharModalPresentes() {
-    modalPresentes.style.display = "none";
+    fecharModal(modalPresentes);
     esconderPainelPix();
 }
 
@@ -692,11 +714,11 @@ const modalDresscode = document.getElementById("modal-dresscode");
 const botaoFecharDresscode = document.getElementById("fechar-modal-dresscode");
 
 function abrirModalDresscode() {
-    modalDresscode.style.display = "flex";
+    abrirModal(modalDresscode);
 }
 
 function fecharModalDresscode() {
-    modalDresscode.style.display = "none";
+    fecharModal(modalDresscode);
 }
 
 botaoDresscode.addEventListener("click", abrirModalDresscode);
