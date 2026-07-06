@@ -316,7 +316,7 @@ function urlImagem(caminho, tamanho = "card") {
         if (caminho.includes("res.cloudinary.com") && caminho.includes("/image/upload/") && !caminho.includes("/image/upload/w_")) {
             const transform = tamanho === "admin"
                 ? "w_480,h_264,c_fill,q_auto:good,f_auto"
-                : "w_320,h_176,c_fill,q_auto:good,f_auto";
+                : "w_320,h_320,c_fill,q_auto:good,f_auto";
             return caminho.replace("/image/upload/", `/image/upload/${transform}/`);
         }
         return caminho;
