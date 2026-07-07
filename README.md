@@ -4,7 +4,7 @@ Site de casamento completo com design **mobile-first**, animações suaves, conf
 
 ## Demo
 
-- Site ao vivo: https://eukevytosdev.github.io/site-casamento/
+- Site ao vivo: https://rafaekevin.com.br/
 - Repositório: https://github.com/euKevytosDev/site-casamento
 - API (backend): https://site-casamento-backend-nrfb.onrender.com
 
