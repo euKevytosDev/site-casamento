@@ -121,6 +121,27 @@
 
     <script src="admin.js"></script>
     <script>
+        function toast(mensagem, tipo = "info") {
+            let container = document.getElementById("toast-container");
+            if (!container) {
+                container = document.createElement("div");
+                container.id = "toast-container";
+                document.body.appendChild(container);
+            }
+
+            const el = document.createElement("div");
+            el.className = `toast toast-${tipo}`;
+            el.textContent = mensagem;
+            container.appendChild(el);
+
+            requestAnimationFrame(() => el.classList.add("visivel"));
+
+            setTimeout(() => {
+                el.classList.remove("visivel");
+                setTimeout(() => el.remove(), 300);
+            }, 3200);
+        }
+
         if (!getToken()) {
             window.location.href = "index.html";
         }
@@ -273,7 +294,7 @@
                 const presente = await resposta.json();
                 entrarModoEdicao(presente);
             } catch (erro) {
-                alert(erro.message || "Não foi possível carregar o presente.");
+                toast(erro.message || "Não foi possível carregar o presente.", "erro");
             }
         }
 
@@ -281,7 +302,7 @@
             if (!confirm("Excluir este presente?")) return;
             const resposta = await apiFetch(`/api/admin/presentes/${id}`, { method: "DELETE" });
             if (!resposta.ok) {
-                alert(await lerErro(resposta));
+                toast(await lerErro(resposta), "erro");
                 return;
             }
             if (String(document.getElementById("presente-id").value) === String(id)) {
@@ -294,7 +315,7 @@
             if (!confirm("Liberar este presente para nova compra?")) return;
             const resposta = await apiFetch(`/api/admin/presentes/${id}/liberar`, { method: "PATCH" });
             if (!resposta.ok) {
-                alert(await lerErro(resposta));
+                toast(await lerErro(resposta), "erro");
                 return;
             }
             carregarPresentes();
@@ -443,7 +464,7 @@
             if (!confirm("Excluir esta confirmação?")) return;
             const resposta = await apiFetch(`/api/admin/presenca/${id}`, { method: "DELETE" });
             if (!resposta.ok) {
-                alert(await lerErro(resposta));
+                toast(await lerErro(resposta), "erro");
                 return;
             }
             carregarPresencas();

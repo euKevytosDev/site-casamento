@@ -1443,3 +1443,51 @@ body {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
+
+/* =======================================================
+   TOAST
+   ======================================================= */
+#toast-container {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(90vw, 360px);
+    pointer-events: none;
+}
+
+.toast {
+    background: #433f3f;
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-family: "Playfair", Georgia, serif;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.toast.visivel {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-sucesso {
+    background: #616e48;
+}
+
+.toast-erro {
+    background: #8b4a3a;
+}
+
+.toast-info {
+    background: #433f3f;
+}

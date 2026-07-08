@@ -4,6 +4,30 @@ const btnAbrirConvite = document.getElementById("btn-abrir-convite");
 
 const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 
+/* =======================================================
+   TOAST (substitui alert)
+   ======================================================= */
+function toast(mensagem, tipo = "info") {
+    let container = document.getElementById("toast-container");
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "toast-container";
+        document.body.appendChild(container);
+    }
+
+    const el = document.createElement("div");
+    el.className = `toast toast-${tipo}`;
+    el.textContent = mensagem;
+    container.appendChild(el);
+
+    requestAnimationFrame(() => el.classList.add("visivel"));
+
+    setTimeout(() => {
+        el.classList.remove("visivel");
+        setTimeout(() => el.remove(), 300);
+    }, 3200);
+}
+
 /* Mantém a barra do Chrome/Android branca ao rolar (não herda verde/bege da página) */
 (function fixarBarraNavegadorBranca() {
     let meta = document.querySelector('meta[name="theme-color"]');
@@ -26,7 +50,7 @@ const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 })();
 
 const musica = document.getElementById("musica");
-musica.volume = 0.5;
+musica.volume = 0.4;
 musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
 
 btnAbrirConvite.addEventListener("click", () => {
@@ -230,7 +254,7 @@ function atualizarInterfaceLista() {
 // ============================================================================
 btnAdicionarMembro.addEventListener("click", () => {
     if (!campoNome.value || !campoIdade.value) {
-        alert("Por favor, preencha o Nome e a Idade antes de adicionar!");
+        toast("Preencha o Nome e a Idade antes de adicionar.", "erro");
         return;
     }
 
@@ -282,17 +306,17 @@ btnEnviarFamilia.addEventListener("click", () => {
     })
         .then(resposta => {
             if (resposta.ok) {
-                alert("Presença confirmada com sucesso! Muito obrigado. ✨");
+                toast("Presença confirmada com sucesso! Muito obrigado. ✨", "sucesso");
                 listaFamilia = [];
                 atualizarInterfaceLista();
                 fecharModal(modalPresenca);
             } else {
-                alert("Ops! Ocorreu um erro ao enviar os dados. Tente novamente.");
+                toast("Ops! Erro ao enviar os dados. Tente novamente.", "erro");
             }
         })
         .catch(erro => {
             console.error("Erro de conexão:", erro);
-            alert("Não foi possível conectar ao servidor. O servidor pode estar iniciando, tente novamente em instantes.");
+            toast("Não foi possível conectar ao servidor. Tente novamente em instantes.", "erro");
         })
         .finally(() => {
             spinner.classList.add("escondido");
@@ -401,7 +425,7 @@ function exibirPainelPix(dadosPix) {
     ctx.clearRect(0, 0, canvasQrPix.width, canvasQrPix.height);
 
     if (typeof QRCode === "undefined") {
-        alert("QR Code indisponível no momento. Use o código copia e cola abaixo para pagar.");
+        toast("QR Code indisponível. Use o código copia e cola abaixo.", "erro");
         painelPix.scrollIntoView({ behavior: "smooth", block: "nearest" });
         return;
     }
@@ -411,7 +435,7 @@ function exibirPainelPix(dadosPix) {
         margin: 1,
         color: { dark: "#433f3f", light: "#ffffff" }
     }).catch(() => {
-        alert("Não foi possível gerar o QR Code. Use o código copia e cola abaixo.");
+        toast("Não foi possível gerar o QR Code. Use o código copia e cola.", "erro");
     });
 
     painelPix.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -552,7 +576,7 @@ function renderizarPresentes(presentes) {
             const max = cotasDisponiveis(presente) - quantidadeNoCarrinho(id);
 
             if (qtd > max) {
-                alert(`Só restam ${max} cota(s) para "${presente.nome}".`);
+                toast(`Só restam ${max} cota(s) para "${presente.nome}".`, "erro");
                 return;
             }
 
@@ -605,13 +629,13 @@ btnLimparCarrinho.addEventListener("click", limparCarrinho);
 
 btnFinalizarCarrinho.addEventListener("click", () => {
     if (!carrinho.length) {
-        alert("Adicione pelo menos uma cota ao carrinho.");
+        toast("Adicione pelo menos uma cota ao carrinho.", "erro");
         return;
     }
 
     const nome = campoNomeComprador.value.trim();
     if (!nome) {
-        alert("Por favor, digite seu nome antes de pagar.");
+        toast("Digite seu nome antes de pagar.", "erro");
         campoNomeComprador.focus();
         return;
     }
@@ -634,7 +658,7 @@ btnFinalizarCarrinho.addEventListener("click", () => {
             exibirPainelPix(corpo);
         })
         .catch(erro => {
-            alert(erro.message || "Não foi possível gerar o PIX. Tente novamente.");
+            toast(erro.message || "Não foi possível gerar o PIX. Tente novamente.", "erro");
         })
         .finally(() => {
             spinnerCompra.classList.add("escondido");
@@ -652,13 +676,14 @@ btnCopiarPix.addEventListener("click", async () => {
     try {
         await navigator.clipboard.writeText(codigo);
         btnCopiarPix.textContent = "Código copiado!";
+        toast("Código PIX copiado!", "sucesso");
         setTimeout(() => {
             btnCopiarPix.textContent = "Copiar código PIX";
         }, 2000);
     } catch {
         campoPixCopiaCola.select();
         document.execCommand("copy");
-        alert("Código selecionado — use Ctrl+C ou Cmd+C para copiar.");
+        toast("Código selecionado — use Ctrl+C ou Cmd+C para copiar.", "info");
     }
 });
 
@@ -667,7 +692,7 @@ btnConfirmarPagamento.addEventListener("click", () => {
 
     const nome = campoNomeComprador.value.trim();
     if (!nome) {
-        alert("Informe seu nome antes de confirmar.");
+        toast("Informe seu nome antes de confirmar.", "erro");
         return;
     }
 
@@ -687,7 +712,7 @@ btnConfirmarPagamento.addEventListener("click", () => {
                 throw new Error(msg);
             }
             const total = corpo.total != null ? formatarValor(corpo.total) : "";
-            alert(corpo.mensagem || `Obrigado pelo carinho! Total: ${total} 💚`);
+            toast(corpo.mensagem || `Obrigado pelo carinho! Total: ${total} 💚`, "sucesso");
             carrinho = [];
             campoNomeComprador.value = "";
             Object.keys(quantidadesSelecionadas).forEach(k => delete quantidadesSelecionadas[k]);
@@ -696,7 +721,7 @@ btnConfirmarPagamento.addEventListener("click", () => {
             carregarPresentes();
         })
         .catch(erro => {
-            alert(erro.message || "Não foi possível confirmar. Tente novamente.");
+            toast(erro.message || "Não foi possível confirmar. Tente novamente.", "erro");
         })
         .finally(() => {
             spinnerPagamento.classList.add("escondido");
