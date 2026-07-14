@@ -1,6 +1,8 @@
-const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
+const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
+const SITE_ID = window.SITE_CONFIG?.siteId || "rafaekevin";
 const TOKEN_KEY = "casamento_admin_token";
 const LOGIN_KEY = "casamento_admin_login";
+
 
 function getToken() {
     return localStorage.getItem(TOKEN_KEY);
@@ -84,6 +86,8 @@ async function apiFetch(caminho, opcoes = {}) {
     if (token) {
         headers["Authorization"] = `Bearer ${token}`;
     }
+
+    headers["X-Site-Id"] = SITE_ID;
 
     const resposta = await fetch(`${API_BASE}${caminho}`, { ...opcoes, headers });
 

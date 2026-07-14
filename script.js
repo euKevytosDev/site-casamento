@@ -2,7 +2,16 @@ const hero = document.querySelector(".hero");
 const site = document.querySelector(".site");
 const btnAbrirConvite = document.getElementById("btn-abrir-convite");
 
-const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
+const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
+const SITE_ID = window.SITE_CONFIG?.siteId || "rafaekevin";
+
+// Helper: junta headers + X-Site-Id em todo fetch da API
+function apiHeaders(extras = {}) {
+    return {
+        "X-Site-Id": SITE_ID,
+        ...extras
+    };
+}
 
 /* =======================================================
    TOAST (substitui alert)
@@ -59,7 +68,9 @@ btnAbrirConvite.addEventListener("click", () => {
 
     // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
     // Como não colocamos o ".then", o JS só faz a chamada e continua rodando o resto do site sem travar nada.
-    fetch(`${API_BASE}/api/presenca`)
+    fetch(`${API_BASE}/api/presenca`, {
+        headers: apiHeaders()
+    })
         .then(() => console.log("Servidor alertado com sucesso nos bastidores! ⏰"))    // fade out da tela inicial
         .catch(() => console.log("Servidor já deve estar acordado ou processando."));
 
@@ -299,9 +310,9 @@ btnEnviarFamilia.addEventListener("click", () => {
 
     fetch(`${API_BASE}/api/presenca/confirmar-familia`, {
         method: "POST",
-        headers: {
+        headers: apiHeaders( {
             "Content-Type": "application/json"
-        },
+        }),
         body: JSON.stringify(listaFamilia)
     })
         .then(resposta => {
@@ -604,7 +615,9 @@ function carregarPresentes() {
     loadingPresentes.style.display = "flex";
     listaPresentes.innerHTML = "";
 
-    fetch(`${API_BASE}/api/presentes`)
+    fetch(`${API_BASE}/api/presentes`, {
+        headers: apiHeaders()
+    })
         .then(resposta => {
             if (!resposta.ok) throw new Error("Erro ao buscar presentes");
             return resposta.json();
@@ -646,7 +659,7 @@ btnFinalizarCarrinho.addEventListener("click", () => {
 
     fetch(`${API_BASE}/api/presentes/gerar-pix`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+         headers: apiHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ nomeComprador: nome, itens: montarItensCarrinho() })
     })
         .then(async resposta => {
@@ -702,7 +715,7 @@ btnConfirmarPagamento.addEventListener("click", () => {
 
     fetch(`${API_BASE}/api/presentes/finalizar-carrinho`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: apiHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ nomeComprador: nome, itens: montarItensCarrinho() })
     })
         .then(async resposta => {
