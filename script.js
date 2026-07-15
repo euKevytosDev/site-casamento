@@ -75,6 +75,23 @@ function aplicarConfigDoSite() {
 
 aplicarConfigDoSite();
 
+
+/* Laterais decorativas: altura = documento inteiro (rola com o site) */
+function ajustarAlturaLaterais() {
+    const camada = document.querySelector(".laterais-decor");
+    if (!camada) return;
+    const altura = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        window.innerHeight
+    );
+    camada.style.height = altura + "px";
+    camada.style.bottom = "auto";
+}
+
+window.addEventListener("load", ajustarAlturaLaterais);
+window.addEventListener("resize", ajustarAlturaLaterais);
+
 /* =======================================================
    TOAST (substitui alert)
    ======================================================= */
@@ -143,6 +160,7 @@ btnAbrirConvite.addEventListener("click", () => {
 
         // mostra o site
         site.style.display = "block";
+        ajustarAlturaLaterais();
 
         // pequeno delay pra ativar o fade in
         setTimeout(() => {

@@ -65,6 +65,230 @@ body {
     overflow-x: hidden;
     background-color: var(--cor-fundo);
     min-height: 100%;
+    position: relative;
+}
+
+/* -------------------------------------------------
+   Laterais com bolhas (só desktop / telas largas)
+   position absolute (não fixed) → sobe e desce com o site
+   ------------------------------------------------- */
+.laterais-decor {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.hero,
+.site {
+    position: relative;
+    z-index: 1;
+}
+
+.bolha {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(0.5px);
+    opacity: 0.55;
+    will-change: transform;
+    animation-name: bolha-flutuar;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+.bolha-e1,
+.bolha-e2,
+.bolha-e3,
+.bolha-e4,
+.bolha-e5 {
+    left: clamp(10px, 3.5vw, 72px);
+}
+
+.bolha-d1,
+.bolha-d2,
+.bolha-d3,
+.bolha-d4,
+.bolha-d5 {
+    right: clamp(10px, 3.5vw, 72px);
+    left: auto;
+}
+
+.bolha-e1 {
+    top: 8%;
+    width: 88px;
+    height: 88px;
+    background: radial-gradient(circle at 35% 30%,
+            var(--cor-fundo-creme-3),
+            var(--cor-fundo-bege) 70%);
+    animation-duration: 11s;
+    animation-delay: 0s;
+}
+
+.bolha-e2 {
+    top: 28%;
+    width: 52px;
+    height: 52px;
+    left: clamp(28px, 7vw, 110px);
+    background: radial-gradient(circle at 40% 35%,
+            var(--cor-fundo),
+            var(--cor-fundo-creme-2) 75%);
+    opacity: 0.45;
+    animation-duration: 14s;
+    animation-delay: -2s;
+}
+
+.bolha-e3 {
+    top: 48%;
+    width: 110px;
+    height: 110px;
+    background: radial-gradient(circle at 30% 30%,
+            var(--cor-fundo-bege),
+            var(--cor-borda-suave) 80%);
+    opacity: 0.35;
+    animation-duration: 16s;
+    animation-delay: -5s;
+}
+
+.bolha-e4 {
+    top: 68%;
+    width: 40px;
+    height: 40px;
+    left: clamp(18px, 5vw, 90px);
+    background: var(--cor-fundo-creme-3);
+    opacity: 0.5;
+    animation-duration: 9s;
+    animation-delay: -1s;
+}
+
+.bolha-e5 {
+    top: 86%;
+    width: 72px;
+    height: 72px;
+    background: radial-gradient(circle at 35% 30%,
+            var(--cor-fundo-creme),
+            var(--cor-oliva-suave) 85%);
+    opacity: 0.28;
+    animation-duration: 13s;
+    animation-delay: -7s;
+}
+
+.bolha-d1 {
+    top: 12%;
+    width: 96px;
+    height: 96px;
+    background: radial-gradient(circle at 60% 30%,
+            var(--cor-fundo-creme-2),
+            var(--cor-fundo-bege) 72%);
+    animation-duration: 12s;
+    animation-delay: -1.5s;
+}
+
+.bolha-d2 {
+    top: 34%;
+    width: 44px;
+    height: 44px;
+    right: clamp(26px, 6.5vw, 105px);
+    background: var(--cor-linha-topo);
+    opacity: 0.55;
+    animation-duration: 10s;
+    animation-delay: -4s;
+}
+
+.bolha-d3 {
+    top: 52%;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at 55% 40%,
+            var(--cor-fundo),
+            var(--cor-fundo-creme-3) 68%,
+            var(--cor-borda-suave) 100%);
+    opacity: 0.32;
+    animation-duration: 17s;
+    animation-delay: -3s;
+}
+
+.bolha-d4 {
+    top: 72%;
+    width: 58px;
+    height: 58px;
+    right: clamp(16px, 4.5vw, 88px);
+    background: radial-gradient(circle at 40% 30%,
+            var(--cor-fundo-bege),
+            var(--cor-oliva-suave) 90%);
+    opacity: 0.3;
+    animation-duration: 11s;
+    animation-delay: -6s;
+}
+
+.bolha-d5 {
+    top: 90%;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle at 50% 35%,
+            var(--cor-fundo-creme),
+            var(--cor-fundo-bege) 75%);
+    opacity: 0.4;
+    animation-duration: 15s;
+    animation-delay: -2.5s;
+}
+
+@keyframes bolha-flutuar {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(10px, -16px) scale(1.05);
+    }
+
+    66% {
+        transform: translate(-8px, 12px) scale(0.96);
+    }
+}
+
+/* Só aparece quando existe faixa lateral (fora do site de 445px) */
+@media (min-width: 640px) {
+    .laterais-decor {
+        display: block;
+    }
+
+    html {
+        background: linear-gradient(90deg,
+                var(--cor-fundo-creme-2) 0%,
+                var(--cor-fundo) 14%,
+                var(--cor-fundo) 86%,
+                var(--cor-fundo-creme-2) 100%);
+    }
+
+    body {
+        background-color: transparent;
+    }
+}
+
+@media (min-width: 900px) {
+    .bolha-e1,
+    .bolha-d1 {
+        width: 118px;
+        height: 118px;
+    }
+
+    .bolha-e3,
+    .bolha-d3 {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bolha {
+        animation: none;
+    }
 }
 
 .hero {
@@ -78,6 +302,7 @@ body {
     background-size: cover;
     background-position: center;
     position: relative;
+    z-index: 1;
     transition: opacity 0.8s ease;
     overflow: hidden;
 
@@ -129,6 +354,8 @@ body {
     text-align: center;
     opacity: 0;
     transition: opacity 1s ease;
+    position: relative;
+    z-index: 1;
 
     /*display: block !important;
     opacity: 1 !important;*/
