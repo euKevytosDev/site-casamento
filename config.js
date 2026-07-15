@@ -25,6 +25,15 @@ window.SITE_CONFIG = {
     // Domínio do site (pra meta/WhatsApp)
     siteUrl: "https://rafaekevin.com.br/",
 
+    // Texto do preview no WhatsApp / redes
+    ogDescricao: "Com a bênção de Deus, convidamos você para o nosso casamento.",
+    // Caminho da imagem OG (relativo ao siteUrl)
+    ogImagem: "imagens/og-image.jpg",
+
+    // Local da festa + link do Google Maps
+    localNome: "Espaço Salaberry",
+    mapsUrl: "https://www.google.com/maps/dir/?api=1&destination=Espaço+Salaberry",
+
     // Pais (opcional — cada casal muda)
     paisNoiva: "Warlen e Rosimar",
     paisNoivo: "Ricardo e Luiza",

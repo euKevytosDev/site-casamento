@@ -50,10 +50,49 @@ function aplicarConfigDoSite() {
     const horaEl = document.getElementById("cfg-hora");
     if (horaEl) horaEl.textContent = (c.horaCasamento || "") + "H";
 
-    // Título da aba do navegador
-    if (c.nomeNoiva && c.nomeNoivo && partes.length === 3) {
-        document.title = `${c.nomeNoiva} & ${c.nomeNoivo} · ${partes[2]}.${partes[1]}.${partes[0]}`;
+    // Local + Maps
+    const localEl = document.getElementById("cfg-local");
+    if (localEl && c.localNome) {
+        localEl.textContent = `Local: ${c.localNome}`;
     }
+    const mapsEl = document.getElementById("cfg-maps");
+    if (mapsEl && c.mapsUrl) {
+        mapsEl.setAttribute("href", c.mapsUrl);
+    }
+
+    // Título da aba + meta / OG (WhatsApp usa o HTML estático; JS ajuda no navegador)
+    const curto = c.nomeCurto || nomes;
+    let tituloAba = nomes;
+    let dataLegivel = "";
+    if (partes.length === 3) {
+        tituloAba = `${nomes} · ${partes[2]}.${partes[1]}.${partes[0]}`;
+        const meses = ["", "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+            "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+        const mesNum = Number(partes[1]);
+        dataLegivel = `${Number(partes[2])} de ${meses[mesNum] || partes[1]} de ${partes[0]}`;
+    }
+    document.title = tituloAba;
+
+    const descricaoPadrao = dataLegivel
+        ? `Convite de casamento de ${nomes} — ${dataLegivel}.`
+        : `Convite de casamento de ${nomes}.`;
+    const descricaoOg = c.ogDescricao || descricaoPadrao;
+    const baseUrl = (c.siteUrl || "").replace(/\/?$/, "/");
+    const ogImagePath = (c.ogImagem || "imagens/og-image.jpg").replace(/^\//, "");
+    const ogImageUrl = baseUrl ? baseUrl + ogImagePath : ogImagePath;
+
+    const setMeta = (id, value) => {
+        const el = document.getElementById(id);
+        if (el && value) el.setAttribute("content", value);
+    };
+    setMeta("meta-description", descricaoPadrao);
+    setMeta("meta-app-name", curto);
+    setMeta("meta-apple-title", curto);
+    setMeta("og-title", tituloAba);
+    setMeta("og-description", descricaoOg);
+    setMeta("og-url", baseUrl);
+    setMeta("og-image", ogImageUrl);
+    setMeta("twitter-image", ogImageUrl);
 
     // Aplica cores do config nas variáveis CSS (sem mudar o visual se forem as mesmas)
     if (c.cores) {

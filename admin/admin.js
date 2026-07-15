@@ -3,6 +3,16 @@ const SITE_ID = window.SITE_CONFIG?.siteId || "rafaekevin";
 const TOKEN_KEY = "casamento_admin_token";
 const LOGIN_KEY = "casamento_admin_login";
 
+(function aplicarSubtituloAdmin() {
+    const c = window.SITE_CONFIG;
+    const el = document.getElementById("admin-subtitulo-casal");
+    if (!el || !c) return;
+    if (c.nomeCurto) {
+        el.textContent = c.nomeCurto;
+    } else if (c.nomeNoiva && c.nomeNoivo) {
+        el.textContent = `${c.nomeNoiva} & ${c.nomeNoivo}`;
+    }
+})();
 
 function getToken() {
     return localStorage.getItem(TOKEN_KEY);
