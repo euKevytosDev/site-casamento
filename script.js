@@ -13,6 +13,68 @@ function apiHeaders(extras = {}) {
     };
 }
 
+// Lê o config e preenche a página (nomes, data, pais...)
+function aplicarConfigDoSite() {
+    const c = window.SITE_CONFIG;
+    if (!c) return;
+
+    const nomes = `${c.nomeNoiva} & ${c.nomeNoivo}`;
+
+    const hero = document.getElementById("cfg-nomes-hero");
+    if (hero) hero.textContent = nomes;
+
+    const bloco = document.getElementById("cfg-nomes-bloco");
+    if (bloco) bloco.innerHTML = `${c.nomeNoiva} <br>& <br> ${c.nomeNoivo}`;
+
+    const paisNoiva = document.getElementById("cfg-pais-noiva");
+    if (paisNoiva) paisNoiva.textContent = c.paisNoiva || "";
+
+    const paisNoivo = document.getElementById("cfg-pais-noivo");
+    if (paisNoivo) paisNoivo.textContent = c.paisNoivo || "";
+
+    // dataCasamento = "2027-04-24" → ano, mês, dia
+    const partes = (c.dataCasamento || "").split("-"); // [ano, mes, dia]
+    if (partes.length === 3) {
+        const diaEl = document.getElementById("cfg-dia");
+        const anoEl = document.getElementById("cfg-ano");
+        if (diaEl) diaEl.textContent = String(Number(partes[2])); // 24 (sem zero à esquerda)
+        if (anoEl) anoEl.textContent = partes[0];
+    }
+
+    const mesEl = document.getElementById("cfg-mes");
+    if (mesEl) mesEl.textContent = c.mesExtenso || "";
+
+    const semanaEl = document.getElementById("cfg-dia-semana");
+    if (semanaEl) semanaEl.textContent = c.diaSemana || "";
+
+    const horaEl = document.getElementById("cfg-hora");
+    if (horaEl) horaEl.textContent = (c.horaCasamento || "") + "H";
+
+    // Título da aba do navegador
+    if (c.nomeNoiva && c.nomeNoivo && partes.length === 3) {
+        document.title = `${c.nomeNoiva} & ${c.nomeNoivo} · ${partes[2]}.${partes[1]}.${partes[0]}`;
+    }
+
+    // Aplica cores do config nas variáveis CSS (sem mudar o visual se forem as mesmas)
+    if (c.cores) {
+        const root = document.documentElement.style;
+        const map = {
+            verde: "--cor-verde",
+            verdeEscuro: "--cor-verde-escuro",
+            verdeClaro: "--cor-verde-claro",
+            fundo: "--cor-fundo",
+            fundoBege: "--cor-fundo-bege",
+            texto: "--cor-texto",
+            textoHero: "--cor-texto-hero"
+        };
+        Object.entries(map).forEach(([chave, cssVar]) => {
+            if (c.cores[chave]) root.setProperty(cssVar, c.cores[chave]);
+        });
+    }
+}
+
+aplicarConfigDoSite();
+
 /* =======================================================
    TOAST (substitui alert)
    ======================================================= */
@@ -160,9 +222,12 @@ function fecharModal(modalEl) {
 }
 
 function atualizarContador() {
-    const dataCasamento = new Date("April 24, 2027 00:00:00").getTime();
+    const dataIso = window.SITE_CONFIG?.dataCasamento || "2027-04-24";
+    const dataCasamento = new Date(dataIso + "T00:00:00").getTime();
     const agora = new Date().getTime();
     const diferenca = dataCasamento - agora;
+
+
 
     // Cálculos de tempo
     const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
@@ -310,7 +375,7 @@ btnEnviarFamilia.addEventListener("click", () => {
 
     fetch(`${API_BASE}/api/presenca/confirmar-familia`, {
         method: "POST",
-        headers: apiHeaders( {
+        headers: apiHeaders({
             "Content-Type": "application/json"
         }),
         body: JSON.stringify(listaFamilia)
@@ -659,7 +724,7 @@ btnFinalizarCarrinho.addEventListener("click", () => {
 
     fetch(`${API_BASE}/api/presentes/gerar-pix`, {
         method: "POST",
-         headers: apiHeaders({ "Content-Type": "application/json" }),
+        headers: apiHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ nomeComprador: nome, itens: montarItensCarrinho() })
     })
         .then(async resposta => {
