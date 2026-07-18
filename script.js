@@ -3,7 +3,19 @@ const site = document.querySelector(".site");
 const btnAbrirConvite = document.getElementById("btn-abrir-convite");
 
 const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
-const SITE_ID = window.SITE_CONFIG?.siteId || "rafaekevin";
+
+/** Slug do casamento: ?site=nicole-teste (painel) ou config.js padrão */
+function resolverSiteId() {
+    const params = new URLSearchParams(window.location.search);
+    const q = (params.get("site") || params.get("siteId") || "").trim().toLowerCase();
+    if (q) return q;
+    return (window.SITE_CONFIG?.siteId || "rafaekevin").trim().toLowerCase();
+}
+
+let SITE_ID = resolverSiteId();
+if (window.SITE_CONFIG) {
+    window.SITE_CONFIG.siteId = SITE_ID;
+}
 
 // Helper: junta headers + X-Site-Id em todo fetch da API
 function apiHeaders(extras = {}) {
@@ -174,6 +186,9 @@ async function carregarConfigRemota() {
             },
             siteId: remoto.siteId || SITE_ID
         };
+        if (remoto.siteId) {
+            SITE_ID = remoto.siteId;
+        }
         aplicarConfigDoSite();
     } catch (_) {
         // silencioso: usa config.js

@@ -15,7 +15,7 @@
                 <span id="usuario-logado"></span>
             </div>
             <div class="topo-acoes">
-                <a href="../index.html" class="link-site">Ver site</a>
+                <a href="../index.html" class="link-site" id="link-ver-site">Ver site</a>
                 <button class="btn-sair" id="btn-sair">Sair</button>
             </div>
         </header>
@@ -284,6 +284,14 @@
 
         document.getElementById("usuario-logado").textContent = `Logado como ${getLogin()}`;
         document.getElementById("btn-sair").addEventListener("click", logout);
+
+        const linkVerSite = document.getElementById("link-ver-site");
+        if (linkVerSite) {
+            const slug = getSiteIdAtivo();
+            linkVerSite.href = `../index.html?site=${encodeURIComponent(slug)}`;
+            linkVerSite.target = "_blank";
+            linkVerSite.rel = "noopener";
+        }
 
         // Abas
         document.querySelectorAll(".aba").forEach(aba => {
