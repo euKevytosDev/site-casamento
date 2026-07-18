@@ -94,6 +94,8 @@ function aplicarConfigDoSite() {
     setMeta("og-image", ogImageUrl);
     setMeta("twitter-image", ogImageUrl);
 
+    aplicarMusicaDoConfig();
+
     // Aplica cores do config nas variáveis CSS (sem mudar o visual se forem as mesmas)
     if (c.cores) {
         const root = document.documentElement.style;
@@ -242,13 +244,51 @@ function toast(mensagem, tipo = "info") {
     document.addEventListener("visibilitychange", aplicar);
 })();
 
+/** Blessings tem trecho específico; outras músicas tocam do início. */
+function configMusicaAtual() {
+    const el = document.getElementById("musica");
+    if (!el) return { inicio: 0, loopEm: 0 };
+    const src = (el.querySelector("source")?.getAttribute("src")
+        || el.currentSrc
+        || window.SITE_CONFIG?.musicaUrl
+        || "").toLowerCase();
+    const isBlessings = src.includes("blessings");
+    return {
+        inicio: isBlessings ? 70 : 0,
+        loopEm: isBlessings ? 99 : 0
+    };
+}
+
+function aplicarMusicaDoConfig() {
+    const el = document.getElementById("musica");
+    const url = window.SITE_CONFIG?.musicaUrl;
+    if (!url || !el) return;
+    const source = el.querySelector("source");
+    const atual = source?.getAttribute("src") || "";
+    if (atual === url) return;
+    if (source) source.setAttribute("src", url);
+    else {
+        const s = document.createElement("source");
+        s.src = url;
+        s.type = "audio/mpeg";
+        el.appendChild(s);
+    }
+    el.load();
+}
+
 const musica = document.getElementById("musica");
-musica.volume = 0.4;
-musica.loop = false; // Desativa o loop nativo do HTML para controlarmos o tempo via JS
+if (musica) {
+    musica.volume = 0.4;
+    musica.loop = false;
+}
 
 btnAbrirConvite.addEventListener("click", () => {
-    musica.currentTime = 70; // Força o início no minuto 1:10 (70 segundos)
-    musica.play();
+    aplicarMusicaDoConfig();
+    const cfgMusica = configMusicaAtual();
+    if (musica) {
+        musica.currentTime = cfgMusica.inicio;
+        musica.play();
+    }
 
     // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
     // Como não colocamos o ".then", o JS só faz a chamada e continua rodando o resto do site sem travar nada.
@@ -275,11 +315,14 @@ btnAbrirConvite.addEventListener("click", () => {
     }, 800); // tempo igual ao CSS
 });
 
-// EVENTO DE LOOP RECOBRANDO DE 1:39
-musica.addEventListener("ended", () => {
-    musica.currentTime = 99; // Reseta o áudio para 1:39 ao invés do zero
-    musica.play();           // Toca novamente
-});
+// EVENTO DE LOOP
+if (musica) {
+    musica.addEventListener("ended", () => {
+        const cfgMusica = configMusicaAtual();
+        musica.currentTime = cfgMusica.loopEm;
+        musica.play();
+    });
+}
 
 const versiculo = document.querySelector(".versiculo");
 const indicadorScroll = document.getElementById("indicador-scroll");

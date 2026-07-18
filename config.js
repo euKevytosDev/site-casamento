@@ -47,5 +47,8 @@ window.SITE_CONFIG = {
         fundoBege: "#e0e1cf",
         texto: "#433f3f",
         textoHero: "#3a4332"
-    }
+    },
+
+    // Música ao abrir o selo (a noiva escolhe no painel)
+    musicaUrl: "musicas/Blessings.mp3"
 };

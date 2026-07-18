@@ -102,6 +102,17 @@
                                 </div>
                             </div>
 
+                            <h3 class="subtitulo-card">Música de fundo</h3>
+                            <label for="cfg-musica">Escolha a música do convite</label>
+                            <select id="cfg-musica">
+                                <option value="musicas/Blessings.mp3">Blessings</option>
+                                <option value="musicas/Chopin - Nocturne in C Sharp Minor (No. 20).mp3">Chopin — Nocturne in C# Minor</option>
+                                <option value="musicas/Idea 22 (Slowed + Reverb).mp3">Idea 22 (Slowed + Reverb)</option>
+                                <option value="musicas/autumn leaves (jazzy piano instrumental).mp3">Autumn Leaves (piano)</option>
+                                <option value="musicas/the bakery.mp3">The Bakery</option>
+                            </select>
+                            <p class="dica-admin">A música começa quando o convidado abre o selo.</p>
+
                             <h3 class="subtitulo-card">Cores do tema</h3>
                             <div class="cores-grid">
                                 <label>Verde <input type="color" id="cfg-cor-verde"></label>
@@ -325,6 +336,20 @@
             document.getElementById("cfg-pix-nome").value = cfg.pixNomeRecebedor || "";
             document.getElementById("cfg-pix-cidade").value = cfg.pixCidade || "";
 
+            const selMusica = document.getElementById("cfg-musica");
+            if (selMusica) {
+                const atual = cfg.musicaUrl || "musicas/Blessings.mp3";
+                selMusica.value = atual;
+                if (selMusica.value !== atual) {
+                    // se o valor salvo não estiver na lista, adiciona opção
+                    const opt = document.createElement("option");
+                    opt.value = atual;
+                    opt.textContent = atual.split("/").pop();
+                    selMusica.appendChild(opt);
+                    selMusica.value = atual;
+                }
+            }
+
             const cores = { ...CORES_PADRAO, ...(cfg.cores || {}) };
             setCor("cfg-cor-verde", cores.verde);
             setCor("cfg-cor-verde-escuro", cores.verdeEscuro);
@@ -431,6 +456,7 @@
                 pixChave: document.getElementById("cfg-pix-chave").value.trim(),
                 pixNomeRecebedor: document.getElementById("cfg-pix-nome").value.trim(),
                 pixCidade: document.getElementById("cfg-pix-cidade").value.trim(),
+                musicaUrl: document.getElementById("cfg-musica")?.value || "musicas/Blessings.mp3",
                 cores: {
                     verde: getCor("cfg-cor-verde", CORES_PADRAO.verde),
                     verdeEscuro: getCor("cfg-cor-verde-escuro", CORES_PADRAO.verdeEscuro),
