@@ -28,6 +28,7 @@
                 <button class="aba ativa" data-aba="personalizar">Personalizar site</button>
                 <button class="aba" data-aba="presentes">Presentes</button>
                 <button class="aba" data-aba="historico">Histórico de cotas</button>
+                <button class="aba" data-aba="pix-pendentes">PIX a confirmar</button>
                 <button class="aba" data-aba="presenca">Presenças</button>
             </div>
 
@@ -275,6 +276,15 @@
                 </div>
             </section>
 
+            <!-- ABA PIX PENDENTES -->
+            <section id="aba-pix-pendentes" class="painel-aba">
+                <div class="card-painel">
+                    <h2>Avisos de PIX aguardando confirmação</h2>
+                    <p class="dica-admin">O convidado avisou que pagou. Confira o crédito na sua conta e só então confirme — aí as cotas baixam na lista.</p>
+                    <div id="lista-pix-pendentes"></div>
+                </div>
+            </section>
+
             <!-- ABA PRESENÇA -->
             <section id="aba-presenca" class="painel-aba">
                 <div class="card-painel">
@@ -326,6 +336,28 @@
             }, 3200);
         }
 
+        function escapeHtml(valor) {
+            return String(valor ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function safeUrl(valor, fallback = "") {
+            const raw = String(valor ?? "").trim();
+            if (!raw) return fallback;
+            const lower = raw.toLowerCase();
+            if (lower.startsWith("javascript:") || lower.startsWith("data:") || lower.startsWith("vbscript:")) {
+                return fallback;
+            }
+            if (/^https?:\/\//i.test(raw) || raw.startsWith("/") || raw.startsWith("imagens/") || raw.startsWith("../")) {
+                return raw;
+            }
+            return fallback;
+        }
+
         if (!getToken()) {
             window.location.href = "index.html";
         }
@@ -356,6 +388,7 @@
 
                 if (aba.dataset.aba === "presenca") carregarPresencas();
                 if (aba.dataset.aba === "historico") carregarHistorico();
+                if (aba.dataset.aba === "pix-pendentes") carregarPixPendentes();
                 if (aba.dataset.aba === "personalizar") carregarPersonalizacao();
             });
         });
@@ -471,7 +504,7 @@
             }
             lista.innerHTML = fotos.map((url, i) => `
                 <div class="item-carrossel-admin">
-                    <img src="${urlImagem(url, "lista")}" alt="Foto ${i + 1}">
+                    <img src="${escapeHtml(safeUrl(urlImagem(url, "lista"), "imagens/flor-central2.png"))}" alt="Foto ${i + 1}">
                     <button type="button" class="btn-secundario btn-remover-carrossel" data-index="${i}">Remover</button>
                 </div>
             `).join("");
@@ -799,10 +832,10 @@
 
             listaPresentes.innerHTML = presentes.map(p => `
                 <article class="item-card">
-                    <img src="${urlImagem(p.imagem, "lista")}" alt="${p.nome}">
+                    <img src="${escapeHtml(safeUrl(urlImagem(p.imagem, "lista"), "imagens/flor-central2.png"))}" alt="${escapeHtml(p.nome)}">
                     <div class="item-info">
-                        <strong>${p.nome}</strong>
-                        <p>${p.descricao || ""}</p>
+                        <strong>${escapeHtml(p.nome)}</strong>
+                        <p>${escapeHtml(p.descricao || "")}</p>
                         <p>${formatarValor(p.valor)} / cota</p>
                         <span class="badge ${p.comprado ? "comprado" : ""}">
                             ${p.cotasVendidas || 0}/${p.cotasTotal || 1} cotas${p.comprado ? " · esgotado" : ""}
@@ -960,8 +993,8 @@
 
                 tbody.innerHTML = lista.map(item => `
                     <tr>
-                        <td><strong>${item.nomeComprador}</strong></td>
-                        <td>${item.nomePresente}</td>
+                        <td><strong>${escapeHtml(item.nomeComprador)}</strong></td>
+                        <td>${escapeHtml(item.nomePresente)}</td>
                         <td>${item.quantidade}</td>
                         <td>${formatarValor(item.valorCota)}</td>
                         <td>${formatarValor(item.valorTotal)}</td>
@@ -969,8 +1002,59 @@
                     </tr>
                 `).join("");
             } catch (erro) {
-                tbody.innerHTML = `<tr><td colspan="6" class="vazio">${erro.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="vazio">${escapeHtml(erro.message)}</td></tr>`;
                 resumo.innerHTML = "";
+            }
+        }
+
+        // ===== PIX PENDENTES =====
+        async function carregarPixPendentes() {
+            const box = document.getElementById("lista-pix-pendentes");
+            if (!box) return;
+            box.innerHTML = `<p class="vazio">Carregando...</p>`;
+            try {
+                const resposta = await apiFetch("/api/admin/pedidos-presente/pendentes-pix");
+                if (!resposta.ok) throw new Error(await lerErro(resposta));
+                const lista = await resposta.json();
+                if (!lista.length) {
+                    box.innerHTML = `<p class="vazio">Nenhum aviso de PIX pendente.</p>`;
+                    return;
+                }
+                box.innerHTML = lista.map(p => `
+                    <article class="item-card" style="margin-bottom:12px;">
+                        <div class="item-info">
+                            <strong>${escapeHtml(p.nomeComprador)}</strong>
+                            <p>Total: ${formatarValor(p.total)}</p>
+                            <p class="dica-admin">Pedido #${p.id} · ${escapeHtml(p.dataCriacao || "")}</p>
+                            <div class="acoes-item">
+                                <button type="button" class="btn-primario" data-pix="confirmar" data-id="${p.id}">Confirmar PIX</button>
+                                <button type="button" class="btn-secundario" data-pix="recusar" data-id="${p.id}">Recusar</button>
+                            </div>
+                        </div>
+                    </article>
+                `).join("");
+
+                box.querySelectorAll("[data-pix]").forEach(btn => {
+                    btn.addEventListener("click", async () => {
+                        const id = btn.dataset.id;
+                        const acao = btn.dataset.pix;
+                        if (acao === "confirmar" && !confirm("Confirmar que o PIX entrou na conta e baixar as cotas?")) return;
+                        if (acao === "recusar" && !confirm("Recusar este aviso de PIX?")) return;
+                        try {
+                            const path = acao === "confirmar"
+                                ? `/api/admin/pedidos-presente/${id}/confirmar-pix`
+                                : `/api/admin/pedidos-presente/${id}/recusar-pix`;
+                            const res = await apiFetch(path, { method: "POST" });
+                            if (!res.ok) throw new Error(await lerErro(res));
+                            toast(acao === "confirmar" ? "PIX confirmado!" : "Aviso recusado", "sucesso");
+                            await carregarPixPendentes();
+                        } catch (e) {
+                            toast(e.message || "Falha ao atualizar pedido", "erro");
+                        }
+                    });
+                });
+            } catch (erro) {
+                box.innerHTML = `<p class="vazio">${escapeHtml(erro.message)}</p>`;
             }
         }
 
@@ -1000,19 +1084,19 @@
 
                 tbody.innerHTML = lista.map(p => `
                     <tr>
-                        <td>${p.nomeConvidado}</td>
+                        <td>${escapeHtml(p.nomeConvidado)}</td>
                         <td>${p.idade ?? "-"}</td>
                         <td class="${p.confirmado ? "status-sim" : "status-nao"}">
                             ${p.confirmado ? "Sim" : "Não"}
                         </td>
                         <td>${formatarData(p.dataCadastro)}</td>
                         <td>
-                            <button class="btn-perigo" onclick="excluirPresenca(${p.id})">Excluir</button>
+                            <button class="btn-perigo" onclick="excluirPresenca(${Number(p.id)})">Excluir</button>
                         </td>
                     </tr>
                 `).join("");
             } catch (erro) {
-                tbody.innerHTML = `<tr><td colspan="5" class="vazio">${erro.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="vazio">${escapeHtml(erro.message)}</td></tr>`;
             }
         }
 

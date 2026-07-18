@@ -25,6 +25,30 @@ function apiHeaders(extras = {}) {
     };
 }
 
+/** Escapa texto para uso seguro em HTML (previne XSS). */
+function escapeHtml(valor) {
+    return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+/** Só permite URLs http(s) ou caminhos relativos locais (imagens). */
+function safeUrl(valor, fallback = "") {
+    const raw = String(valor ?? "").trim();
+    if (!raw) return fallback;
+    const lower = raw.toLowerCase();
+    if (lower.startsWith("javascript:") || lower.startsWith("data:") || lower.startsWith("vbscript:")) {
+        return fallback;
+    }
+    if (/^https?:\/\//i.test(raw) || raw.startsWith("/") || raw.startsWith("imagens/") || raw.startsWith("musicas/")) {
+        return raw;
+    }
+    return fallback;
+}
+
 // Lê o config e preenche a página (nomes, data, pais...)
 function aplicarConfigDoSite() {
     const c = window.SITE_CONFIG;
@@ -36,7 +60,14 @@ function aplicarConfigDoSite() {
     if (hero) hero.textContent = nomes;
 
     const bloco = document.getElementById("cfg-nomes-bloco");
-    if (bloco) bloco.innerHTML = `${c.nomeNoiva} <br>& <br> ${c.nomeNoivo}`;
+    if (bloco) {
+        bloco.replaceChildren();
+        bloco.append(document.createTextNode(c.nomeNoiva || ""));
+        bloco.append(document.createElement("br"));
+        bloco.append(document.createTextNode("&"));
+        bloco.append(document.createElement("br"));
+        bloco.append(document.createTextNode(c.nomeNoivo || ""));
+    }
 
     const paisNoiva = document.getElementById("cfg-pais-noiva");
     if (paisNoiva) paisNoiva.textContent = c.paisNoiva || "";
@@ -75,7 +106,8 @@ function aplicarConfigDoSite() {
     }
     const mapsEl = document.getElementById("cfg-maps");
     if (mapsEl && c.mapsUrl) {
-        mapsEl.setAttribute("href", c.mapsUrl);
+        const url = safeUrl(c.mapsUrl);
+        if (url) mapsEl.setAttribute("href", url);
     }
 
     // Título da aba + meta / OG (WhatsApp usa o HTML estático; JS ajuda no navegador)
@@ -217,11 +249,14 @@ function aplicarFotosDoSite(c) {
     if (!slidesWrap) return;
 
     if (fotos.length) {
-        slidesWrap.innerHTML = fotos.map((url, i) => `
+        slidesWrap.innerHTML = fotos.map((url, i) => {
+            const src = escapeHtml(safeUrl(url, "imagens/flor-central2.png"));
+            return `
             <figure class="carrossel-slide${i === 0 ? " ativo" : ""}">
-                <img src="${url}" alt="Momento ${i + 1}">
+                <img src="${src}" alt="Momento ${i + 1}">
             </figure>
-        `).join("");
+        `;
+        }).join("");
         if (dotsWrap) dotsWrap.innerHTML = "";
         if (typeof iniciarCarrosselMomentos === "function") {
             iniciarCarrosselMomentos();
@@ -692,14 +727,20 @@ function atualizarInterfaceLista() {
     // Roda cada membro da nossa memória e desenha ele na tela com um botão de "X" para remover
     listaFamilia.forEach((membro, index) => {
         const li = document.createElement("li");
-
-        // Formata o texto bonito para o usuário ler
-        const statusTexto = membro.confirmado ? "Confirmado" : "Não vai";
-        li.innerHTML = `
-            <span><strong>${membro.nomeConvidado}</strong> (${membro.idade} anos) - ${statusTexto}</span>
-            <button class="btn-remover-membro" onclick="removerMembroDaLista(${index})">&times;</button>
-        `;
-
+        const span = document.createElement("span");
+        const strong = document.createElement("strong");
+        strong.textContent = membro.nomeConvidado;
+        span.append(strong);
+        span.append(document.createTextNode(
+            ` (${membro.idade} anos) - ${membro.confirmado ? "Confirmado" : "Não vai"}`
+        ));
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-remover-membro";
+        btn.setAttribute("aria-label", "Remover");
+        btn.textContent = "×";
+        btn.addEventListener("click", () => window.removerMembroDaLista(index));
+        li.append(span, btn);
         listaFamiliaVisual.appendChild(li);
     });
 }
@@ -917,11 +958,11 @@ function atualizarPainelCarrinho() {
         return `
             <li class="item-carrinho">
                 <div class="item-carrinho-info">
-                    <span>${item.nome}</span>
+                    <span>${escapeHtml(item.nome)}</span>
                     <small>${item.quantidade} cota${item.quantidade > 1 ? "s" : ""} × ${formatarValor(item.valor)}</small>
                 </div>
                 <span>${formatarValor(subtotal)}</span>
-                <button type="button" class="btn-remover-carrinho" data-id="${item.presenteId}" aria-label="Remover">×</button>
+                <button type="button" class="btn-remover-carrinho" data-id="${Number(item.presenteId)}" aria-label="Remover">×</button>
             </li>
         `;
     }).join("");
@@ -983,12 +1024,16 @@ function renderizarPresentes(presentes) {
             ? `<span class="badge-comprado">${disponiveis === 0 && presente.comprado ? "Esgotado" : "No carrinho"}</span>`
             : `<p class="cotas-info">${disponiveis}/${cotasTotal} cotas livres</p>`;
 
+        const nomeSafe = escapeHtml(presente.nome);
+        const descSafe = escapeHtml(presente.descricao || "");
+        const imgSafe = escapeHtml(safeUrl(urlImagem(presente.imagem), "imagens/flor-central2.png"));
+
         card.innerHTML = `
-            <img src="${urlImagem(presente.imagem)}" alt="${presente.nome}" onerror="this.src='imagens/flor-central2.png'">
+            <img src="${imgSafe}" alt="${nomeSafe}" onerror="this.src='imagens/flor-central2.png'">
             <div class="card-presente-corpo">
                 ${infoCotas}
-                <h4>${presente.nome}</h4>
-                <p class="descricao-presente">${presente.descricao || ""}</p>
+                <h4>${nomeSafe}</h4>
+                <p class="descricao-presente">${descSafe}</p>
                 <p class="valor-presente">${formatarValor(presente.valor)}<small style="font-size:10px;font-weight:400;color:#888"> / cota</small></p>
                 <div class="controle-quantidade">
                     <button type="button" class="btn-qtd btn-menos" data-id="${presente.id}" ${esgotado ? "disabled" : ""}>−</button>
@@ -1255,7 +1300,7 @@ btnConfirmarPagamento.addEventListener("click", () => {
         })
         .finally(() => {
             spinnerPagamento.classList.add("escondido");
-            textoConfirmarPagamento.textContent = "Já paguei, confirmar";
+            textoConfirmarPagamento.textContent = "Já paguei — avisar o casal";
             btnConfirmarPagamento.disabled = false;
         });
 });
