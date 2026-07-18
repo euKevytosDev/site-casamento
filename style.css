@@ -995,6 +995,30 @@ body {
     width: 100%;
 }
 
+button.linha-interacao {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button.linha-interacao:hover .botao-circulo,
+button.linha-interacao:focus-visible .botao-circulo,
+.link-mapa:hover .botao-circulo,
+.link-mapa:focus-visible .botao-circulo {
+    background-color: var(--cor-verde-escuro);
+    transform: scale(1.05);
+}
+
+button.linha-interacao:focus-visible,
+.link-mapa:focus-visible {
+    outline: none;
+}
+
 .botao-circulo {
     width: 52px;
     height: 52px;
@@ -1145,13 +1169,8 @@ body {
 .link-mapa {
     text-decoration: none;
     color: inherit;
-}
-
-.link-mapa:hover .botao-circulo {
-    background-color: var(--cor-verde-escuro);
-    /* Muda o verde para o tom mais escuro */
-    transform: scale(1.05);
-    /* Dá o leve zoom na bolinha */
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .linha-campos-duplos {
