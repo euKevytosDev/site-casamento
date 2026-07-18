@@ -10,11 +10,11 @@
 <body>
     <div class="pagina-login">
         <div class="card-login">
-            <h1>Área Admin</h1>
-            <p class="subtitulo" id="admin-subtitulo-casal">Rafaella & Kevin</p>
+            <h1>Área do casal</h1>
+            <p class="subtitulo" id="admin-subtitulo-casal">Entre com e-mail ou login admin</p>
 
             <form id="form-login">
-                <label for="login">Login</label>
+                <label for="login">E-mail ou login</label>
                 <input type="text" id="login" autocomplete="username" required>
 
                 <label for="senha">Senha</label>
@@ -24,7 +24,8 @@
             </form>
 
             <p id="mensagem" class="mensagem"></p>
-            <a href="../index.html" class="link-voltar">← Voltar ao site</a>
+            <a href="../landing/index.html" class="link-voltar">← Criar meu site</a>
+            <a href="../index.html" class="link-voltar">Ver demonstração</a>
         </div>
     </div>
 
@@ -47,14 +48,24 @@
             btnLogin.textContent = "Entrando...";
 
             try {
-                const resposta = await fetch(`${API_BASE}/api/auth/login`, {
+                const login = document.getElementById("login").value.trim();
+                const senha = document.getElementById("senha").value;
+                const payload = JSON.stringify({ login, senha });
+
+                // Tenta noiva (e-mail) e depois admin global
+                let resposta = await fetch(`${API_BASE}/api/auth/login-noiva`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        login: document.getElementById("login").value.trim(),
-                        senha: document.getElementById("senha").value
-                    })
+                    body: payload
                 });
+
+                if (resposta.status === 401) {
+                    resposta = await fetch(`${API_BASE}/api/auth/login`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: payload
+                    });
+                }
 
                 const texto = await resposta.text();
                 let dados;
@@ -64,7 +75,7 @@
                     throw new Error(typeof dados === "string" ? dados : (dados.message || "Login ou senha inválidos"));
                 }
 
-                setAuth(dados.token, dados.login);
+                setAuth(dados.token, dados.login, dados.siteId || null, dados.role || "ADMIN");
                 window.location.href = "painel.html";
             } catch (erro) {
                 mensagem.className = "mensagem erro";

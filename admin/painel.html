@@ -357,7 +357,8 @@
         const SITE_SEM_LIMITE_PRESENTES = "rafaekevin";
 
         function siteSemLimitePresentes() {
-            return (SITE_ID || "").toLowerCase() === SITE_SEM_LIMITE_PRESENTES;
+            const id = (typeof getSiteIdAtivo === "function" ? getSiteIdAtivo() : SITE_ID) || "";
+            return id.toLowerCase() === SITE_SEM_LIMITE_PRESENTES;
         }
 
         function renderCarrosselAdmin(fotos) {

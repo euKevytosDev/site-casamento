@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site de Casamento · personalizável</title>
+    <meta name="description" content="Crie o site do seu casamento: presentes no PIX, confirmação de presença e personalização completa. R$ 99 para começar + R$ 49,90/mês.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+    <header class="topo">
+        <a class="marca" href="./index.html">RK Sites</a>
+        <nav>
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#plano">Plano</a>
+            <a href="#comecar" class="btn-nav">Começar</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Site de casamento · assinatura</p>
+                <h1>O site do seu casamento,<br>feito por vocês.</h1>
+                <p class="lead">
+                    Presentes no PIX, confirmação de presença, fotos e cores do jeito de vocês —
+                    sem taxa nossa em cima dos presentes.
+                </p>
+                <div class="cta-row">
+                    <a class="btn-primario" href="#comecar">Criar meu site — R$&nbsp;99</a>
+                    <a class="btn-ghost" href="https://rafaekevin.com.br/" target="_blank" rel="noopener">Ver demonstração</a>
+                </div>
+                <p class="fine">Criação + 1º mês incluso. Depois R$ 49,90/mês.</p>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+                <div class="frame">
+                    <span class="frame-label">Demo ao vivo</span>
+                    <p>Rafaella &amp; Kevin</p>
+                    <a href="https://rafaekevin.com.br/" target="_blank" rel="noopener">Abrir site →</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="como-funciona" class="bloco">
+            <h2>Como funciona</h2>
+            <ol class="passos">
+                <li><strong>Checkout na landing</strong> — vocês escolhem o link e pagam R$&nbsp;99 no cartão (Mercado Pago).</li>
+                <li><strong>Painel liberado</strong> — personalizam nomes, fotos, cores, local e lista de presentes.</li>
+                <li><strong>Convidados</strong> — confirmam presença e presenteiam no PIX (valor 100% de vocês).</li>
+                <li><strong>Mensalidade</strong> — a partir do 2º mês, R$&nbsp;49,90. Cancelem quando quiserem após o 4º mês.</li>
+            </ol>
+        </section>
+
+        <section id="plano" class="bloco plano">
+            <h2>Plano único</h2>
+            <div class="card-plano">
+                <p class="preco"><span>R$</span>99</p>
+                <p class="preco-sub">criação + 1º mês</p>
+                <p class="mensal">Depois <strong>R$ 49,90/mês</strong></p>
+                <ul>
+                    <li>Site personalizável (nomes, cores, fotos, carrossel)</li>
+                    <li>Até 20 presentes + PIX direto pra vocês</li>
+                    <li>Confirmação de presença</li>
+                    <li>Link pra mandar no WhatsApp</li>
+                    <li>Cancelamento sem multa após 4 meses</li>
+                    <li>7 dias de arrependimento</li>
+                </ul>
+                <a class="btn-primario" href="#comecar">Quero esse plano</a>
+            </div>
+        </section>
+
+        <section id="comecar" class="bloco checkout">
+            <h2>Começar agora</h2>
+            <p class="lead-sm">Preencha e vá para o pagamento seguro no Mercado Pago.</p>
+
+            <form id="form-checkout" class="form-checkout">
+                <div class="linha">
+                    <div>
+                        <label for="nomeNoiva">Nome da noiva</label>
+                        <input id="nomeNoiva" name="nomeNoiva" required autocomplete="given-name">
+                    </div>
+                    <div>
+                        <label for="nomeNoivo">Nome do noivo</label>
+                        <input id="nomeNoivo" name="nomeNoivo" required autocomplete="family-name">
+                    </div>
+                </div>
+
+                <label for="slug">Link do site</label>
+                <div class="slug-row">
+                    <span class="slug-prefix" id="slug-prefix">seudominio.com/</span>
+                    <input id="slug" name="slug" required pattern="[a-z0-9-]{3,40}" placeholder="mariajoao"
+                        title="Só letras minúsculas, números e hífen">
+                </div>
+
+                <label for="email">E-mail (login do painel)</label>
+                <input id="email" name="email" type="email" required autocomplete="email">
+
+                <label for="senha">Senha do painel</label>
+                <input id="senha" name="senha" type="password" required minlength="6" autocomplete="new-password">
+
+                <p class="termos">
+                    Ao continuar, você aceita a permanência mínima de 4 meses (com multa proporcional se cancelar antes,
+                    exceto nos 7 primeiros dias). Sem pagamento, o site fica temporariamente desativado.
+                </p>
+
+                <button type="submit" class="btn-primario btn-full" id="btn-checkout">
+                    Ir para o pagamento — R$&nbsp;99
+                </button>
+                <p id="msg-checkout" class="msg" role="status"></p>
+            </form>
+
+            <p class="ja-tem">Já tem conta? <a href="../admin/index.html">Entrar no painel</a></p>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <p>RK Sites · Site de casamento personalizável</p>
+        <p><a href="https://rafaekevin.com.br/" target="_blank" rel="noopener">Ver demonstração</a></p>
+    </footer>
+
+    <script src="../config.js"></script>
+    <script src="landing.js"></script>
+</body>
+</html>

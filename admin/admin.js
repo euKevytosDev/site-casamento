@@ -1,12 +1,25 @@
 const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
-const SITE_ID = window.SITE_CONFIG?.siteId || "rafaekevin";
 const TOKEN_KEY = "casamento_admin_token";
 const LOGIN_KEY = "casamento_admin_login";
+const SITE_KEY = "casamento_admin_site";
+const ROLE_KEY = "casamento_admin_role";
+
+function getSiteIdAtivo() {
+    return localStorage.getItem(SITE_KEY) || window.SITE_CONFIG?.siteId || "rafaekevin";
+}
+
+const SITE_ID = getSiteIdAtivo();
 
 (function aplicarSubtituloAdmin() {
     const c = window.SITE_CONFIG;
     const el = document.getElementById("admin-subtitulo-casal");
-    if (!el || !c) return;
+    if (!el) return;
+    const siteSalvo = localStorage.getItem(SITE_KEY);
+    if (siteSalvo) {
+        el.textContent = siteSalvo;
+        return;
+    }
+    if (!c) return;
     if (c.nomeCurto) {
         el.textContent = c.nomeCurto;
     } else if (c.nomeNoiva && c.nomeNoivo) {
@@ -18,9 +31,13 @@ function getToken() {
     return localStorage.getItem(TOKEN_KEY);
 }
 
-function setAuth(token, login) {
+function setAuth(token, login, siteId, role) {
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(LOGIN_KEY, login);
+    if (siteId) localStorage.setItem(SITE_KEY, siteId);
+    else localStorage.removeItem(SITE_KEY);
+    if (role) localStorage.setItem(ROLE_KEY, role);
+    else localStorage.removeItem(ROLE_KEY);
 }
 
 function getLogin() {
@@ -30,6 +47,8 @@ function getLogin() {
 function logout() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(LOGIN_KEY);
+    localStorage.removeItem(SITE_KEY);
+    localStorage.removeItem(ROLE_KEY);
     window.location.href = "index.html";
 }
 
@@ -97,7 +116,7 @@ async function apiFetch(caminho, opcoes = {}) {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    headers["X-Site-Id"] = SITE_ID;
+    headers["X-Site-Id"] = getSiteIdAtivo();
 
     const resposta = await fetch(`${API_BASE}${caminho}`, { ...opcoes, headers });
 
