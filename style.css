@@ -1769,7 +1769,17 @@ button.linha-interacao:focus-visible,
 
 .botoes-carrinho {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
+}
+
+.botoes-carrinho .btn-confirmar-compra,
+.botoes-carrinho .btn-cancelar-compra {
+    flex: 1 1 140px;
+}
+
+.btn-cartao {
+    background: #1c1f26 !important;
 }
 
 .painel-pix {

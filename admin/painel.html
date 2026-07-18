@@ -113,6 +113,20 @@
                                 </div>
                             </div>
 
+                            <h3 class="subtitulo-card">Mercado Pago (cartão nos presentes)</h3>
+                            <p class="dica-admin">Conecte a conta Mercado Pago do casal. O valor do cartão cai direto pra vocês — sem taxa do site (só a taxa da operadora/MP).</p>
+                            <p id="mp-status-texto" class="dica-admin">Status: verificando...</p>
+                            <div class="linha-dupla" style="margin-bottom:12px;">
+                                <button type="button" class="btn-secundario" id="btn-mp-conectar">Conectar Mercado Pago</button>
+                                <button type="button" class="btn-secundario" id="btn-mp-desconectar">Desconectar</button>
+                            </div>
+                            <details id="mp-token-manual-box">
+                                <summary style="cursor:pointer; font-size:13px; color:#6b7280; margin-bottom:8px;">Ou colar Access Token manualmente</summary>
+                                <label for="cfg-mp-token">Access Token (conta da noiva)</label>
+                                <input type="password" id="cfg-mp-token" placeholder="APP_USR-... ou TEST-..." autocomplete="off">
+                                <button type="button" class="btn-secundario" id="btn-mp-salvar-token">Salvar token</button>
+                            </details>
+
                             <h3 class="subtitulo-card">Música de fundo</h3>
                             <label for="cfg-musica">Escolha uma música pronta</label>
                             <select id="cfg-musica">
@@ -600,8 +614,81 @@
         }
         ligarUpload("file-carrossel", "carrossel");
 
+        async function atualizarStatusMp() {
+            const el = document.getElementById("mp-status-texto");
+            if (!el) return;
+            try {
+                const res = await apiFetch("/api/admin/mercadopago/status");
+                if (!res.ok) throw new Error(await res.text());
+                const st = await res.json();
+                el.textContent = st.conectado
+                    ? `Status: conectado${st.userId ? " (user " + st.userId + ")" : ""}`
+                    : "Status: não conectado — convidados só poderão presentear via PIX.";
+                const btnOauth = document.getElementById("btn-mp-conectar");
+                if (btnOauth) {
+                    btnOauth.disabled = !st.oauthDisponivel && !st.permiteTokenManual;
+                    btnOauth.title = st.oauthDisponivel
+                        ? "Abrir autorização do Mercado Pago"
+                        : "OAuth ainda não configurado no servidor — use o token manual abaixo";
+                }
+            } catch (e) {
+                el.textContent = "Status: não foi possível verificar (" + (e.message || "erro") + ")";
+            }
+        }
+
+        document.getElementById("btn-mp-conectar")?.addEventListener("click", async () => {
+            try {
+                const res = await apiFetch("/api/admin/mercadopago/oauth/url");
+                const texto = await res.text();
+                let data; try { data = JSON.parse(texto); } catch { data = texto; }
+                if (!res.ok) throw new Error(typeof data === "string" ? data : data.message || "OAuth indisponível");
+                if (!data.url) throw new Error("URL de autorização não retornada. Use o token manual.");
+                window.location.href = data.url;
+            } catch (e) {
+                toast(e.message || "Configure OAuth ou use token manual", "erro");
+                document.getElementById("mp-token-manual-box")?.setAttribute("open", "");
+            }
+        });
+
+        document.getElementById("btn-mp-desconectar")?.addEventListener("click", async () => {
+            if (!confirm("Desconectar Mercado Pago? Convidados não poderão mais pagar no cartão.")) return;
+            try {
+                const res = await apiFetch("/api/admin/mercadopago/conexao", { method: "DELETE" });
+                if (!res.ok) throw new Error(await res.text());
+                toast("Mercado Pago desconectado", "sucesso");
+                atualizarStatusMp();
+            } catch (e) {
+                toast(e.message || "Erro ao desconectar", "erro");
+            }
+        });
+
+        document.getElementById("btn-mp-salvar-token")?.addEventListener("click", async () => {
+            const token = document.getElementById("cfg-mp-token")?.value.trim();
+            if (!token) {
+                toast("Cole o Access Token da conta Mercado Pago", "erro");
+                return;
+            }
+            try {
+                const res = await apiFetch("/api/admin/mercadopago/token-manual", {
+                    method: "POST",
+                    body: JSON.stringify({ accessToken: token })
+                });
+                if (!res.ok) throw new Error(await res.text());
+                document.getElementById("cfg-mp-token").value = "";
+                toast("Token salvo — cartão liberado nos presentes", "sucesso");
+                atualizarStatusMp();
+            } catch (e) {
+                toast(e.message || "Erro ao salvar token", "erro");
+            }
+        });
+
+        const mpParam = new URLSearchParams(location.search).get("mp");
+        if (mpParam === "ok") toast("Mercado Pago conectado com sucesso!", "sucesso");
+        if (mpParam === "erro") toast("Não foi possível conectar o Mercado Pago", "erro");
+
         // carrega personalizar na abertura (aba padrão)
         carregarPersonalizacao();
+        atualizarStatusMp();
 
         // ===== PRESENTES =====
         const formPresente = document.getElementById("form-presente");

@@ -132,6 +132,15 @@ function aplicarConfigDoSite() {
     }
 
     aplicarFotosDoSite(c);
+    atualizarOpcaoCartaoPresente(c);
+}
+
+function atualizarOpcaoCartaoPresente(c) {
+    const ok = !!(c && c.mpCartaoDisponivel);
+    const btn = document.getElementById("btn-pagar-cartao");
+    const dica = document.getElementById("dica-cartao-presente");
+    if (btn) btn.classList.toggle("escondido", !ok);
+    if (dica) dica.classList.toggle("escondido", !ok);
 }
 
 /** Slug da vitrine de venda (com fotos reais). Qualquer outro slug usa layout neutro. */
@@ -788,6 +797,10 @@ const btnLimparCarrinho = document.getElementById("btn-limpar-carrinho");
 const btnFinalizarCarrinho = document.getElementById("btn-finalizar-carrinho");
 const spinnerCompra = document.getElementById("spinner-compra");
 const textoFinalizarCarrinho = document.getElementById("texto-finalizar-carrinho");
+const btnPagarCartao = document.getElementById("btn-pagar-cartao");
+const spinnerCartao = document.getElementById("spinner-cartao");
+const textoPagarCartao = document.getElementById("texto-pagar-cartao");
+const dicaCartaoPresente = document.getElementById("dica-cartao-presente");
 const painelPix = document.getElementById("painel-pix");
 const totalPixEl = document.getElementById("total-pix");
 const canvasQrPix = document.getElementById("qrcode-pix");
@@ -1114,6 +1127,75 @@ btnFinalizarCarrinho.addEventListener("click", () => {
             btnFinalizarCarrinho.disabled = false;
         });
 });
+
+btnPagarCartao?.addEventListener("click", () => {
+    if (!carrinho.length) {
+        toast("Adicione pelo menos uma cota ao carrinho.", "erro");
+        return;
+    }
+    const nome = campoNomeComprador.value.trim();
+    if (!nome) {
+        toast("Digite seu nome antes de pagar.", "erro");
+        campoNomeComprador.focus();
+        return;
+    }
+
+    spinnerCartao?.classList.remove("escondido");
+    if (textoPagarCartao) textoPagarCartao.textContent = "Abrindo Mercado Pago...";
+    btnPagarCartao.disabled = true;
+
+    fetch(`${API_BASE}/api/presentes/checkout-cartao`, {
+        method: "POST",
+        headers: apiHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ nomeComprador: nome, itens: montarItensCarrinho() })
+    })
+        .then(async resposta => {
+            const corpo = await resposta.json().catch(() => ({}));
+            if (!resposta.ok) {
+                const msg = typeof corpo === "string" ? corpo : corpo.message || "Erro ao iniciar cartão";
+                throw new Error(msg);
+            }
+            if (!corpo.checkoutUrl) throw new Error("Link de pagamento não retornado.");
+            sessionStorage.setItem("pedido_presente_id", String(corpo.pedidoId || ""));
+            window.location.href = corpo.checkoutUrl;
+        })
+        .catch(erro => {
+            toast(erro.message || "Não foi possível abrir o pagamento no cartão.", "erro");
+        })
+        .finally(() => {
+            spinnerCartao?.classList.add("escondido");
+            if (textoPagarCartao) textoPagarCartao.textContent = "Pagar com cartão";
+            btnPagarCartao.disabled = false;
+        });
+});
+
+/* Retorno do Mercado Pago após pagar presente no cartão */
+(function confirmarPresentePagoSeRetorno() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("presente_pago") !== "1") return;
+    const pedidoId = params.get("pedido") || sessionStorage.getItem("pedido_presente_id");
+    const paymentId = params.get("payment_id") || params.get("collection_id");
+    if (!pedidoId || !paymentId || paymentId === "null") {
+        toast("Recebemos seu retorno. Se o pagamento foi aprovado, a cota será confirmada em instantes.", "info");
+        return;
+    }
+    fetch(`${API_BASE}/api/presentes/confirmar-pagamento-mp`, {
+        method: "POST",
+        headers: apiHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ pedidoId: Number(pedidoId), paymentId: String(paymentId) })
+    })
+        .then(async res => {
+            const corpo = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(typeof corpo === "string" ? corpo : corpo.message || "Falha ao confirmar");
+            limparCarrinho();
+            sessionStorage.removeItem("pedido_presente_id");
+            toast(corpo.mensagem || "Presente confirmado! Obrigado 💚", "sucesso");
+            if (typeof carregarPresentes === "function") carregarPresentes();
+        })
+        .catch(err => {
+            toast(err.message || "Pagamento em processamento. Obrigado!", "info");
+        });
+})();
 
 btnVoltarCarrinho.addEventListener("click", esconderPainelPix);
 
