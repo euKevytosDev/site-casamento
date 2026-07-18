@@ -555,7 +555,7 @@ body {
 /* ---- Carrossel "Nossos momentos" (fade suave) ---- */
 .nossos-momentos {
     width: 100%;
-    padding: 8px 20px 28px;
+    padding: 12px 20px 28px;
     box-sizing: border-box;
 }
 
@@ -566,7 +566,7 @@ body {
     font-weight: 500;
     color: var(--cor-verde);
     letter-spacing: 1px;
-    margin: 0 0 16px;
+    margin: 0 0 28px;
 }
 
 .carrossel {
