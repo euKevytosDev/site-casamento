@@ -42,6 +42,34 @@
     --cor-toast-erro: #8b4a3a;
     --cor-branco: #ffffff;
     --cor-preto: #000000;
+
+    /* ---- Flores decorativas (ajuste fino do tema / SaaS) ---- */
+    --flor-z: 1;
+    --flor-tamanho-sm: clamp(100px, 20vw, 150px);
+    --flor-tamanho-md: clamp(110px, 28vw, 150px);
+    --flor-tamanho-centro: 200px;
+    --flor-tamanho-rosa: clamp(125px, 28vw, 150px);
+
+    /* Centro (entre versículo e bênção) */
+    --flor-centro-mb: 0px;
+
+    /* Ao redor dos nomes */
+    --flor-nomes-slot-h: 72px;
+    --flor-nomes-esq-x: -42px;
+    --flor-nomes-esq-y: -80px;
+    --flor-nomes-dir-x: -25px;
+    --flor-nomes-dir-y: -170px;
+
+    /* Sobre a foto do local (âncora = a própria foto) */
+    --flor-local-esq-x: -6%;
+    --flor-local-esq-y: 42%;
+    --flor-local-dir-x: 4%;
+    --flor-local-dir-y: -6%;
+
+    /* Rosa ao lado das interações */
+    --flor-interacoes-dir-x: -28px;
+    --flor-interacoes-dir-y: 58%;
+    --flor-interacoes-dir-translate-y: -50%;
 }
 
 html {
@@ -455,49 +483,68 @@ body {
     letter-spacing: 0px;
     margin-top: 8px;
     z-index: 2;
-
 }
 
+/* Âncora dos nomes: flores posicionam em relação a este bloco */
+.secao-nomes {
+    position: relative;
+    z-index: 2;
+}
+
+/* Base das decorações — modifiers definem o layout de cada bloco */
 .decoracao-flores {
     position: relative;
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
+    pointer-events: none;
+    z-index: var(--flor-z);
+}
+
+.flor {
+    display: block;
+    height: auto;
+    max-width: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.decoracao-flores--centro {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80px;
+    margin-top: 4px;
+    margin-bottom: var(--flor-centro-mb);
+}
+
+.flor--centro {
+    position: relative;
+    width: var(--flor-tamanho-centro);
+    z-index: var(--flor-z);
+}
+
+.decoracao-flores--nomes {
+    height: var(--flor-nomes-slot-h);
     margin-top: -10px;
 }
 
-.flor-esquerda {
+.flor--nomes-esq,
+.flor--nomes-dir {
     position: absolute;
-    left: -42px;
-    top: -80px;
-    width: clamp(100px, 20vw, 150px);
-    /* leve transparência */
+    z-index: var(--flor-z);
+}
+
+.flor--nomes-esq {
+    left: var(--flor-nomes-esq-x);
+    top: var(--flor-nomes-esq-y);
+    width: var(--flor-tamanho-sm);
     transform: scaleX(-1);
-    /* Opcional: espelha a imagem para dar simetria */
-    z-index: 1;
 }
 
-.flor-direita {
-    position: absolute;
-    right: -25px;
-    /* Cola no canto direito */
-    top: -170px;
-    bottom: 10px;
-    width: clamp(110px, 30vw, 150px);
-    z-index: 1;
-}
-
-.flor-centro {
-    position: relative;
-    width: 200px;
-    height: auto;
-    margin: 0 auto;
-    z-index: 1;
-    /* transform: translateY(25px); */
+.flor--nomes-dir {
+    right: var(--flor-nomes-dir-x);
+    top: var(--flor-nomes-dir-y);
+    width: var(--flor-tamanho-md);
 }
 
 /* ---- Carrossel "Nossos momentos" (fade suave) ---- */
@@ -780,25 +827,12 @@ body {
     font-weight: 400;
 }
 
-.local p {
-    font-family: "Playfair", serif;
-    font-size: clamp(20px, 5vw, 24px);
-    color: var(--cor-texto-suave);
-    margin: 0;
-}
-
 .container-local {
     width: 100%;
     text-align: center;
     margin-top: 48px;
     position: relative;
     z-index: 2;
-}
-
-.container-local + .decoracao-flores {
-    position: relative;
-    z-index: 1;
-    pointer-events: none;
 }
 
 .local {
@@ -812,12 +846,19 @@ body {
     margin: 0;
 }
 
+/* Cena do local: foto + flores ancoradas nela (sem top:-370px) */
+.local-cena {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
 .espaco-foto-wrapper {
     display: flex;
     justify-content: center;
     position: relative;
     margin: 0 auto;
-    overflow: hidden;
 }
 
 .espaco-foto-wrapper img {
@@ -830,6 +871,33 @@ body {
     z-index: 1;
 
     /*filter: grayscale(100%); Ativar para caso queira a imagem P&B */
+}
+
+.decoracao-flores--local {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    margin: 0;
+    z-index: 2;
+}
+
+.flor--local-esq,
+.flor--local-dir {
+    position: absolute;
+    z-index: 2;
+}
+
+.flor--local-esq {
+    left: var(--flor-local-esq-x);
+    top: var(--flor-local-esq-y);
+    width: var(--flor-tamanho-sm);
+    transform: scaleX(-1) translateY(-50%);
+}
+
+.flor--local-dir {
+    right: var(--flor-local-dir-x);
+    bottom: var(--flor-local-dir-y);
+    width: var(--flor-tamanho-md);
 }
 
 /*.overlay-local {
@@ -867,26 +935,6 @@ body {
     margin-top: -23px;
 }
 
-.flor-esquerda2 {
-    position: absolute;
-    left: 10px;
-    top: -370px;
-    width: clamp(100px, 20vw, 150px);
-    transform: scaleX(-1);
-    z-index: 0;
-    pointer-events: none;
-}
-
-.flor-direita2 {
-    position: absolute;
-    right: 45px;
-    top: -45px;
-    bottom: 10px;
-    width: clamp(110px, 30vw, 150px);
-    z-index: 0;
-    pointer-events: none;
-}
-
 /* abaixo está a parte dos icones clicaveis */
 
 .container-interacoes {
@@ -906,8 +954,21 @@ body {
     z-index: 1;
 }
 
-.container-interacoes + .decoracao-flores {
-    z-index: 1;
+.decoracao-flores--interacoes {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    margin: 0;
+    z-index: 0;
+}
+
+.flor--interacoes-dir {
+    position: absolute;
+    right: var(--flor-interacoes-dir-x);
+    top: var(--flor-interacoes-dir-y);
+    width: var(--flor-tamanho-rosa);
+    transform: translateY(var(--flor-interacoes-dir-translate-y));
+    z-index: 0;
 }
 
 .lista-botoes {
@@ -1341,16 +1402,6 @@ body {
         transform: none;
         transition: none;
     }
-}
-
-.flor-direita3 {
-    position: absolute;
-    right: -36px;
-    /* Cola no canto direito */
-    top: -190px;
-    bottom: 10px;
-    width: clamp(125px, 30vw, 150px);
-    z-index: 0;
 }
 
 /* MODAL DE PRESENTES */
@@ -1917,11 +1968,19 @@ body {
         margin-top: 28px;
     }
 
-    .flor-esquerda,
-    .flor-direita,
-    .flor-esquerda2,
-    .flor-direita2 {
+    .flor--nomes-esq,
+    .flor--nomes-dir,
+    .flor--local-esq,
+    .flor--local-dir {
         width: 160px;
+    }
+
+    .flor--interacoes-dir {
+        width: 160px;
+    }
+
+    .flor--centro {
+        width: 220px;
     }
 
     .chamada-casamento {
