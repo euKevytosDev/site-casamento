@@ -394,10 +394,10 @@ btnAbrirConvite.addEventListener("click", () => {
 
     // 🚀 GATILHO SILENCIOSO: Acorda a Render em segundo plano assim que entra no site!
     // Como não colocamos o ".then", o JS só faz a chamada e continua rodando o resto do site sem travar nada.
-    fetch(`${API_BASE}/api/presenca`, {
+    fetch(`${API_BASE}/api/health`, {
         headers: apiHeaders()
     })
-        .then(() => console.log("Servidor alertado com sucesso nos bastidores! ⏰"))    // fade out da tela inicial
+        .then(() => console.log("Servidor alertado com sucesso nos bastidores! ⏰"))
         .catch(() => console.log("Servidor já deve estar acordado ou processando."));
 
     hero.style.opacity = "0";
