@@ -141,9 +141,9 @@
                         </div>
 
                         <div class="upload-bloco">
-                            <h3>Carrossel — Nossos momentos</h3>
+                            <h3>Carrossel — Nossos momentos <span id="contador-carrossel" class="contador-limite"></span></h3>
                             <div id="lista-carrossel-admin" class="lista-carrossel-admin"></div>
-                            <label for="file-carrossel">Adicionar foto ao carrossel</label>
+                            <label for="file-carrossel">Adicionar foto ao carrossel (máx. 6)</label>
                             <input type="file" id="file-carrossel" accept="image/jpeg,image/png,image/webp,image/gif">
                         </div>
                     </div>
@@ -183,7 +183,7 @@
                     </div>
 
                     <div class="card-painel">
-                        <h2>Presentes cadastrados</h2>
+                        <h2>Presentes cadastrados <span id="contador-presentes" class="contador-limite"></span></h2>
                         <div id="lista-presentes" class="lista-itens">
                             <p class="vazio">Carregando...</p>
                         </div>
@@ -352,10 +352,25 @@
             }
         }
 
+        const MAX_CARROSSEL = 6;
+        const MAX_PRESENTES = 20;
+        const SITE_SEM_LIMITE_PRESENTES = "rafaekevin";
+
+        function siteSemLimitePresentes() {
+            return (SITE_ID || "").toLowerCase() === SITE_SEM_LIMITE_PRESENTES;
+        }
+
         function renderCarrosselAdmin(fotos) {
             const lista = document.getElementById("lista-carrossel-admin");
+            const contador = document.getElementById("contador-carrossel");
+            const inputCarrossel = document.getElementById("file-carrossel");
             if (!lista) return;
-            if (!fotos.length) {
+            const total = fotos.length;
+            if (contador) contador.textContent = `(${total}/${MAX_CARROSSEL})`;
+            if (inputCarrossel) {
+                inputCarrossel.disabled = total >= MAX_CARROSSEL;
+            }
+            if (!total) {
                 lista.innerHTML = `<p class="vazio">Nenhuma foto no carrossel ainda.</p>`;
                 return;
             }
@@ -563,8 +578,26 @@
                 if (!resposta.ok) throw new Error(await lerErro(resposta));
                 const presentes = await resposta.json();
                 renderizarPresentes(presentes);
+                atualizarLimitePresentes(presentes.length);
             } catch (erro) {
                 listaPresentes.innerHTML = `<p class="vazio">${erro.message}</p>`;
+            }
+        }
+
+        function atualizarLimitePresentes(total) {
+            const contador = document.getElementById("contador-presentes");
+            const semLimite = siteSemLimitePresentes();
+            if (contador) {
+                contador.textContent = semLimite
+                    ? `(${total} · sem limite neste site)`
+                    : `(${total}/${MAX_PRESENTES})`;
+            }
+            const bloqueado = !semLimite && total >= MAX_PRESENTES && !document.getElementById("presente-id").value;
+            btnSalvar.disabled = bloqueado && !document.getElementById("presente-id").value;
+            if (bloqueado && tituloForm && !document.getElementById("presente-id").value) {
+                tituloForm.textContent = `Limite de ${MAX_PRESENTES} presentes atingido`;
+            } else if (!document.getElementById("presente-id").value && tituloForm) {
+                tituloForm.textContent = "Novo presente";
             }
         }
 
@@ -653,6 +686,17 @@
             msgPresente.className = "mensagem";
             msgPresente.textContent = "";
 
+            const id = document.getElementById("presente-id").value;
+            if (!id && !siteSemLimitePresentes()) {
+                const cards = listaPresentes.querySelectorAll(".item-card").length;
+                if (cards >= MAX_PRESENTES) {
+                    msgPresente.className = "mensagem erro";
+                    msgPresente.textContent = `Limite de ${MAX_PRESENTES} presentes atingido.`;
+                    toast(msgPresente.textContent, "erro");
+                    return;
+                }
+            }
+
             const valorNumerico = parseMoedaParaNumero(inputValor.value);
 
             if (valorNumerico <= 0) {
@@ -661,7 +705,6 @@
                 return;
             }
 
-            const id = document.getElementById("presente-id").value;
             const dados = new FormData();
             dados.append("nome", document.getElementById("nome").value.trim());
             dados.append("descricao", document.getElementById("descricao").value.trim());

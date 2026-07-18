@@ -259,6 +259,13 @@ button, .btn {
     background: #eee;
 }
 
+.contador-limite {
+    font-size: 13px;
+    font-weight: normal;
+    color: #888;
+    font-style: italic;
+}
+
 .lista-carrossel-admin {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
