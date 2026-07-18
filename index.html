@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <script>
-        /* Evita flash do casal demo quando abre com ?site=outro-slug (Ver site no painel) */
+        /* Layout neutro ao abrir outro casal (?site=) — não flasha fotos da vitrine */
         (function () {
             try {
                 var p = new URLSearchParams(location.search);
                 var s = (p.get("site") || p.get("siteId") || "").trim().toLowerCase();
-                if (s) document.documentElement.classList.add("site-via-url");
+                if (s && s !== "rafaekevin") document.documentElement.classList.add("site-via-url");
             } catch (e) { /* ignore */ }
         })();
     </script>

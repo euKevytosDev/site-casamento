@@ -13,6 +13,7 @@
             <div>
                 <h1>Painel Admin</h1>
                 <span id="usuario-logado"></span>
+                <span id="site-ativo-label" class="site-ativo-label"></span>
             </div>
             <div class="topo-acoes">
                 <a href="../index.html" class="link-site" id="link-ver-site">Ver site</a>
@@ -314,6 +315,11 @@
         }
 
         document.getElementById("usuario-logado").textContent = `Logado como ${getLogin()}`;
+        const siteLabel = document.getElementById("site-ativo-label");
+        if (siteLabel) {
+            const slug = getSiteIdAtivo();
+            siteLabel.textContent = slug === "rafaekevin" ? "Site: demonstração" : `Site: ${slug}`;
+        }
         document.getElementById("btn-sair").addEventListener("click", logout);
 
         const linkVerSite = document.getElementById("link-ver-site");

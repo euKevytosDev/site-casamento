@@ -11,14 +11,19 @@ function getSiteIdAtivo() {
 const SITE_ID = getSiteIdAtivo();
 
 (function aplicarSubtituloAdmin() {
-    const c = window.SITE_CONFIG;
     const el = document.getElementById("admin-subtitulo-casal");
     if (!el) return;
+    // Na tela de login: texto neutro (não mostra Rafa & Kevin do config.js)
+    if (document.getElementById("form-login")) {
+        el.textContent = "Entre com o e-mail da sua conta";
+        return;
+    }
     const siteSalvo = localStorage.getItem(SITE_KEY);
     if (siteSalvo) {
         el.textContent = siteSalvo;
         return;
     }
+    const c = window.SITE_CONFIG;
     if (!c) return;
     if (c.nomeCurto) {
         el.textContent = c.nomeCurto;

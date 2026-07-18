@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Login</title>
+    <title>Área da noiva — Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <div class="pagina-login">
         <div class="card-login">
-            <h1>Área do casal</h1>
-            <p class="subtitulo" id="admin-subtitulo-casal">Entre com e-mail ou login admin</p>
+            <h1>Área da noiva</h1>
+            <p class="subtitulo" id="admin-subtitulo-casal">Entre com o e-mail da sua conta</p>
 
             <form id="form-login">
-                <label for="login">E-mail ou login</label>
-                <input type="text" id="login" autocomplete="username" required>
+                <label for="login">E-mail</label>
+                <input type="text" id="login" autocomplete="username" required placeholder="seu@email.com">
 
                 <label for="senha">Senha</label>
                 <input type="password" id="senha" autocomplete="current-password" required>
@@ -24,8 +24,11 @@
             </form>
 
             <p id="mensagem" class="mensagem"></p>
-            <a href="../landing/index.html" class="link-voltar">← Criar meu site</a>
-            <a href="../index.html" class="link-voltar">Ver demonstração</a>
+            <div class="links-login">
+                <a href="../landing/index.html" class="link-voltar">Criar meu site</a>
+                <a href="../index.html?site=modelo" class="link-voltar" target="_blank" rel="noopener">Ver modelo em branco</a>
+                <a href="../index.html" class="link-voltar" target="_blank" rel="noopener">Ver demonstração</a>
+            </div>
         </div>
     </div>
 

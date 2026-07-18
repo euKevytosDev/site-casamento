@@ -134,44 +134,96 @@ function aplicarConfigDoSite() {
     aplicarFotosDoSite(c);
 }
 
-/** Aplica URLs de fotos vindas da API (ou deixa as locais se não houver). */
+/** Slug da vitrine de venda (com fotos reais). Qualquer outro slug usa layout neutro. */
+const SITE_VITRINE = "rafaekevin";
+
+function ehSiteVitrine() {
+    return SITE_ID === SITE_VITRINE;
+}
+
+/** Aplica URLs de fotos da API. Fora da vitrine, sem URL = placeholder (nunca herda foto do Rafa). */
 function aplicarFotosDoSite(c) {
     if (!c) return;
+    const vitrine = ehSiteVitrine();
 
-    if (c.fotoHeroUrl) {
-        const heroEl = document.querySelector(".hero");
-        if (heroEl) heroEl.style.backgroundImage = `url("${c.fotoHeroUrl}")`;
+    const heroEl = document.querySelector(".hero");
+    if (heroEl) {
+        if (c.fotoHeroUrl) {
+            heroEl.style.backgroundImage = `url("${c.fotoHeroUrl}")`;
+            heroEl.classList.remove("foto-vazia");
+        } else if (!vitrine) {
+            heroEl.style.backgroundImage = "none";
+            heroEl.classList.add("foto-vazia");
+        }
     }
-    if (c.fotoSecundariaUrl) {
-        const foto2 = document.querySelector(".foto2");
-        if (foto2) foto2.style.backgroundImage = `url("${c.fotoSecundariaUrl}")`;
+
+    const foto2 = document.querySelector(".foto2");
+    if (foto2) {
+        if (c.fotoSecundariaUrl) {
+            foto2.style.backgroundImage = `url("${c.fotoSecundariaUrl}")`;
+            foto2.classList.remove("foto-vazia");
+        } else if (!vitrine) {
+            foto2.style.backgroundImage = "none";
+            foto2.classList.add("foto-vazia");
+        }
     }
-    if (c.fotoLocalUrl) {
-        const imgLocal = document.querySelector(".espaco-foto-wrapper img");
-        if (imgLocal) imgLocal.src = c.fotoLocalUrl;
+
+    const imgLocal = document.querySelector(".espaco-foto-wrapper img");
+    const wrapLocal = document.querySelector(".espaco-foto-wrapper");
+    if (imgLocal) {
+        if (c.fotoLocalUrl) {
+            imgLocal.src = c.fotoLocalUrl;
+            imgLocal.style.display = "";
+            imgLocal.classList.remove("foto-vazia-img");
+            wrapLocal?.querySelector(".placeholder-foto")?.remove();
+        } else if (!vitrine) {
+            imgLocal.removeAttribute("src");
+            imgLocal.style.display = "none";
+            if (wrapLocal && !wrapLocal.querySelector(".placeholder-foto")) {
+                const ph = document.createElement("div");
+                ph.className = "placeholder-foto";
+                ph.textContent = "Foto do local";
+                wrapLocal.insertBefore(ph, imgLocal);
+            }
+        }
     }
-    if (c.fotoRodapeUrl) {
-        const imgRodape = document.getElementById("cfg-foto-rodape")
-            || document.querySelector(".fotomeio");
-        if (imgRodape) imgRodape.src = c.fotoRodapeUrl;
+
+    const imgRodape = document.getElementById("cfg-foto-rodape")
+        || document.querySelector(".fotomeio");
+    if (imgRodape) {
+        if (c.fotoRodapeUrl) {
+            imgRodape.src = c.fotoRodapeUrl;
+            imgRodape.style.display = "";
+            imgRodape.classList.remove("foto-vazia-img");
+        } else if (!vitrine) {
+            imgRodape.removeAttribute("src");
+            imgRodape.alt = "Espaço para foto";
+            imgRodape.classList.add("foto-vazia-img");
+        }
     }
 
     const fotos = Array.isArray(c.fotosCarrossel) ? c.fotosCarrossel.filter(Boolean) : [];
+    const slidesWrap = document.querySelector("#carrossel-momentos .carrossel-slides");
+    const dotsWrap = document.querySelector("#carrossel-momentos .carrossel-dots");
+    if (!slidesWrap) return;
+
     if (fotos.length) {
-        const slidesWrap = document.querySelector("#carrossel-momentos .carrossel-slides");
-        const dotsWrap = document.querySelector("#carrossel-momentos .carrossel-dots");
-        if (slidesWrap) {
-            slidesWrap.innerHTML = fotos.map((url, i) => `
-                <figure class="carrossel-slide${i === 0 ? " ativo" : ""}">
-                    <img src="${url}" alt="Momento ${i + 1}">
-                </figure>
-            `).join("");
-            if (dotsWrap) dotsWrap.innerHTML = "";
-            // reinicia o carrossel se a função existir
-            if (typeof iniciarCarrosselMomentos === "function") {
-                iniciarCarrosselMomentos();
-            }
+        slidesWrap.innerHTML = fotos.map((url, i) => `
+            <figure class="carrossel-slide${i === 0 ? " ativo" : ""}">
+                <img src="${url}" alt="Momento ${i + 1}">
+            </figure>
+        `).join("");
+        if (dotsWrap) dotsWrap.innerHTML = "";
+        if (typeof iniciarCarrosselMomentos === "function") {
+            iniciarCarrosselMomentos();
         }
+    } else if (!vitrine) {
+        slidesWrap.innerHTML = `
+            <figure class="carrossel-slide ativo">
+                <div class="placeholder-foto placeholder-foto--carrossel">Suas fotos aqui</div>
+            </figure>
+        `;
+        if (dotsWrap) dotsWrap.innerHTML = "";
     }
 }
 
@@ -212,8 +264,10 @@ const SITE_VIA_URL = (() => {
     return !!(params.get("site") || params.get("siteId") || "").trim();
 })();
 
-if (SITE_VIA_URL) {
-    // Não aplica Rafa/Kevin local — espera a API do slug
+/** Qualquer casal que não seja a vitrine: não pinta Rafa/Kevin antes da API. */
+const USAR_LAYOUT_NEUTRO = SITE_VIA_URL && !ehSiteVitrine();
+
+if (USAR_LAYOUT_NEUTRO) {
     carregarConfigRemota().then((ok) => {
         if (ok) document.documentElement.classList.remove("site-via-url");
     });

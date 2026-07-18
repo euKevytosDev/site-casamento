@@ -347,7 +347,7 @@ body {
 html.site-via-url .hero,
 html.site-via-url .foto2 {
     background-image: none !important;
-    background-color: #f4f3ee;
+    background-color: #e8e6dc;
 }
 
 html.site-via-url .carrossel-slides,
@@ -364,6 +364,65 @@ html.site-via-url #cfg-frase-bencao,
 html.site-via-url #cfg-pais-noiva,
 html.site-via-url #cfg-pais-noivo {
     opacity: 0;
+}
+
+/* Espaços vazios (modelo / noiva sem upload) — nunca herda foto da vitrine */
+.hero.foto-vazia,
+.foto2.foto-vazia {
+    background-image: none !important;
+    background-color: #e8e6dc;
+    background-size: cover;
+}
+
+.hero.foto-vazia::after,
+.foto2.foto-vazia::after {
+    content: "Sua foto aqui";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Playfair", serif;
+    font-size: 1.1rem;
+    color: #9a9688;
+    letter-spacing: 0.04em;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero.foto-vazia .overlay,
+.hero.foto-vazia .texto,
+.foto2.foto-vazia .overlay2,
+.foto2.foto-vazia .setabaixo {
+    z-index: 1;
+}
+
+.placeholder-foto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 220px;
+    background: #e8e6dc;
+    color: #9a9688;
+    font-family: "Playfair", serif;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    border-radius: 4px;
+}
+
+.placeholder-foto--carrossel {
+    min-height: 320px;
+    aspect-ratio: 3 / 4;
+}
+
+img.foto-vazia-img {
+    display: block;
+    width: 100%;
+    min-height: 200px;
+    object-fit: cover;
+    background: #e8e6dc;
+    color: transparent;
 }
 
 .overlay {
