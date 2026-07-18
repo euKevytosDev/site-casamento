@@ -60,11 +60,16 @@
     --flor-nomes-dir-x: -25px;
     --flor-nomes-dir-y: -170px;
 
-    /* Sobre a foto do local (âncora = a própria foto) */
+    /* Sobre / atrás da foto do local (âncora = a própria foto) */
     --flor-local-esq-x: -6%;
     --flor-local-esq-y: 42%;
     --flor-local-dir-x: 4%;
     --flor-local-dir-y: -6%;
+    --flor-local-z: 0;
+    --foto-local-z: 2;
+
+    /* Espaço entre foto do local e "Toque nos ícones" */
+    --espaco-apos-local: 72px;
 
     /* Rosa ao lado das interações */
     --flor-interacoes-dir-x: -28px;
@@ -846,18 +851,20 @@ body {
     margin: 0;
 }
 
-/* Cena do local: foto + flores ancoradas nela (sem top:-370px) */
+/* Cena do local: foto na frente, flores atrás (só as pontas aparecem) */
 .local-cena {
     position: relative;
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
+    margin-bottom: var(--espaco-apos-local);
 }
 
 .espaco-foto-wrapper {
     display: flex;
     justify-content: center;
     position: relative;
+    z-index: var(--foto-local-z);
     margin: 0 auto;
 }
 
@@ -868,7 +875,8 @@ body {
     height: auto;
     display: block;
     position: relative;
-    z-index: 1;
+    z-index: var(--foto-local-z);
+    background: var(--cor-fundo);
 
     /*filter: grayscale(100%); Ativar para caso queira a imagem P&B */
 }
@@ -878,13 +886,13 @@ body {
     inset: 0;
     max-width: none;
     margin: 0;
-    z-index: 2;
+    z-index: var(--flor-local-z);
 }
 
 .flor--local-esq,
 .flor--local-dir {
     position: absolute;
-    z-index: 2;
+    z-index: var(--flor-local-z);
 }
 
 .flor--local-esq {
@@ -923,7 +931,7 @@ body {
     margin-left: 25px;
     font-family: "Playfair", serif;
     color: var(--cor-texto-suave);
-    margin-top: -40px;
+    margin-top: 0;
 }
 
 .chamada-icones h2 {
