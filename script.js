@@ -110,10 +110,76 @@ function aplicarConfigDoSite() {
             if (c.cores[chave]) root.setProperty(cssVar, c.cores[chave]);
         });
     }
+
+    aplicarFotosDoSite(c);
+}
+
+/** Aplica URLs de fotos vindas da API (ou deixa as locais se não houver). */
+function aplicarFotosDoSite(c) {
+    if (!c) return;
+
+    if (c.fotoHeroUrl) {
+        const heroEl = document.querySelector(".hero");
+        if (heroEl) heroEl.style.backgroundImage = `url("${c.fotoHeroUrl}")`;
+    }
+    if (c.fotoSecundariaUrl) {
+        const foto2 = document.querySelector(".foto2");
+        if (foto2) foto2.style.backgroundImage = `url("${c.fotoSecundariaUrl}")`;
+    }
+    if (c.fotoLocalUrl) {
+        const imgLocal = document.querySelector(".espaco-foto-wrapper img");
+        if (imgLocal) imgLocal.src = c.fotoLocalUrl;
+    }
+
+    const fotos = Array.isArray(c.fotosCarrossel) ? c.fotosCarrossel.filter(Boolean) : [];
+    if (fotos.length) {
+        const slidesWrap = document.querySelector("#carrossel-momentos .carrossel-slides");
+        const dotsWrap = document.querySelector("#carrossel-momentos .carrossel-dots");
+        if (slidesWrap) {
+            slidesWrap.innerHTML = fotos.map((url, i) => `
+                <figure class="carrossel-slide${i === 0 ? " ativo" : ""}">
+                    <img src="${url}" alt="Momento ${i + 1}">
+                </figure>
+            `).join("");
+            if (dotsWrap) dotsWrap.innerHTML = "";
+            // reinicia o carrossel se a função existir
+            if (typeof iniciarCarrosselMomentos === "function") {
+                iniciarCarrosselMomentos();
+            }
+        }
+    }
+}
+
+/**
+ * Busca personalização no backend e mescla em SITE_CONFIG.
+ * Se a API falhar (cold start), mantém o config.js local.
+ */
+async function carregarConfigRemota() {
+    try {
+        const res = await fetch(`${API_BASE}/api/site/config`, {
+            headers: apiHeaders()
+        });
+        if (!res.ok) return;
+        const remoto = await res.json();
+        window.SITE_CONFIG = {
+            ...(window.SITE_CONFIG || {}),
+            ...Object.fromEntries(
+                Object.entries(remoto).filter(([, v]) => v !== null && v !== undefined && v !== "")
+            ),
+            cores: {
+                ...((window.SITE_CONFIG && window.SITE_CONFIG.cores) || {}),
+                ...(remoto.cores || {})
+            },
+            siteId: remoto.siteId || SITE_ID
+        };
+        aplicarConfigDoSite();
+    } catch (_) {
+        // silencioso: usa config.js
+    }
 }
 
 aplicarConfigDoSite();
-
+carregarConfigRemota();
 
 /* Laterais decorativas: altura = documento inteiro (rola com o site) */
 function ajustarAlturaLaterais() {
@@ -261,14 +327,27 @@ function iniciarCarrosselMomentos() {
     const root = document.getElementById("carrossel-momentos");
     if (!root) return;
 
+    // Permite reiniciar depois que a API troca as fotos
+    if (typeof root._carrosselCleanup === "function") {
+        root._carrosselCleanup();
+        root._carrosselCleanup = null;
+    }
+
     const slides = Array.from(root.querySelectorAll(".carrossel-slide"));
     const dotsWrap = root.querySelector(".carrossel-dots");
-    if (slides.length < 2 || !dotsWrap) return;
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = "";
+    if (slides.length < 1) return;
+    if (slides.length === 1) {
+        slides[0].classList.add("ativo");
+        return;
+    }
 
     const intervaloMs = Number(root.dataset.intervalo) || 3000;
     const reduzirMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let indice = slides.findIndex((s) => s.classList.contains("ativo"));
     if (indice < 0) indice = 0;
+    slides.forEach((s, i) => s.classList.toggle("ativo", i === indice));
 
     slides.forEach((_, i) => {
         const dot = document.createElement("button");
@@ -305,31 +384,32 @@ function iniciarCarrosselMomentos() {
         timer = setInterval(() => irPara(indice + 1, false), intervaloMs);
     }
 
-    // Swipe horizontal (mobile)
     let toqueX = null;
     const viewport = root.querySelector(".carrossel-viewport");
+    const onTouchStart = (e) => {
+        toqueX = e.changedTouches[0].clientX;
+        parar();
+    };
+    const onTouchEnd = (e) => {
+        if (toqueX == null) return;
+        const delta = e.changedTouches[0].clientX - toqueX;
+        toqueX = null;
+        if (Math.abs(delta) > 40) {
+            irPara(indice + (delta < 0 ? 1 : -1), true);
+        } else {
+            reiniciar();
+        }
+    };
     if (viewport) {
-        viewport.addEventListener("touchstart", (e) => {
-            toqueX = e.changedTouches[0].clientX;
-            parar();
-        }, { passive: true });
-
-        viewport.addEventListener("touchend", (e) => {
-            if (toqueX == null) return;
-            const delta = e.changedTouches[0].clientX - toqueX;
-            toqueX = null;
-            if (Math.abs(delta) > 40) {
-                irPara(indice + (delta < 0 ? 1 : -1), true);
-            } else {
-                reiniciar();
-            }
-        }, { passive: true });
+        viewport.addEventListener("touchstart", onTouchStart, { passive: true });
+        viewport.addEventListener("touchend", onTouchEnd, { passive: true });
     }
 
-    root.addEventListener("mouseenter", parar);
-    root.addEventListener("mouseleave", reiniciar);
+    const onEnter = () => parar();
+    const onLeave = () => reiniciar();
+    root.addEventListener("mouseenter", onEnter);
+    root.addEventListener("mouseleave", onLeave);
 
-    // Só autoplay quando a seção está visível (economiza e fica mais elegante)
     const observador = new IntersectionObserver((entradas) => {
         entradas.forEach((entrada) => {
             if (entrada.isIntersecting) reiniciar();
@@ -337,6 +417,18 @@ function iniciarCarrosselMomentos() {
         });
     }, { threshold: 0.35 });
     observador.observe(root);
+
+    root._carrosselCleanup = () => {
+        parar();
+        observador.disconnect();
+        root.removeEventListener("mouseenter", onEnter);
+        root.removeEventListener("mouseleave", onLeave);
+        if (viewport) {
+            viewport.removeEventListener("touchstart", onTouchStart);
+            viewport.removeEventListener("touchend", onTouchEnd);
+        }
+        dotsWrap.innerHTML = "";
+    };
 }
 
 iniciarCarrosselMomentos();

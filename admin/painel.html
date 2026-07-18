@@ -22,13 +22,136 @@
 
         <main class="conteudo-admin">
             <div class="abas">
-                <button class="aba ativa" data-aba="presentes">Presentes</button>
+                <button class="aba ativa" data-aba="personalizar">Personalizar site</button>
+                <button class="aba" data-aba="presentes">Presentes</button>
                 <button class="aba" data-aba="historico">Histórico de cotas</button>
                 <button class="aba" data-aba="presenca">Presenças</button>
             </div>
 
+            <!-- ABA PERSONALIZAR SITE -->
+            <section id="aba-personalizar" class="painel-aba ativo">
+                <div class="grid-admin grid-personalizar">
+                    <div class="card-painel">
+                        <h2>Textos e data</h2>
+                        <form id="form-personalizar">
+                            <div class="linha-dupla">
+                                <div>
+                                    <label for="cfg-nome-noiva">Nome da noiva</label>
+                                    <input type="text" id="cfg-nome-noiva" required>
+                                </div>
+                                <div>
+                                    <label for="cfg-nome-noivo">Nome do noivo</label>
+                                    <input type="text" id="cfg-nome-noivo" required>
+                                </div>
+                            </div>
+
+                            <label for="cfg-nome-curto">Nome curto (aba / WhatsApp)</label>
+                            <input type="text" id="cfg-nome-curto" placeholder="Ex: Rafa & Kevin">
+
+                            <div class="linha-dupla">
+                                <div>
+                                    <label for="cfg-data">Data do casamento</label>
+                                    <input type="date" id="cfg-data">
+                                </div>
+                                <div>
+                                    <label for="cfg-hora">Hora</label>
+                                    <input type="text" id="cfg-hora" placeholder="16:00">
+                                </div>
+                            </div>
+
+                            <div class="linha-dupla">
+                                <div>
+                                    <label for="cfg-dia-semana">Dia da semana</label>
+                                    <input type="text" id="cfg-dia-semana" placeholder="SÁBADO">
+                                </div>
+                                <div>
+                                    <label for="cfg-mes">Mês (extenso)</label>
+                                    <input type="text" id="cfg-mes" placeholder="ABRIL">
+                                </div>
+                            </div>
+
+                            <div class="linha-dupla">
+                                <div>
+                                    <label for="cfg-pais-noiva">Pais da noiva</label>
+                                    <input type="text" id="cfg-pais-noiva">
+                                </div>
+                                <div>
+                                    <label for="cfg-pais-noivo">Pais do noivo</label>
+                                    <input type="text" id="cfg-pais-noivo">
+                                </div>
+                            </div>
+
+                            <label for="cfg-local">Local</label>
+                            <input type="text" id="cfg-local" placeholder="Espaço Salaberry">
+
+                            <label for="cfg-maps">Link do Google Maps</label>
+                            <input type="url" id="cfg-maps" placeholder="https://maps.google.com/...">
+
+                            <h3 class="subtitulo-card">PIX</h3>
+                            <label for="cfg-pix-chave">Chave PIX</label>
+                            <input type="text" id="cfg-pix-chave">
+
+                            <div class="linha-dupla">
+                                <div>
+                                    <label for="cfg-pix-nome">Nome no PIX</label>
+                                    <input type="text" id="cfg-pix-nome">
+                                </div>
+                                <div>
+                                    <label for="cfg-pix-cidade">Cidade</label>
+                                    <input type="text" id="cfg-pix-cidade">
+                                </div>
+                            </div>
+
+                            <h3 class="subtitulo-card">Cores do tema</h3>
+                            <div class="cores-grid">
+                                <label>Verde <input type="color" id="cfg-cor-verde"></label>
+                                <label>Verde escuro <input type="color" id="cfg-cor-verde-escuro"></label>
+                                <label>Verde claro <input type="color" id="cfg-cor-verde-claro"></label>
+                                <label>Fundo <input type="color" id="cfg-cor-fundo"></label>
+                                <label>Fundo bege <input type="color" id="cfg-cor-fundo-bege"></label>
+                                <label>Texto <input type="color" id="cfg-cor-texto"></label>
+                                <label>Texto hero <input type="color" id="cfg-cor-texto-hero"></label>
+                            </div>
+
+                            <button type="submit" class="btn-primario" id="btn-salvar-personalizar">Salvar personalização</button>
+                            <p id="msg-personalizar" class="mensagem"></p>
+                        </form>
+                    </div>
+
+                    <div class="card-painel">
+                        <h2>Fotos do site</h2>
+                        <p class="dica-admin">Envie fotos em pé (estilo story). Elas substituem as imagens do convite.</p>
+
+                        <div class="upload-bloco">
+                            <h3>Foto hero (capa)</h3>
+                            <img id="preview-hero" class="preview-midia" alt="Hero">
+                            <input type="file" id="file-hero" accept="image/jpeg,image/png,image/webp,image/gif">
+                        </div>
+
+                        <div class="upload-bloco">
+                            <h3>Foto secundária (após abrir o selo)</h3>
+                            <img id="preview-secundaria" class="preview-midia" alt="Secundária">
+                            <input type="file" id="file-secundaria" accept="image/jpeg,image/png,image/webp,image/gif">
+                        </div>
+
+                        <div class="upload-bloco">
+                            <h3>Foto do local</h3>
+                            <img id="preview-local" class="preview-midia" alt="Local">
+                            <input type="file" id="file-local" accept="image/jpeg,image/png,image/webp,image/gif">
+                        </div>
+
+                        <div class="upload-bloco">
+                            <h3>Carrossel — Nossos momentos</h3>
+                            <div id="lista-carrossel-admin" class="lista-carrossel-admin"></div>
+                            <label for="file-carrossel">Adicionar foto ao carrossel</label>
+                            <input type="file" id="file-carrossel" accept="image/jpeg,image/png,image/webp,image/gif">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- ABA PRESENTES -->
-            <section id="aba-presentes" class="painel-aba ativo">
+            <section id="aba-presentes" class="painel-aba">
                 <div class="grid-admin">
                     <div class="card-painel">
                         <h2 id="titulo-form-presente">Novo presente</h2>
@@ -161,8 +284,206 @@
 
                 if (aba.dataset.aba === "presenca") carregarPresencas();
                 if (aba.dataset.aba === "historico") carregarHistorico();
+                if (aba.dataset.aba === "personalizar") carregarPersonalizacao();
             });
         });
+
+        // ===== PERSONALIZAR SITE =====
+        const CORES_PADRAO = {
+            verde: "#616e48",
+            verdeEscuro: "#4f5a3a",
+            verdeClaro: "#839164",
+            fundo: "#ffffff",
+            fundoBege: "#e0e1cf",
+            texto: "#433f3f",
+            textoHero: "#3a4332"
+        };
+
+        function setCor(id, valor) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.value = valor && /^#([0-9a-f]{6})$/i.test(valor) ? valor : valor || "#000000";
+        }
+
+        function getCor(id, fallback) {
+            return document.getElementById(id)?.value || fallback;
+        }
+
+        function preencherPersonalizacao(cfg) {
+            document.getElementById("cfg-nome-noiva").value = cfg.nomeNoiva || "";
+            document.getElementById("cfg-nome-noivo").value = cfg.nomeNoivo || "";
+            document.getElementById("cfg-nome-curto").value = cfg.nomeCurto || "";
+            document.getElementById("cfg-data").value = cfg.dataCasamento || "";
+            document.getElementById("cfg-hora").value = cfg.horaCasamento || "";
+            document.getElementById("cfg-dia-semana").value = cfg.diaSemana || "";
+            document.getElementById("cfg-mes").value = cfg.mesExtenso || "";
+            document.getElementById("cfg-pais-noiva").value = cfg.paisNoiva || "";
+            document.getElementById("cfg-pais-noivo").value = cfg.paisNoivo || "";
+            document.getElementById("cfg-local").value = cfg.localNome || "";
+            document.getElementById("cfg-maps").value = cfg.mapsUrl || "";
+            document.getElementById("cfg-pix-chave").value = cfg.pixChave || "";
+            document.getElementById("cfg-pix-nome").value = cfg.pixNomeRecebedor || "";
+            document.getElementById("cfg-pix-cidade").value = cfg.pixCidade || "";
+
+            const cores = { ...CORES_PADRAO, ...(cfg.cores || {}) };
+            setCor("cfg-cor-verde", cores.verde);
+            setCor("cfg-cor-verde-escuro", cores.verdeEscuro);
+            setCor("cfg-cor-verde-claro", cores.verdeClaro);
+            setCor("cfg-cor-fundo", cores.fundo);
+            setCor("cfg-cor-fundo-bege", cores.fundoBege);
+            setCor("cfg-cor-texto", cores.texto);
+            setCor("cfg-cor-texto-hero", cores.textoHero);
+
+            mostrarPreviewMidia("preview-hero", cfg.fotoHeroUrl);
+            mostrarPreviewMidia("preview-secundaria", cfg.fotoSecundariaUrl);
+            mostrarPreviewMidia("preview-local", cfg.fotoLocalUrl);
+            renderCarrosselAdmin(cfg.fotosCarrossel || []);
+        }
+
+        function mostrarPreviewMidia(id, url) {
+            const img = document.getElementById(id);
+            if (!img) return;
+            if (url) {
+                img.src = urlImagem(url, "admin");
+                img.style.display = "block";
+            } else {
+                img.removeAttribute("src");
+                img.style.display = "none";
+            }
+        }
+
+        function renderCarrosselAdmin(fotos) {
+            const lista = document.getElementById("lista-carrossel-admin");
+            if (!lista) return;
+            if (!fotos.length) {
+                lista.innerHTML = `<p class="vazio">Nenhuma foto no carrossel ainda.</p>`;
+                return;
+            }
+            lista.innerHTML = fotos.map((url, i) => `
+                <div class="item-carrossel-admin">
+                    <img src="${urlImagem(url, "lista")}" alt="Foto ${i + 1}">
+                    <button type="button" class="btn-secundario btn-remover-carrossel" data-index="${i}">Remover</button>
+                </div>
+            `).join("");
+
+            lista.querySelectorAll(".btn-remover-carrossel").forEach(btn => {
+                btn.addEventListener("click", async () => {
+                    const index = Number(btn.dataset.index);
+                    if (!confirm("Remover esta foto do carrossel?")) return;
+                    try {
+                        const res = await apiFetch(`/api/admin/site/atual/midia/carrossel/${index}`, { method: "DELETE" });
+                        if (!res.ok) throw new Error(await res.text());
+                        const cfg = await res.json();
+                        preencherPersonalizacao(cfg);
+                        toast("Foto removida", "sucesso");
+                    } catch (e) {
+                        toast(e.message || "Erro ao remover", "erro");
+                    }
+                });
+            });
+        }
+
+        async function carregarPersonalizacao() {
+            try {
+                const res = await apiFetch("/api/admin/site/atual");
+                if (!res.ok) throw new Error(await res.text());
+                preencherPersonalizacao(await res.json());
+            } catch (e) {
+                toast(e.message || "Erro ao carregar personalização", "erro");
+            }
+        }
+
+        document.getElementById("form-personalizar").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const msg = document.getElementById("msg-personalizar");
+            const btn = document.getElementById("btn-salvar-personalizar");
+            btn.disabled = true;
+            msg.textContent = "Salvando...";
+
+            const body = {
+                nomeNoiva: document.getElementById("cfg-nome-noiva").value.trim(),
+                nomeNoivo: document.getElementById("cfg-nome-noivo").value.trim(),
+                nomeCurto: document.getElementById("cfg-nome-curto").value.trim(),
+                dataCasamento: document.getElementById("cfg-data").value || null,
+                horaCasamento: document.getElementById("cfg-hora").value.trim(),
+                diaSemana: document.getElementById("cfg-dia-semana").value.trim(),
+                mesExtenso: document.getElementById("cfg-mes").value.trim(),
+                paisNoiva: document.getElementById("cfg-pais-noiva").value.trim(),
+                paisNoivo: document.getElementById("cfg-pais-noivo").value.trim(),
+                localNome: document.getElementById("cfg-local").value.trim(),
+                mapsUrl: document.getElementById("cfg-maps").value.trim(),
+                pixChave: document.getElementById("cfg-pix-chave").value.trim(),
+                pixNomeRecebedor: document.getElementById("cfg-pix-nome").value.trim(),
+                pixCidade: document.getElementById("cfg-pix-cidade").value.trim(),
+                cores: {
+                    verde: getCor("cfg-cor-verde", CORES_PADRAO.verde),
+                    verdeEscuro: getCor("cfg-cor-verde-escuro", CORES_PADRAO.verdeEscuro),
+                    verdeClaro: getCor("cfg-cor-verde-claro", CORES_PADRAO.verdeClaro),
+                    fundo: getCor("cfg-cor-fundo", CORES_PADRAO.fundo),
+                    fundoBege: getCor("cfg-cor-fundo-bege", CORES_PADRAO.fundoBege),
+                    texto: getCor("cfg-cor-texto", CORES_PADRAO.texto),
+                    textoHero: getCor("cfg-cor-texto-hero", CORES_PADRAO.textoHero)
+                }
+            };
+
+            try {
+                const res = await apiFetch("/api/admin/site/atual", {
+                    method: "PUT",
+                    body: JSON.stringify(body)
+                });
+                if (!res.ok) throw new Error(await res.text());
+                preencherPersonalizacao(await res.json());
+                msg.textContent = "";
+                toast("Personalização salva!", "sucesso");
+            } catch (err) {
+                msg.textContent = err.message || "Erro ao salvar";
+                toast(msg.textContent, "erro");
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        async function uploadMidiaSite(tipo, arquivo, carrosselIndex) {
+            const form = new FormData();
+            form.append("tipo", tipo);
+            form.append("arquivo", arquivo);
+            if (carrosselIndex !== undefined && carrosselIndex !== null) {
+                form.append("carrosselIndex", String(carrosselIndex));
+            }
+            const res = await apiFetch("/api/admin/site/atual/midia", {
+                method: "POST",
+                body: form
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
+        function ligarUpload(inputId, tipo) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.addEventListener("change", async () => {
+                const arquivo = input.files?.[0];
+                if (!arquivo) return;
+                try {
+                    toast("Enviando foto...", "info");
+                    const cfg = await uploadMidiaSite(tipo, arquivo);
+                    preencherPersonalizacao(cfg);
+                    toast("Foto atualizada!", "sucesso");
+                } catch (e) {
+                    toast(e.message || "Falha no upload", "erro");
+                } finally {
+                    input.value = "";
+                }
+            });
+        }
+
+        ligarUpload("file-hero", "hero");
+        ligarUpload("file-secundaria", "secundaria");
+        ligarUpload("file-local", "local");
+        ligarUpload("file-carrossel", "carrossel");
+
+        // carrega personalizar na abertura (aba padrão)
+        carregarPersonalizacao();
 
         // ===== PRESENTES =====
         const formPresente = document.getElementById("form-presente");

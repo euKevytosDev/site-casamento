@@ -168,12 +168,13 @@ button, .btn {
 
 .abas {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 20px;
 }
 
 .aba {
-    flex: 1;
+    flex: 1 1 140px;
     background: white;
     border: 1px solid #ddd;
     color: #666;
@@ -193,6 +194,101 @@ button, .btn {
 
 .painel-aba.ativo {
     display: block;
+}
+
+.subtitulo-card {
+    margin: 18px 0 10px;
+    font-size: 16px;
+    color: #616e48;
+}
+
+.dica-admin {
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+    margin: 0 0 16px;
+}
+
+.linha-dupla {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.cores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.cores-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.cores-grid input[type="color"] {
+    width: 100%;
+    height: 40px;
+    padding: 2px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.upload-bloco {
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.upload-bloco h3 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: #433f3f;
+}
+
+.preview-midia {
+    display: none;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: #eee;
+}
+
+.lista-carrossel-admin {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.item-carrossel-admin {
+    background: #f9f9f7;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e6e6df;
+}
+
+.item-carrossel-admin img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+.item-carrossel-admin .btn-secundario {
+    width: 100%;
+    border-radius: 0;
+}
+
+@media (max-width: 640px) {
+    .linha-dupla {
+        grid-template-columns: 1fr;
+    }
 }
 
 .grid-admin {
