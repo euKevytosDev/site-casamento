@@ -103,7 +103,7 @@
                             </div>
 
                             <h3 class="subtitulo-card">Música de fundo</h3>
-                            <label for="cfg-musica">Escolha a música do convite</label>
+                            <label for="cfg-musica">Escolha uma música pronta</label>
                             <select id="cfg-musica">
                                 <option value="musicas/Blessings.mp3">Blessings</option>
                                 <option value="musicas/Chopin - Nocturne in C Sharp Minor (No. 20).mp3">Chopin — Nocturne in C# Minor</option>
@@ -111,7 +111,9 @@
                                 <option value="musicas/autumn leaves (jazzy piano instrumental).mp3">Autumn Leaves (piano)</option>
                                 <option value="musicas/the bakery.mp3">The Bakery</option>
                             </select>
-                            <p class="dica-admin">A música começa quando o convidado abre o selo.</p>
+                            <label for="file-musica" style="margin-top:12px; display:block;">Ou envie seu próprio MP3 (máx. 15 MB)</label>
+                            <input type="file" id="file-musica" accept="audio/mpeg,audio/mp3,.mp3">
+                            <p class="dica-admin" id="musica-atual-dica">A música começa quando o convidado abre o selo.</p>
 
                             <h3 class="subtitulo-card">Cores do tema</h3>
                             <div class="cores-grid">
@@ -349,13 +351,18 @@
                 const atual = cfg.musicaUrl || "musicas/Blessings.mp3";
                 selMusica.value = atual;
                 if (selMusica.value !== atual) {
-                    // se o valor salvo não estiver na lista, adiciona opção
                     const opt = document.createElement("option");
                     opt.value = atual;
-                    opt.textContent = atual.split("/").pop();
+                    opt.textContent = atual.startsWith("http") ? "Música enviada (MP3 próprio)" : atual.split("/").pop();
+                    opt.selected = true;
                     selMusica.appendChild(opt);
-                    selMusica.value = atual;
                 }
+            }
+            const dicaMusica = document.getElementById("musica-atual-dica");
+            if (dicaMusica && cfg.musicaUrl) {
+                dicaMusica.textContent = cfg.musicaUrl.startsWith("http")
+                    ? "Usando MP3 enviado por você. A música começa ao abrir o selo."
+                    : "A música começa quando o convidado abre o selo.";
             }
 
             const cores = { ...CORES_PADRAO, ...(cfg.cores || {}) };
@@ -530,6 +537,24 @@
         ligarUpload("file-hero", "hero");
         ligarUpload("file-secundaria", "secundaria");
         ligarUpload("file-local", "local");
+
+        const fileMusica = document.getElementById("file-musica");
+        if (fileMusica) {
+            fileMusica.addEventListener("change", async () => {
+                const arquivo = fileMusica.files?.[0];
+                if (!arquivo) return;
+                try {
+                    toast("Enviando música...", "info");
+                    const cfg = await uploadMidiaSite("musica", arquivo);
+                    preencherPersonalizacao(cfg);
+                    toast("Música atualizada!", "sucesso");
+                } catch (e) {
+                    toast(e.message || "Falha no upload da música", "erro");
+                } finally {
+                    fileMusica.value = "";
+                }
+            });
+        }
         ligarUpload("file-carrossel", "carrossel");
 
         // carrega personalizar na abertura (aba padrão)
