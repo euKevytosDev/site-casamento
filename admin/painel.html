@@ -154,6 +154,12 @@
                         </div>
 
                         <div class="upload-bloco">
+                            <h3>Foto do rodapé (última foto)</h3>
+                            <img id="preview-rodape" class="preview-midia" alt="Rodapé">
+                            <input type="file" id="file-rodape" accept="image/jpeg,image/png,image/webp,image/gif">
+                        </div>
+
+                        <div class="upload-bloco">
                             <h3>Carrossel — Nossos momentos <span id="contador-carrossel" class="contador-limite"></span></h3>
                             <div id="lista-carrossel-admin" class="lista-carrossel-admin"></div>
                             <label for="file-carrossel">Adicionar foto ao carrossel (máx. 6)</label>
@@ -377,6 +383,7 @@
             mostrarPreviewMidia("preview-hero", cfg.fotoHeroUrl);
             mostrarPreviewMidia("preview-secundaria", cfg.fotoSecundariaUrl);
             mostrarPreviewMidia("preview-local", cfg.fotoLocalUrl);
+            mostrarPreviewMidia("preview-rodape", cfg.fotoRodapeUrl);
             renderCarrosselAdmin(cfg.fotosCarrossel || []);
         }
 
@@ -537,6 +544,7 @@
         ligarUpload("file-hero", "hero");
         ligarUpload("file-secundaria", "secundaria");
         ligarUpload("file-local", "local");
+        ligarUpload("file-rodape", "rodape");
 
         const fileMusica = document.getElementById("file-musica");
         if (fileMusica) {

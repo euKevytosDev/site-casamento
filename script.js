@@ -144,6 +144,11 @@ function aplicarFotosDoSite(c) {
         const imgLocal = document.querySelector(".espaco-foto-wrapper img");
         if (imgLocal) imgLocal.src = c.fotoLocalUrl;
     }
+    if (c.fotoRodapeUrl) {
+        const imgRodape = document.getElementById("cfg-foto-rodape")
+            || document.querySelector(".fotomeio");
+        if (imgRodape) imgRodape.src = c.fotoRodapeUrl;
+    }
 
     const fotos = Array.isArray(c.fotosCarrossel) ? c.fotosCarrossel.filter(Boolean) : [];
     if (fotos.length) {
