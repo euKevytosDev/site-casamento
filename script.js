@@ -256,6 +256,91 @@ if (elementosRevelar.length > 0) {
     elementosRevelar.forEach((el) => observadorScroll.observe(el));
 }
 
+/** Carrossel "Nossos momentos": fade + autoplay + swipe */
+function iniciarCarrosselMomentos() {
+    const root = document.getElementById("carrossel-momentos");
+    if (!root) return;
+
+    const slides = Array.from(root.querySelectorAll(".carrossel-slide"));
+    const dotsWrap = root.querySelector(".carrossel-dots");
+    if (slides.length < 2 || !dotsWrap) return;
+
+    const intervaloMs = Number(root.dataset.intervalo) || 4500;
+    const reduzirMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let indice = slides.findIndex((s) => s.classList.contains("ativo"));
+    if (indice < 0) indice = 0;
+
+    slides.forEach((_, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "carrossel-dot" + (i === indice ? " ativo" : "");
+        dot.setAttribute("role", "tab");
+        dot.setAttribute("aria-label", `Foto ${i + 1}`);
+        dot.addEventListener("click", () => irPara(i, true));
+        dotsWrap.appendChild(dot);
+    });
+
+    const dots = Array.from(dotsWrap.querySelectorAll(".carrossel-dot"));
+
+    function irPara(novo, reiniciarTimer) {
+        if (novo === indice) return;
+        slides[indice].classList.remove("ativo");
+        dots[indice].classList.remove("ativo");
+        indice = (novo + slides.length) % slides.length;
+        slides[indice].classList.add("ativo");
+        dots[indice].classList.add("ativo");
+        if (reiniciarTimer) reiniciar();
+    }
+
+    let timer = null;
+    function parar() {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+    function reiniciar() {
+        parar();
+        if (reduzirMotion) return;
+        timer = setInterval(() => irPara(indice + 1, false), intervaloMs);
+    }
+
+    // Swipe horizontal (mobile)
+    let toqueX = null;
+    const viewport = root.querySelector(".carrossel-viewport");
+    if (viewport) {
+        viewport.addEventListener("touchstart", (e) => {
+            toqueX = e.changedTouches[0].clientX;
+            parar();
+        }, { passive: true });
+
+        viewport.addEventListener("touchend", (e) => {
+            if (toqueX == null) return;
+            const delta = e.changedTouches[0].clientX - toqueX;
+            toqueX = null;
+            if (Math.abs(delta) > 40) {
+                irPara(indice + (delta < 0 ? 1 : -1), true);
+            } else {
+                reiniciar();
+            }
+        }, { passive: true });
+    }
+
+    root.addEventListener("mouseenter", parar);
+    root.addEventListener("mouseleave", reiniciar);
+
+    // Só autoplay quando a seção está visível (economiza e fica mais elegante)
+    const observador = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada) => {
+            if (entrada.isIntersecting) reiniciar();
+            else parar();
+        });
+    }, { threshold: 0.35 });
+    observador.observe(root);
+}
+
+iniciarCarrosselMomentos();
+
 const DURACAO_MODAL_MS = 280;
 
 function abrirModal(modalEl) {
