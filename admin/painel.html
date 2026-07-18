@@ -87,6 +87,14 @@
                             <label for="cfg-maps">Link do Google Maps</label>
                             <input type="url" id="cfg-maps" placeholder="https://maps.google.com/...">
 
+                            <h3 class="subtitulo-card">Textos do convite</h3>
+                            <label for="cfg-versiculo">Versículo</label>
+                            <textarea id="cfg-versiculo" rows="3" placeholder='"Assim, eles já não são dois..." Mateus 19:6'></textarea>
+
+                            <label for="cfg-frase-bencao">Frase da bênção</label>
+                            <input type="text" id="cfg-frase-bencao" placeholder="Com a bênção de Deus e nossos pais">
+                            <p class="dica-admin">Aparece acima dos nomes dos pais.</p>
+
                             <h3 class="subtitulo-card">PIX</h3>
                             <label for="cfg-pix-chave">Chave PIX</label>
                             <input type="text" id="cfg-pix-chave">
@@ -363,6 +371,8 @@
             document.getElementById("cfg-pais-noivo").value = cfg.paisNoivo || "";
             document.getElementById("cfg-local").value = cfg.localNome || "";
             document.getElementById("cfg-maps").value = cfg.mapsUrl || "";
+            document.getElementById("cfg-versiculo").value = cfg.versiculo || "";
+            document.getElementById("cfg-frase-bencao").value = cfg.fraseBencao || "";
             document.getElementById("cfg-pix-chave").value = cfg.pixChave || "";
             document.getElementById("cfg-pix-nome").value = cfg.pixNomeRecebedor || "";
             document.getElementById("cfg-pix-cidade").value = cfg.pixCidade || "";
@@ -490,6 +500,8 @@
                 paisNoivo: document.getElementById("cfg-pais-noivo").value.trim(),
                 localNome: document.getElementById("cfg-local").value.trim(),
                 mapsUrl: document.getElementById("cfg-maps").value.trim(),
+                versiculo: document.getElementById("cfg-versiculo").value.trim(),
+                fraseBencao: document.getElementById("cfg-frase-bencao").value.trim(),
                 pixChave: document.getElementById("cfg-pix-chave").value.trim(),
                 pixNomeRecebedor: document.getElementById("cfg-pix-nome").value.trim(),
                 pixCidade: document.getElementById("cfg-pix-cidade").value.trim(),

@@ -38,6 +38,10 @@ window.SITE_CONFIG = {
     paisNoiva: "Warlen e Rosimar",
     paisNoivo: "Ricardo e Luiza",
 
+    // Textos do convite (editáveis no painel)
+    versiculo: "\"Assim, eles já não são dois, mas sim uma só carne. Portanto, o que Deus uniu, ninguém separe.\" Mateus 19:6",
+    fraseBencao: "Com a bênção de Deus e nossos pais",
+
     // Cores do tema (iguais às do CSS :root — outra noiva muda só aqui)
     cores: {
         verde: "#616e48",

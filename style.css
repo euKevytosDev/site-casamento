@@ -343,6 +343,29 @@ body {
     opacity: 0 !important; */
 }
 
+/* Preview de outro casal (?site=): sem foto demo até a API carregar */
+html.site-via-url .hero,
+html.site-via-url .foto2 {
+    background-image: none !important;
+    background-color: #f4f3ee;
+}
+
+html.site-via-url .carrossel-slides,
+html.site-via-url .espaco-foto-wrapper img,
+html.site-via-url #cfg-foto-rodape,
+html.site-via-url .fotomeio {
+    visibility: hidden;
+}
+
+html.site-via-url #cfg-nomes-hero,
+html.site-via-url #cfg-nomes-bloco,
+html.site-via-url #cfg-versiculo,
+html.site-via-url #cfg-frase-bencao,
+html.site-via-url #cfg-pais-noiva,
+html.site-via-url #cfg-pais-noivo {
+    opacity: 0;
+}
+
 .overlay {
     position: absolute;
     width: 100%;

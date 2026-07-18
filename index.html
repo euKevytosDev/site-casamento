@@ -2,10 +2,20 @@
 <html lang="pt-BR">
 
 <head>
+    <meta charset="UTF-8">
+    <script>
+        /* Evita flash do casal demo quando abre com ?site=outro-slug (Ver site no painel) */
+        (function () {
+            try {
+                var p = new URLSearchParams(location.search);
+                var s = (p.get("site") || p.get("siteId") || "").trim().toLowerCase();
+                if (s) document.documentElement.classList.add("site-via-url");
+            } catch (e) { /* ignore */ }
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#616e48">
     <meta name="color-scheme" content="light">
-    <meta charset="UTF-8">
     <title>Rafaella & Kevin · 24.04.2027</title>
     <meta id="meta-description" name="description" content="Convite de casamento de Rafaella & Kevin — 24 de abril de 2027.">
     <meta id="meta-app-name" name="application-name" content="Rafa & Kevin">
@@ -76,7 +86,7 @@
         </section>
 
         <div class="conteudo">
-            <p class="versiculo">
+            <p class="versiculo" id="cfg-versiculo">
                 "Assim, eles já não são dois, mas sim uma só carne. Portanto, o que Deus uniu, ninguém separe." Mateus
                 19:6
             </p>
@@ -86,7 +96,7 @@
         </div>
 
         <div class="bencao">
-            <p class="frase-bencao">Com a bênção de Deus e nossos pais</p>
+            <p class="frase-bencao" id="cfg-frase-bencao">Com a bênção de Deus e nossos pais</p>
             <div class="pais">
                 <div class="lado">
                     <p id="cfg-pais-noiva">Warlen e Rosimar</p>

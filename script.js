@@ -44,6 +44,12 @@ function aplicarConfigDoSite() {
     const paisNoivo = document.getElementById("cfg-pais-noivo");
     if (paisNoivo) paisNoivo.textContent = c.paisNoivo || "";
 
+    const versiculoEl = document.getElementById("cfg-versiculo");
+    if (versiculoEl && c.versiculo) versiculoEl.textContent = c.versiculo;
+
+    const fraseBencaoEl = document.getElementById("cfg-frase-bencao");
+    if (fraseBencaoEl && c.fraseBencao) fraseBencaoEl.textContent = c.fraseBencao;
+
     // dataCasamento = "2027-04-24" → ano, mês, dia
     const partes = (c.dataCasamento || "").split("-"); // [ano, mes, dia]
     if (partes.length === 3) {
@@ -178,7 +184,7 @@ async function carregarConfigRemota() {
         const res = await fetch(`${API_BASE}/api/site/config`, {
             headers: apiHeaders()
         });
-        if (!res.ok) return;
+        if (!res.ok) return false;
         const remoto = await res.json();
         window.SITE_CONFIG = {
             ...(window.SITE_CONFIG || {}),
@@ -195,13 +201,26 @@ async function carregarConfigRemota() {
             SITE_ID = remoto.siteId;
         }
         aplicarConfigDoSite();
+        return true;
     } catch (_) {
-        // silencioso: usa config.js
+        return false;
     }
 }
 
-aplicarConfigDoSite();
-carregarConfigRemota();
+const SITE_VIA_URL = (() => {
+    const params = new URLSearchParams(window.location.search);
+    return !!(params.get("site") || params.get("siteId") || "").trim();
+})();
+
+if (SITE_VIA_URL) {
+    // Não aplica Rafa/Kevin local — espera a API do slug
+    carregarConfigRemota().then((ok) => {
+        if (ok) document.documentElement.classList.remove("site-via-url");
+    });
+} else {
+    aplicarConfigDoSite();
+    carregarConfigRemota();
+}
 
 /* Laterais decorativas: altura = documento inteiro (rola com o site) */
 function ajustarAlturaLaterais() {
