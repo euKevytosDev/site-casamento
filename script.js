@@ -265,7 +265,7 @@ function iniciarCarrosselMomentos() {
     const dotsWrap = root.querySelector(".carrossel-dots");
     if (slides.length < 2 || !dotsWrap) return;
 
-    const intervaloMs = Number(root.dataset.intervalo) || 4500;
+    const intervaloMs = Number(root.dataset.intervalo) || 3000;
     const reduzirMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let indice = slides.findIndex((s) => s.classList.contains("ativo"));
     if (indice < 0) indice = 0;
