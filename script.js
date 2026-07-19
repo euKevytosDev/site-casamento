@@ -1363,6 +1363,114 @@ window.addEventListener("click", (evento) => {
     }
 });
 
+/* =======================================================
+   MURAL DE RECADOS
+   ======================================================= */
+(function initRecados() {
+    const listaEl = document.getElementById("lista-recados");
+    const form = document.getElementById("form-recado");
+    const campoNome = document.getElementById("recado-nome");
+    const campoMsg = document.getElementById("recado-mensagem");
+    const contador = document.getElementById("recado-contador");
+    const btn = document.getElementById("btn-enviar-recado");
+    const textoBtn = document.getElementById("texto-enviar-recado");
+    const msgStatus = document.getElementById("msg-recado");
+    if (!listaEl || !form) return;
+
+    function atualizarContador() {
+        if (!contador || !campoMsg) return;
+        contador.textContent = `${campoMsg.value.length} / 280`;
+    }
+
+    function renderRecados(lista) {
+        listaEl.innerHTML = "";
+        if (!lista.length) {
+            const p = document.createElement("p");
+            p.className = "lista-recados-vazia";
+            p.textContent = "Seja o primeiro a deixar um recado.";
+            listaEl.appendChild(p);
+            return;
+        }
+        lista.forEach((item) => {
+            const li = document.createElement("li");
+            li.className = "item-recado";
+            const quote = document.createElement("blockquote");
+            quote.textContent = item.mensagem || "";
+            const foot = document.createElement("footer");
+            foot.textContent = `— ${item.nome || "Convidado"}`;
+            li.append(quote, foot);
+            listaEl.appendChild(li);
+        });
+    }
+
+    async function carregarRecados() {
+        try {
+            const res = await fetch(`${API_BASE}/api/recados`, { headers: apiHeaders() });
+            if (!res.ok) throw new Error("falha");
+            const data = await res.json();
+            renderRecados(Array.isArray(data) ? data : []);
+        } catch {
+            listaEl.innerHTML = "";
+            const p = document.createElement("p");
+            p.className = "lista-recados-vazia";
+            p.textContent = "Os recados aparecem em instantes.";
+            listaEl.appendChild(p);
+        }
+    }
+
+    campoMsg?.addEventListener("input", atualizarContador);
+    atualizarContador();
+    carregarRecados();
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nome = (campoNome?.value || "").trim();
+        const mensagem = (campoMsg?.value || "").trim();
+        if (!nome || !mensagem) {
+            if (msgStatus) {
+                msgStatus.className = "msg-recado erro";
+                msgStatus.textContent = "Preencha nome e mensagem.";
+            }
+            return;
+        }
+        if (btn) btn.disabled = true;
+        if (textoBtn) textoBtn.textContent = "Enviando...";
+        if (msgStatus) {
+            msgStatus.className = "msg-recado";
+            msgStatus.textContent = "";
+        }
+        try {
+            const res = await fetch(`${API_BASE}/api/recados`, {
+                method: "POST",
+                headers: apiHeaders({ "Content-Type": "application/json" }),
+                body: JSON.stringify({ nome, mensagem })
+            });
+            const texto = await res.text();
+            let data;
+            try { data = JSON.parse(texto); } catch { data = texto; }
+            if (!res.ok) {
+                throw new Error(typeof data === "string" ? data : (data.message || "Não foi possível enviar."));
+            }
+            form.reset();
+            atualizarContador();
+            if (msgStatus) {
+                msgStatus.className = "msg-recado ok";
+                msgStatus.textContent = "Recado publicado. Obrigado!";
+            }
+            if (typeof toast === "function") toast("Recado enviado!", "sucesso");
+            await carregarRecados();
+        } catch (err) {
+            if (msgStatus) {
+                msgStatus.className = "msg-recado erro";
+                msgStatus.textContent = err.message || "Falha ao enviar.";
+            }
+        } finally {
+            if (btn) btn.disabled = false;
+            if (textoBtn) textoBtn.textContent = "Enviar recado";
+        }
+    });
+})();
+
 /* Acesso discreto ao admin: tocar 3 vezes seguidas no número de dias */
 (function initAcessoAdminOculto() {
     const gatilho = document.getElementById("dias");

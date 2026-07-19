@@ -435,6 +435,33 @@
             </div>
         </div>
 
+        <section class="secao-recados revelar-scroll" aria-label="Recados dos convidados">
+            <header class="recados-cabecalho">
+                <p class="recados-eyebrow">Mural de carinho</p>
+                <h3 class="recados-titulo">Deixe um recado</h3>
+                <p class="recados-lead">Uma frase curta para o casal — nome e mensagem.</p>
+            </header>
+
+            <form id="form-recado" class="form-recado">
+                <label class="sr-only" for="recado-nome">Seu nome</label>
+                <input id="recado-nome" name="nome" type="text" maxlength="80" required
+                    placeholder="Seu nome" autocomplete="name">
+
+                <label class="sr-only" for="recado-mensagem">Sua mensagem</label>
+                <textarea id="recado-mensagem" name="mensagem" rows="3" maxlength="280" required
+                    placeholder="Escreva uma mensagem carinhosa..."></textarea>
+                <div class="recado-form-rodape">
+                    <span id="recado-contador" class="recado-contador">0 / 280</span>
+                    <button type="submit" class="btn-enviar-recado" id="btn-enviar-recado">
+                        <span id="texto-enviar-recado">Enviar recado</span>
+                    </button>
+                </div>
+                <p id="msg-recado" class="msg-recado" role="status"></p>
+            </form>
+
+            <ul id="lista-recados" class="lista-recados" aria-live="polite"></ul>
+        </section>
+
         <div class="fotodois revelar-scroll revelar-suave">
             <div class="overlay-meio"></div>
             <img src="imagens/olhandoumparaooutro.jpg" class="fotomeio" id="cfg-foto-rodape" alt="Foto do casal">

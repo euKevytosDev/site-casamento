@@ -30,6 +30,7 @@
                 <button class="aba" data-aba="historico">Histórico de cotas</button>
                 <button class="aba" data-aba="pix-pendentes">PIX a confirmar</button>
                 <button class="aba" data-aba="presenca">Presenças</button>
+                <button class="aba" data-aba="recados">Recados</button>
             </div>
 
             <!-- ABA PERSONALIZAR SITE -->
@@ -328,6 +329,28 @@
                     </div>
                 </div>
             </section>
+
+            <!-- ABA RECADOS -->
+            <section id="aba-recados" class="painel-aba">
+                <div class="card-painel">
+                    <h2>Recados do mural</h2>
+                    <p class="dica-admin">Mensagens que os convidados deixaram no site. Exclua se precisar moderar.</p>
+                    <div class="resumo" id="resumo-recados"></div>
+                    <div style="overflow-x:auto;">
+                        <table class="tabela-presenca">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Mensagem</th>
+                                    <th>Data</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-recados"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -446,6 +469,7 @@
                 if (aba.dataset.aba === "presenca") carregarPresencas();
                 if (aba.dataset.aba === "historico") carregarHistorico();
                 if (aba.dataset.aba === "pix-pendentes") carregarPixPendentes();
+                if (aba.dataset.aba === "recados") carregarRecadosAdmin();
                 if (aba.dataset.aba === "personalizar") carregarPersonalizacao();
             });
         });
@@ -1171,6 +1195,49 @@
                 return;
             }
             carregarPresencas();
+        };
+
+        async function carregarRecadosAdmin() {
+            const tbody = document.getElementById("tabela-recados");
+            const resumo = document.getElementById("resumo-recados");
+            if (!tbody) return;
+            try {
+                const resposta = await apiFetch("/api/admin/recados");
+                if (!resposta.ok) throw new Error(await lerErro(resposta));
+                const lista = await resposta.json();
+                if (resumo) {
+                    resumo.innerHTML = `
+                        <div class="resumo-card"><strong>${lista.length}</strong><span>Recados</span></div>
+                    `;
+                }
+                if (!lista.length) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="vazio">Nenhum recado ainda.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = lista.map(r => `
+                    <tr>
+                        <td><strong>${escapeHtml(r.nome)}</strong></td>
+                        <td>${escapeHtml(r.mensagem)}</td>
+                        <td>${formatarData(r.dataCadastro)}</td>
+                        <td>
+                            <button class="btn-perigo" onclick="excluirRecado(${Number(r.id)})">Excluir</button>
+                        </td>
+                    </tr>
+                `).join("");
+            } catch (erro) {
+                tbody.innerHTML = `<tr><td colspan="4" class="vazio">${escapeHtml(erro.message)}</td></tr>`;
+            }
+        }
+
+        window.excluirRecado = async function(id) {
+            if (!confirm("Excluir este recado do mural?")) return;
+            const resposta = await apiFetch(`/api/admin/recados/${id}`, { method: "DELETE" });
+            if (!resposta.ok) {
+                toast(await lerErro(resposta), "erro");
+                return;
+            }
+            toast("Recado removido", "sucesso");
+            carregarRecadosAdmin();
         };
 
         carregarPresentes();
