@@ -1394,11 +1394,16 @@ window.addEventListener("click", (evento) => {
         lista.forEach((item) => {
             const li = document.createElement("li");
             li.className = "item-recado";
-            const quote = document.createElement("blockquote");
-            quote.textContent = item.mensagem || "";
-            const foot = document.createElement("footer");
-            foot.textContent = `— ${item.nome || "Convidado"}`;
-            li.append(quote, foot);
+
+            const nomeEl = document.createElement("p");
+            nomeEl.className = "recado-nome";
+            nomeEl.textContent = item.nome || "Convidado";
+
+            const textoEl = document.createElement("p");
+            textoEl.className = "recado-texto";
+            textoEl.textContent = item.mensagem || "";
+
+            li.append(nomeEl, textoEl);
             listaEl.appendChild(li);
         });
     }

@@ -1144,7 +1144,7 @@ img.foto-vazia-img {
 .container-interacoes {
     width: 100%;
     max-width: 390px;
-    margin: 38px auto 44px;
+    margin: 38px auto 28px;
     display: flex;
     flex-direction: column;
     gap: 28px;
@@ -1211,17 +1211,20 @@ img.foto-vazia-img {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 28px;
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(97, 110, 72, 0.12);
 }
 
 .form-recado input,
 .form-recado textarea {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid rgba(97, 110, 72, 0.22);
-    background: rgba(255, 255, 255, 0.72);
-    border-radius: 2px;
-    padding: 12px 14px;
+    border: none;
+    border-bottom: 1px solid rgba(97, 110, 72, 0.25);
+    background: transparent;
+    border-radius: 0;
+    padding: 12px 2px;
     font-family: "Playfair", serif;
     font-size: 15px;
     color: var(--cor-texto);
@@ -1231,8 +1234,8 @@ img.foto-vazia-img {
 .form-recado input:focus,
 .form-recado textarea:focus {
     outline: none;
-    border-color: var(--cor-verde);
-    box-shadow: 0 0 0 3px rgba(97, 110, 72, 0.1);
+    border-bottom-color: var(--cor-verde);
+    box-shadow: none;
 }
 
 .form-recado textarea {
@@ -1288,44 +1291,53 @@ img.foto-vazia-img {
 
 .lista-recados {
     list-style: none;
-    margin: 0;
+    margin: 8px 0 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 28px;
 }
 
 .item-recado {
     margin: 0;
-    padding: 16px 16px 14px;
-    background: var(--cor-fundo-bege);
-    border-radius: 2px;
-    box-shadow: 0 1px 0 rgba(67, 63, 63, 0.04);
+    padding: 4px 0 4px 18px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: 3px solid rgba(97, 110, 72, 0.28);
 }
 
-.item-recado blockquote {
-    margin: 0 0 10px;
-    font-family: "Playfair", serif;
-    font-style: italic;
-    font-size: clamp(14px, 3.5vw, 16px);
-    line-height: 1.5;
+.item-recado .recado-nome {
+    margin: 0 0 8px;
+    font-family: "Playfair Display", "Playfair", serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
     color: var(--cor-texto);
 }
 
-.item-recado footer {
-    font-family: "Playfair Display", "Playfair", serif;
-    font-size: 12px;
-    letter-spacing: 1px;
-    color: var(--cor-verde);
+.item-recado .recado-texto {
+    margin: 0;
+    font-family: "Playfair", serif;
+    font-style: normal;
+    font-size: clamp(14px, 3.5vw, 15px);
+    line-height: 1.55;
+    letter-spacing: 0.3px;
+    color: var(--cor-texto-suave);
+    text-transform: none;
 }
 
 .lista-recados-vazia {
-    text-align: center;
+    text-align: left;
     font-family: "Playfair", serif;
     font-style: italic;
     font-size: 14px;
     color: var(--cor-texto-fraco, #8a8580);
     margin: 8px 0 0;
+    padding-left: 18px;
+    border-left: 3px solid rgba(97, 110, 72, 0.18);
 }
 
 .chamada-icones {
