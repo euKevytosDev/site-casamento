@@ -649,6 +649,54 @@ button,
     color: var(--text);
 }
 
+.tabela-recados-wrap {
+    width: 100%;
+    overflow: hidden;
+}
+
+.tabela-recados {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.tabela-recados .col-nome {
+    width: 22%;
+}
+
+.tabela-recados .col-msg {
+    width: 48%;
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-muted);
+}
+
+.tabela-recados .col-data {
+    width: 18%;
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.tabela-recados .col-acao {
+    width: 12%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.tabela-recados .btn-excluir-recado {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+@media (max-width: 640px) {
+    .tabela-recados .col-nome { width: 26%; }
+    .tabela-recados .col-msg { width: 42%; }
+    .tabela-recados .col-data { width: 16%; font-size: 10px; }
+    .tabela-recados .col-acao { width: 16%; }
+}
+
 .resumo-card {
     flex: 1;
     min-width: 120px;

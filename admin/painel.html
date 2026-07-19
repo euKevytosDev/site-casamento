@@ -336,14 +336,14 @@
                     <h2>Recados do mural</h2>
                     <p class="dica-admin">Mensagens dos convidados no site. Você pode excluir qualquer recado quando quiser.</p>
                     <div class="resumo" id="resumo-recados"></div>
-                    <div style="overflow-x:auto;">
-                        <table class="tabela-presenca">
+                    <div class="tabela-recados-wrap">
+                        <table class="tabela-presenca tabela-recados">
                             <thead>
                                 <tr>
-                                    <th>Nome</th>
-                                    <th>Mensagem</th>
-                                    <th>Data</th>
-                                    <th></th>
+                                    <th class="col-nome">Nome</th>
+                                    <th class="col-msg">Mensagem</th>
+                                    <th class="col-data">Data</th>
+                                    <th class="col-acao"></th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-recados"></tbody>
@@ -1214,18 +1214,38 @@
                     tbody.innerHTML = `<tr><td colspan="4" class="vazio">Nenhum recado ainda.</td></tr>`;
                     return;
                 }
-                tbody.innerHTML = lista.map(r => `
+                tbody.innerHTML = lista.map(r => {
+                    const msgCompleta = String(r.mensagem || "");
+                    const msgCurta = msgCompleta.length > 48
+                        ? `${msgCompleta.slice(0, 48).trim()}…`
+                        : msgCompleta;
+                    return `
                     <tr>
-                        <td><strong>${escapeHtml(r.nome)}</strong></td>
-                        <td>${escapeHtml(r.mensagem)}</td>
-                        <td>${formatarData(r.dataCadastro)}</td>
-                        <td>
-                            <button class="btn-perigo" onclick="excluirRecado(${Number(r.id)})">Excluir</button>
+                        <td class="col-nome"><strong>${escapeHtml(r.nome)}</strong></td>
+                        <td class="col-msg" title="${escapeHtml(msgCompleta)}">${escapeHtml(msgCurta)}</td>
+                        <td class="col-data">${formatarDataCurta(r.dataCadastro)}</td>
+                        <td class="col-acao">
+                            <button type="button" class="btn-perigo btn-excluir-recado" onclick="excluirRecado(${Number(r.id)})">Excluir</button>
                         </td>
-                    </tr>
-                `).join("");
+                    </tr>`;
+                }).join("");
             } catch (erro) {
                 tbody.innerHTML = `<tr><td colspan="4" class="vazio">${escapeHtml(erro.message)}</td></tr>`;
+            }
+        }
+
+        function formatarDataCurta(data) {
+            if (!data) return "—";
+            try {
+                const d = new Date(data);
+                if (Number.isNaN(d.getTime())) return "—";
+                const dia = String(d.getDate()).padStart(2, "0");
+                const mes = String(d.getMonth() + 1).padStart(2, "0");
+                const h = String(d.getHours()).padStart(2, "0");
+                const m = String(d.getMinutes()).padStart(2, "0");
+                return `${dia}/${mes} ${h}:${m}`;
+            } catch {
+                return "—";
             }
         }
 
