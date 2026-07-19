@@ -34,6 +34,17 @@
 
             <!-- ABA PERSONALIZAR SITE -->
             <section id="aba-personalizar" class="painel-aba ativo">
+                <div class="card-painel" style="margin-bottom:16px;">
+                    <h2>Compartilhar convite</h2>
+                    <p class="dica-admin">Envie o link do site para convidados (WhatsApp ou copiar).</p>
+                    <input type="text" id="link-convite-publico" readonly
+                        style="width:100%; margin-bottom:10px; font-size:13px;">
+                    <div class="linha-dupla">
+                        <button type="button" class="btn-secundario" id="btn-copiar-convite">Copiar link</button>
+                        <button type="button" class="btn-primario" id="btn-whatsapp-convite">WhatsApp</button>
+                    </div>
+                    <p id="msg-compartilhar" class="dica-admin" style="margin-top:8px;"></p>
+                </div>
                 <div class="grid-admin grid-personalizar">
                     <div class="card-painel">
                         <h2>Textos e data</h2>
@@ -98,6 +109,15 @@
                             <label for="cfg-frase-bencao">Frase da bênção</label>
                             <input type="text" id="cfg-frase-bencao" placeholder="Com a bênção de Deus e nossos pais">
                             <p class="dica-admin">Aparece acima dos nomes dos pais.</p>
+
+                            <h3 class="subtitulo-card">Galeria e história</h3>
+                            <label for="cfg-titulo-galeria">Título do carrossel</label>
+                            <input type="text" id="cfg-titulo-galeria" maxlength="80" placeholder="Nossos momentos">
+
+                            <label for="cfg-historia-curta">História curta (máx. 500 caracteres)</label>
+                            <textarea id="cfg-historia-curta" rows="3" maxlength="500"
+                                placeholder="Um encontro, um sim e o começo da nossa história juntos."></textarea>
+                            <p class="dica-admin">Texto curto acima das fotos — convidado lê em 5 segundos.</p>
 
                             <h3 class="subtitulo-card">PIX</h3>
                             <label for="cfg-pix-chave">Chave PIX</label>
@@ -370,6 +390,43 @@
         }
         document.getElementById("btn-sair").addEventListener("click", logout);
 
+        function linkPublicoDoSite() {
+            const slug = getSiteIdAtivo();
+            const base = (window.SITE_CONFIG?.siteUrl || "https://rafaekevin.com.br/").replace(/\/?$/, "/");
+            if (slug === "rafaekevin") return base;
+            return `${base}index.html?site=${encodeURIComponent(slug)}`;
+        }
+
+        function atualizarBlocoCompartilhar() {
+            const input = document.getElementById("link-convite-publico");
+            if (input) input.value = linkPublicoDoSite();
+        }
+
+        atualizarBlocoCompartilhar();
+
+        document.getElementById("btn-copiar-convite")?.addEventListener("click", async () => {
+            const link = linkPublicoDoSite();
+            const msg = document.getElementById("msg-compartilhar");
+            try {
+                await navigator.clipboard.writeText(link);
+                if (msg) msg.textContent = "Link copiado!";
+                toast("Link do convite copiado", "sucesso");
+            } catch {
+                const input = document.getElementById("link-convite-publico");
+                if (input) {
+                    input.select();
+                    document.execCommand("copy");
+                }
+                if (msg) msg.textContent = "Link selecionado — use Ctrl+C / Cmd+C.";
+            }
+        });
+
+        document.getElementById("btn-whatsapp-convite")?.addEventListener("click", () => {
+            const link = linkPublicoDoSite();
+            const texto = `Olá! Segue o convite do nosso casamento: ${link}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+        });
+
         const linkVerSite = document.getElementById("link-ver-site");
         if (linkVerSite) {
             const slug = getSiteIdAtivo();
@@ -428,6 +485,10 @@
             document.getElementById("cfg-maps").value = cfg.mapsUrl || "";
             document.getElementById("cfg-versiculo").value = cfg.versiculo || "";
             document.getElementById("cfg-frase-bencao").value = cfg.fraseBencao || "";
+            const tituloGal = document.getElementById("cfg-titulo-galeria");
+            if (tituloGal) tituloGal.value = cfg.tituloGaleria || "Nossos momentos";
+            const hist = document.getElementById("cfg-historia-curta");
+            if (hist) hist.value = cfg.historiaCurta || "";
             document.getElementById("cfg-pix-chave").value = cfg.pixChave || "";
             document.getElementById("cfg-pix-nome").value = cfg.pixNomeRecebedor || "";
             document.getElementById("cfg-pix-cidade").value = cfg.pixCidade || "";
@@ -557,6 +618,8 @@
                 mapsUrl: document.getElementById("cfg-maps").value.trim(),
                 versiculo: document.getElementById("cfg-versiculo").value.trim(),
                 fraseBencao: document.getElementById("cfg-frase-bencao").value.trim(),
+                tituloGaleria: document.getElementById("cfg-titulo-galeria")?.value.trim() || "Nossos momentos",
+                historiaCurta: document.getElementById("cfg-historia-curta")?.value.trim() || "",
                 pixChave: document.getElementById("cfg-pix-chave").value.trim(),
                 pixNomeRecebedor: document.getElementById("cfg-pix-nome").value.trim(),
                 pixCidade: document.getElementById("cfg-pix-cidade").value.trim(),

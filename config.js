@@ -41,6 +41,8 @@ window.SITE_CONFIG = {
     // Textos do convite (editáveis no painel)
     versiculo: "\"Assim, eles já não são dois, mas sim uma só carne. Portanto, o que Deus uniu, ninguém separe.\" Mateus 19:6",
     fraseBencao: "Com a bênção de Deus e nossos pais",
+    tituloGaleria: "Nossos momentos",
+    historiaCurta: "Um encontro, um sim e o começo da nossa história juntos.",
 
     // Cores do tema (iguais às do CSS :root — outra noiva muda só aqui)
     cores: {

@@ -81,6 +81,17 @@ function aplicarConfigDoSite() {
     const fraseBencaoEl = document.getElementById("cfg-frase-bencao");
     if (fraseBencaoEl && c.fraseBencao) fraseBencaoEl.textContent = c.fraseBencao;
 
+    const tituloGaleriaEl = document.getElementById("cfg-titulo-galeria");
+    if (tituloGaleriaEl) {
+        tituloGaleriaEl.textContent = c.tituloGaleria || "Nossos momentos";
+    }
+    const historiaEl = document.getElementById("cfg-historia-curta");
+    if (historiaEl) {
+        const hist = (c.historiaCurta || "").trim();
+        historiaEl.textContent = hist;
+        historiaEl.hidden = !hist;
+    }
+
     // dataCasamento = "2027-04-24" → ano, mês, dia
     const partes = (c.dataCasamento || "").split("-"); // [ano, mes, dia]
     if (partes.length === 3) {
@@ -612,6 +623,102 @@ function iniciarCarrosselMomentos() {
 }
 
 iniciarCarrosselMomentos();
+
+function parseHoraCasamento(horaRaw) {
+    const limpa = String(horaRaw || "16:00").replace(/h/gi, "").trim();
+    const m = limpa.match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return { h: 16, min: 0 };
+    return { h: Math.min(23, Number(m[1])), min: Math.min(59, Number(m[2])) };
+}
+
+function formatarDataIcsUtc(date) {
+    const y = date.getUTCFullYear();
+    const mo = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const d = String(date.getUTCDate()).padStart(2, "0");
+    const h = String(date.getUTCHours()).padStart(2, "0");
+    const mi = String(date.getUTCMinutes()).padStart(2, "0");
+    const s = String(date.getUTCSeconds()).padStart(2, "0");
+    return `${y}${mo}${d}T${h}${mi}${s}Z`;
+}
+
+function montarEventoAgenda() {
+    const c = window.SITE_CONFIG || {};
+    const data = String(c.dataCasamento || "").trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+        throw new Error("Data do casamento ainda não foi definida.");
+    }
+    const { h, min } = parseHoraCasamento(c.horaCasamento);
+    const [ano, mes, dia] = data.split("-").map(Number);
+    const inicio = new Date(ano, mes - 1, dia, h, min, 0);
+    const fim = new Date(inicio.getTime() + 4 * 60 * 60 * 1000);
+    const titulo = `Casamento ${c.nomeNoiva || ""} & ${c.nomeNoivo || ""}`.replace(/\s+/g, " ").trim();
+    const local = c.localNome || "";
+    const detalhes = c.mapsUrl
+        ? `Convite: ${window.location.href.split("#")[0]}\nMapa: ${c.mapsUrl}`
+        : `Convite: ${window.location.href.split("#")[0]}`;
+    return { titulo, local, detalhes, inicio, fim };
+}
+
+function baixarArquivoIcs(evento) {
+    const ics = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//RK Sites//Casamento//PT",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        `UID:casamento-${SITE_ID}-${evento.inicio.getTime()}@rafaekevin.com.br`,
+        `DTSTAMP:${formatarDataIcsUtc(new Date())}`,
+        `DTSTART:${formatarDataIcsUtc(evento.inicio)}`,
+        `DTEND:${formatarDataIcsUtc(evento.fim)}`,
+        `SUMMARY:${evento.titulo.replace(/,/g, "\\,")}`,
+        `LOCATION:${evento.local.replace(/,/g, "\\,")}`,
+        `DESCRIPTION:${evento.detalhes.replace(/\n/g, "\\n").replace(/,/g, "\\,")}`,
+        "END:VEVENT",
+        "END:VCALENDAR"
+    ].join("\r\n");
+
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `casamento-${SITE_ID}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+}
+
+function abrirGoogleCalendar(evento) {
+    const params = new URLSearchParams({
+        action: "TEMPLATE",
+        text: evento.titulo,
+        dates: `${formatarDataIcsUtc(evento.inicio)}/${formatarDataIcsUtc(evento.fim)}`,
+        details: evento.detalhes,
+        location: evento.local
+    });
+    window.open(`https://calendar.google.com/calendar/render?${params}`, "_blank", "noopener");
+}
+
+document.getElementById("btn-salvar-agenda")?.addEventListener("click", () => {
+    try {
+        const evento = montarEventoAgenda();
+        // Mobile: .ics abre no app de calendário; desktop também oferece Google
+        baixarArquivoIcs(evento);
+        if (!/iPhone|iPad|Android/i.test(navigator.userAgent)) {
+            abrirGoogleCalendar(evento);
+        }
+        if (typeof toast === "function") {
+            toast("Evento pronto para salvar na sua agenda!", "sucesso");
+        }
+    } catch (err) {
+        if (typeof toast === "function") {
+            toast(err.message || "Não foi possível criar o evento.", "erro");
+        } else {
+            alert(err.message || "Não foi possível criar o evento.");
+        }
+    }
+});
 
 const DURACAO_MODAL_MS = 280;
 
