@@ -730,14 +730,12 @@ img.foto-vazia-img {
     position: relative;
     z-index: 2;
     width: 100%;
-    padding: 20px 20px 8px;
+    padding: 20px 20px 12px;
     /* Espaço nas laterais para não encostar na borda da tela */
     display: flex;
     justify-content: center;
     margin-top: -95px;
-    margin-bottom: 8px;
-    /* Espaço em relação aos nomes acima */
-    margin-bottom: -5px;
+    margin-bottom: 0;
 }
 
 .retangulo {
