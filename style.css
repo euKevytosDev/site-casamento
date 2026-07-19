@@ -671,34 +671,6 @@ img.foto-vazia-img {
     display: none;
 }
 
-.acoes-data {
-    display: flex;
-    justify-content: center;
-    margin: -8px auto 8px;
-    padding: 0 20px;
-}
-
-.btn-salvar-agenda {
-    appearance: none;
-    border: 1px solid var(--cor-borda-suave, rgba(97, 110, 72, 0.35));
-    background: transparent;
-    color: var(--cor-verde);
-    font-family: "Playfair", serif;
-    font-size: 13px;
-    letter-spacing: 0.6px;
-    padding: 10px 18px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-.btn-salvar-agenda:hover,
-.btn-salvar-agenda:focus-visible {
-    background: var(--cor-fundo-bege);
-    border-color: var(--cor-verde);
-    outline: none;
-}
-
 .carrossel {
     width: 100%;
     max-width: 380px;
