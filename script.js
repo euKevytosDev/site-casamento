@@ -513,12 +513,11 @@ if (elementosRevelar.length > 0) {
     elementosRevelar.forEach((el) => observadorScroll.observe(el));
 }
 
-/** Carrossel "Nossos momentos": fade + autoplay + swipe */
+/** Carrossel "Nossos momentos": fade + autoplay + swipe + setas */
 function iniciarCarrosselMomentos() {
     const root = document.getElementById("carrossel-momentos");
     if (!root) return;
 
-    // Permite reiniciar depois que a API troca as fotos
     if (typeof root._carrosselCleanup === "function") {
         root._carrosselCleanup();
         root._carrosselCleanup = null;
@@ -526,19 +525,34 @@ function iniciarCarrosselMomentos() {
 
     const slides = Array.from(root.querySelectorAll(".carrossel-slide"));
     const dotsWrap = root.querySelector(".carrossel-dots");
+    const contadorEl = root.querySelector(".carrossel-contador") || document.getElementById("carrossel-contador");
+    const btnPrev = root.querySelector(".carrossel-nav--prev");
+    const btnNext = root.querySelector(".carrossel-nav--next");
     if (!dotsWrap) return;
     dotsWrap.innerHTML = "";
     if (slides.length < 1) return;
+
+    function atualizarContador(i) {
+        if (!contadorEl) return;
+        const atual = String(i + 1).padStart(2, "0");
+        const total = String(slides.length).padStart(2, "0");
+        contadorEl.textContent = `${atual} / ${total}`;
+    }
+
     if (slides.length === 1) {
         slides[0].classList.add("ativo");
+        atualizarContador(0);
+        if (btnPrev) btnPrev.hidden = true;
+        if (btnNext) btnNext.hidden = true;
         return;
     }
 
-    const intervaloMs = Number(root.dataset.intervalo) || 3000;
+    const intervaloMs = Number(root.dataset.intervalo) || 4800;
     const reduzirMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let indice = slides.findIndex((s) => s.classList.contains("ativo"));
     if (indice < 0) indice = 0;
     slides.forEach((s, i) => s.classList.toggle("ativo", i === indice));
+    atualizarContador(indice);
 
     slides.forEach((_, i) => {
         const dot = document.createElement("button");
@@ -559,6 +573,7 @@ function iniciarCarrosselMomentos() {
         indice = (novo + slides.length) % slides.length;
         slides[indice].classList.add("ativo");
         dots[indice].classList.add("ativo");
+        atualizarContador(indice);
         if (reiniciarTimer) reiniciar();
     }
 
@@ -574,6 +589,11 @@ function iniciarCarrosselMomentos() {
         if (reduzirMotion) return;
         timer = setInterval(() => irPara(indice + 1, false), intervaloMs);
     }
+
+    const onPrev = () => irPara(indice - 1, true);
+    const onNext = () => irPara(indice + 1, true);
+    btnPrev?.addEventListener("click", onPrev);
+    btnNext?.addEventListener("click", onNext);
 
     let toqueX = null;
     const viewport = root.querySelector(".carrossel-viewport");
@@ -614,6 +634,8 @@ function iniciarCarrosselMomentos() {
         observador.disconnect();
         root.removeEventListener("mouseenter", onEnter);
         root.removeEventListener("mouseleave", onLeave);
+        btnPrev?.removeEventListener("click", onPrev);
+        btnNext?.removeEventListener("click", onNext);
         if (viewport) {
             viewport.removeEventListener("touchstart", onTouchStart);
             viewport.removeEventListener("touchend", onTouchEnd);

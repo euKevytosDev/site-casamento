@@ -143,8 +143,13 @@
                 <h3 class="titulo-galeria" id="cfg-titulo-galeria">Nossos momentos</h3>
                 <p class="historia-curta" id="cfg-historia-curta">Um encontro, um sim e o começo da nossa história juntos.</p>
             </header>
-            <div class="carrossel" id="carrossel-momentos" data-intervalo="3000">
+            <div class="carrossel" id="carrossel-momentos" data-intervalo="4800">
                 <div class="carrossel-viewport">
+                    <button type="button" class="carrossel-nav carrossel-nav--prev" aria-label="Foto anterior">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M15 6 9 12l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                     <div class="carrossel-slides">
                         <figure class="carrossel-slide ativo">
                             <img src="imagens/olhandoumparaooutro.jpg" alt="Rafaella e Kevin">
@@ -159,8 +164,17 @@
                             <img src="imagens/maoanel.jpg" alt="Aliança">
                         </figure>
                     </div>
+                    <button type="button" class="carrossel-nav carrossel-nav--next" aria-label="Próxima foto">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="carrossel-vinheta" aria-hidden="true"></div>
                 </div>
-                <div class="carrossel-dots" role="tablist" aria-label="Fotos do carrossel"></div>
+                <div class="carrossel-rodape">
+                    <p class="carrossel-contador" id="carrossel-contador" aria-live="polite">01 / 04</p>
+                    <div class="carrossel-dots" role="tablist" aria-label="Fotos do carrossel"></div>
+                </div>
             </div>
         </section>
 
