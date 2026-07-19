@@ -857,7 +857,8 @@ img.foto-vazia-img {
     /* Espaço nas laterais para não encostar na borda da tela */
     display: flex;
     justify-content: center;
-    margin-top: -95px;
+    /* Menos overlap com os nomes — mais respiro abaixo de “Kevin” */
+    margin-top: -48px;
     margin-bottom: 0;
 }
 
