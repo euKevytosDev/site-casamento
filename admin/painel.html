@@ -35,6 +35,20 @@
 
             <!-- ABA PERSONALIZAR SITE -->
             <section id="aba-personalizar" class="painel-aba ativo">
+                <div class="card-painel qualidade-site-card" style="margin-bottom:16px;">
+                    <div class="qualidade-topo">
+                        <div>
+                            <p class="qualidade-label">Qualidade do site</p>
+                            <p class="qualidade-dica">Complete os itens abaixo para chegar a 100%.</p>
+                        </div>
+                        <strong id="qualidade-pct">0%</strong>
+                    </div>
+                    <div class="qualidade-barra" aria-hidden="true">
+                        <div id="qualidade-barra-fill" class="qualidade-barra-fill"></div>
+                    </div>
+                    <ul id="qualidade-faltas" class="qualidade-faltas"></ul>
+                    <p id="qualidade-ok" class="qualidade-ok escondido">Site completo — ótimo para compartilhar.</p>
+                </div>
                 <div class="card-painel" style="margin-bottom:16px;">
                     <h2>Compartilhar convite</h2>
                     <p class="dica-admin">Envie o link do site para convidados (WhatsApp ou copiar).</p>
@@ -496,6 +510,7 @@
         }
 
         function preencherPersonalizacao(cfg) {
+            window.__cfgQualidade = cfg;
             document.getElementById("cfg-nome-noiva").value = cfg.nomeNoiva || "";
             document.getElementById("cfg-nome-noivo").value = cfg.nomeNoivo || "";
             document.getElementById("cfg-nome-curto").value = cfg.nomeCurto || "";
@@ -550,6 +565,53 @@
             mostrarPreviewMidia("preview-local", cfg.fotoLocalUrl);
             mostrarPreviewMidia("preview-rodape", cfg.fotoRodapeUrl);
             renderCarrosselAdmin(cfg.fotosCarrossel || []);
+            atualizarQualidadeSite();
+        }
+
+        function temTexto(v) {
+            return !!(v && String(v).trim());
+        }
+
+        function atualizarQualidadeSite() {
+            const cfg = window.__cfgQualidade || {};
+            const carrossel = Array.isArray(cfg.fotosCarrossel) ? cfg.fotosCarrossel.filter(Boolean) : [];
+            const qtdPresentes = Number(window.__qtdPresentes || 0);
+
+            const checks = [
+                { ok: temTexto(cfg.dataCasamento), falta: "Definir a data do casamento" },
+                { ok: temTexto(cfg.horaCasamento), falta: "Informar o horário da cerimônia" },
+                { ok: temTexto(cfg.localNome), falta: "Cadastrar o local do evento" },
+                { ok: temTexto(cfg.mapsUrl), falta: "Adicionar o link do Google Maps" },
+                { ok: temTexto(cfg.pixChave), falta: "Cadastrar a chave PIX" },
+                { ok: temTexto(cfg.fotoHeroUrl), falta: "Enviar a foto da capa (hero)" },
+                { ok: temTexto(cfg.fotoLocalUrl), falta: "Enviar a foto do local" },
+                { ok: temTexto(cfg.fotoRodapeUrl), falta: "Enviar a foto do rodapé" },
+                { ok: carrossel.length >= 2, falta: "Colocar pelo menos 2 fotos no carrossel" },
+                { ok: temTexto(cfg.historiaCurta), falta: "Escrever a história curta do casal" },
+                { ok: temTexto(cfg.paisNoiva) && temTexto(cfg.paisNoivo), falta: "Preencher os nomes dos pais" },
+                { ok: qtdPresentes >= 1, falta: "Cadastrar ao menos 1 presente na lista" },
+                { ok: !!cfg.mpCartaoDisponivel, falta: "Conectar Mercado Pago (cartão nos presentes)" }
+            ];
+
+            const feitos = checks.filter(c => c.ok).length;
+            const total = checks.length;
+            const pct = Math.round((feitos / total) * 100);
+            const faltas = checks.filter(c => !c.ok).map(c => c.falta);
+
+            const pctEl = document.getElementById("qualidade-pct");
+            const fill = document.getElementById("qualidade-barra-fill");
+            const lista = document.getElementById("qualidade-faltas");
+            const okEl = document.getElementById("qualidade-ok");
+            if (pctEl) pctEl.textContent = `${pct}%`;
+            if (fill) {
+                fill.style.width = `${pct}%`;
+                fill.classList.toggle("alta", pct >= 80);
+            }
+            if (lista) {
+                lista.innerHTML = faltas.map(f => `<li>${escapeHtml(f)}</li>`).join("");
+                lista.classList.toggle("escondido", faltas.length === 0);
+            }
+            if (okEl) okEl.classList.toggle("escondido", faltas.length > 0);
         }
 
         function mostrarPreviewMidia(id, url) {
@@ -744,6 +806,9 @@
                 el.textContent = st.conectado
                     ? `Status: conectado${st.userId ? " (user " + st.userId + ")" : ""}`
                     : "Status: não conectado — convidados só poderão presentear via PIX.";
+                if (!window.__cfgQualidade) window.__cfgQualidade = {};
+                window.__cfgQualidade.mpCartaoDisponivel = !!st.conectado;
+                atualizarQualidadeSite();
                 const btnOauth = document.getElementById("btn-mp-conectar");
                 if (btnOauth) {
                     btnOauth.disabled = !st.oauthDisponivel && !st.permiteTokenManual;
@@ -887,8 +952,10 @@
                 const resposta = await apiFetch("/api/admin/presentes");
                 if (!resposta.ok) throw new Error(await lerErro(resposta));
                 const presentes = await resposta.json();
+                window.__qtdPresentes = Array.isArray(presentes) ? presentes.length : 0;
                 renderizarPresentes(presentes);
                 atualizarLimitePresentes(presentes.length);
+                atualizarQualidadeSite();
             } catch (erro) {
                 listaPresentes.innerHTML = `<p class="vazio">${erro.message}</p>`;
             }
