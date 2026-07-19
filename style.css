@@ -1174,10 +1174,11 @@ img.foto-vazia-img {
     box-sizing: border-box;
     position: relative;
     z-index: 2;
+    text-align: left;
 }
 
 .recados-cabecalho {
-    text-align: center;
+    text-align: left;
     margin-bottom: 22px;
 }
 
@@ -1306,6 +1307,7 @@ img.foto-vazia-img {
     border-radius: 0;
     box-shadow: none;
     border-left: 3px solid rgba(97, 110, 72, 0.28);
+    text-align: left;
 }
 
 .item-recado .recado-nome {
@@ -1316,6 +1318,7 @@ img.foto-vazia-img {
     letter-spacing: 1.8px;
     text-transform: uppercase;
     color: var(--cor-texto);
+    text-align: left;
 }
 
 .item-recado .recado-texto {
@@ -1327,6 +1330,7 @@ img.foto-vazia-img {
     letter-spacing: 0.3px;
     color: var(--cor-texto-suave);
     text-transform: none;
+    text-align: left;
 }
 
 .lista-recados-vazia {
