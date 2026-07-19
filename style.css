@@ -1214,7 +1214,7 @@ img.foto-vazia-img {
     gap: 10px;
     margin-bottom: 36px;
     padding-bottom: 28px;
-    border-bottom: 1px solid rgba(97, 110, 72, 0.12);
+    border-bottom: 1px solid color-mix(in srgb, var(--cor-verde) 18%, transparent);
 }
 
 .form-recado input,
@@ -1222,7 +1222,7 @@ img.foto-vazia-img {
     width: 100%;
     box-sizing: border-box;
     border: none;
-    border-bottom: 1px solid rgba(97, 110, 72, 0.25);
+    border-bottom: 1px solid color-mix(in srgb, var(--cor-verde) 32%, transparent);
     background: transparent;
     border-radius: 0;
     padding: 12px 2px;
@@ -1306,7 +1306,7 @@ img.foto-vazia-img {
     border: none;
     border-radius: 0;
     box-shadow: none;
-    border-left: 3px solid rgba(97, 110, 72, 0.28);
+    border-left: 3px solid color-mix(in srgb, var(--cor-verde) 35%, transparent);
     text-align: left;
 }
 
@@ -1341,7 +1341,7 @@ img.foto-vazia-img {
     color: var(--cor-texto-fraco, #8a8580);
     margin: 8px 0 0;
     padding-left: 18px;
-    border-left: 3px solid rgba(97, 110, 72, 0.18);
+    border-left: 3px solid color-mix(in srgb, var(--cor-verde) 22%, transparent);
 }
 
 .chamada-icones {
