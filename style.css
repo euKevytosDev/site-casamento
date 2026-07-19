@@ -637,7 +637,8 @@ img.foto-vazia-img {
 /* ---- Carrossel "Nossos momentos" (fade suave) ---- */
 .nossos-momentos {
     width: 100%;
-    padding: 36px 20px 28px;
+    /* Espaço acima do carrossel (após “Convidamos você…”) — vale pra todos os sites */
+    padding: 56px 20px 28px;
     box-sizing: border-box;
 }
 
@@ -729,11 +730,12 @@ img.foto-vazia-img {
     position: relative;
     z-index: 2;
     width: 100%;
-    padding: 20px;
+    padding: 20px 20px 8px;
     /* Espaço nas laterais para não encostar na borda da tela */
     display: flex;
     justify-content: center;
     margin-top: -95px;
+    margin-bottom: 8px;
     /* Espaço em relação aos nomes acima */
     margin-bottom: -5px;
 }
