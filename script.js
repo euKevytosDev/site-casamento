@@ -653,10 +653,7 @@ function montarEventoAgenda() {
     const fim = new Date(inicio.getTime() + 4 * 60 * 60 * 1000);
     const titulo = `Casamento ${c.nomeNoiva || ""} & ${c.nomeNoivo || ""}`.replace(/\s+/g, " ").trim();
     const local = c.localNome || "";
-    const detalhes = c.mapsUrl
-        ? `Convite: ${window.location.href.split("#")[0]}\nMapa: ${c.mapsUrl}`
-        : `Convite: ${window.location.href.split("#")[0]}`;
-    return { titulo, local, detalhes, inicio, fim };
+    return { titulo, local, detalhes: "", inicio, fim };
 }
 
 function baixarArquivoIcs(evento) {
