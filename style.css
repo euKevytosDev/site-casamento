@@ -58,7 +58,7 @@
     --flor-nomes-esq-x: -42px;
     --flor-nomes-esq-y: -80px;
     --flor-nomes-dir-x: -25px;
-    --flor-nomes-dir-y: -170px;
+    --flor-nomes-dir-y: -180px;
 
     /* Sobre / atrás da foto do local (âncora = a própria foto) */
     --flor-local-esq-x: 2%;
@@ -75,6 +75,11 @@
     --flor-interacoes-dir-x: -28px;
     --flor-interacoes-dir-y: 58%;
     --flor-interacoes-dir-translate-y: -50%;
+
+    /* Laterais desktop (estilo papel / moldura dourada) */
+    --cor-lateral-bege: #faf6ef;
+    --cor-linha-dourada: rgba(184, 145, 47, 0.35);
+    --cor-linha-dourada-suave: rgba(184, 145, 47, 0.18);
 }
 
 html {
@@ -291,16 +296,46 @@ body {
         display: block;
     }
 
+    /* Bege só nas laterais — o centro (.hero / .site) continua com --cor-fundo */
     html {
-        background: linear-gradient(90deg,
-                var(--cor-fundo-creme-2) 0%,
-                var(--cor-fundo) 14%,
-                var(--cor-fundo) 86%,
-                var(--cor-fundo-creme-2) 100%);
+        background-color: var(--cor-lateral-bege);
     }
 
     body {
         background-color: transparent;
+    }
+
+    /* Moldura dourada dupla nas laterais do convite (desktop) */
+    .hero,
+    .site {
+        box-shadow:
+            -18px 0 40px -22px rgba(90, 70, 25, 0.22),
+            18px 0 40px -22px rgba(90, 70, 25, 0.22);
+    }
+
+    .hero::before,
+    .site::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-left: 1px solid var(--cor-linha-dourada);
+        border-right: 1px solid var(--cor-linha-dourada);
+        pointer-events: none;
+        z-index: 6;
+    }
+
+    .hero::after,
+    .site::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 5px;
+        right: 5px;
+        border-left: 1px solid var(--cor-linha-dourada-suave);
+        border-right: 1px solid var(--cor-linha-dourada-suave);
+        pointer-events: none;
+        z-index: 6;
     }
 }
 
