@@ -177,7 +177,9 @@
                             <p class="dica-admin" id="musica-atual-dica">A música começa quando o convidado abre o selo.</p>
 
                             <h3 class="subtitulo-card">Cores do tema</h3>
-                            <p class="dica-admin">Escolha pelas funções do site — não precisa ser verde.</p>
+                            <p class="dica-admin">Escolha uma paleta pronta — as cores já combinam entre si. Depois você pode ajustar manualmente se quiser.</p>
+                            <div class="paletas-tema" id="paletas-tema" role="listbox" aria-label="Paletas prontas de cores"></div>
+                            <h4 class="subtitulo-mini">Ajuste manual (opcional)</h4>
                             <div class="cores-grid">
                                 <label>Cor principal<br><small>(títulos e botões)</small>
                                     <input type="color" id="cfg-cor-verde">
@@ -499,6 +501,222 @@
             textoHero: "#3a4332"
         };
 
+        /** Paletas curadas — mesma família de tom em destaque, fundo e texto */
+        const PALETAS_TEMA = [
+            {
+                id: "verde-oliva",
+                nome: "Verde oliva",
+                descricao: "Clássico e atemporal",
+                cores: {
+                    verde: "#616e48",
+                    verdeEscuro: "#4f5a3a",
+                    verdeClaro: "#839164",
+                    fundo: "#ffffff",
+                    fundoBege: "#e8e9dc",
+                    texto: "#433f3f",
+                    textoHero: "#3a4332"
+                }
+            },
+            {
+                id: "azul-sereno",
+                nome: "Azul sereno",
+                descricao: "Elegante e calmo",
+                cores: {
+                    verde: "#4a6278",
+                    verdeEscuro: "#3a4f62",
+                    verdeClaro: "#6b8499",
+                    fundo: "#ffffff",
+                    fundoBege: "#e8eef2",
+                    texto: "#3d3a38",
+                    textoHero: "#2e3f4d"
+                }
+            },
+            {
+                id: "rosa-antigo",
+                nome: "Rosa antigo",
+                descricao: "Romântico e suave",
+                cores: {
+                    verde: "#9b6b73",
+                    verdeEscuro: "#7d5560",
+                    verdeClaro: "#b88991",
+                    fundo: "#fffdfd",
+                    fundoBege: "#f3e8e9",
+                    texto: "#4a3f40",
+                    textoHero: "#5c3d44"
+                }
+            },
+            {
+                id: "vinho-classico",
+                nome: "Vinho",
+                descricao: "Sofisticado e marcante",
+                cores: {
+                    verde: "#7a3f4a",
+                    verdeEscuro: "#5f2f38",
+                    verdeClaro: "#9a5a66",
+                    fundo: "#fffefe",
+                    fundoBege: "#efe6e7",
+                    texto: "#3f3637",
+                    textoHero: "#4a2a30"
+                }
+            },
+            {
+                id: "vermelho-terracota",
+                nome: "Terracota",
+                descricao: "Quente e acolhedor",
+                cores: {
+                    verde: "#9a6848",
+                    verdeEscuro: "#7a5238",
+                    verdeClaro: "#b58468",
+                    fundo: "#fffdfb",
+                    fundoBege: "#f0e6df",
+                    texto: "#443b36",
+                    textoHero: "#5c4030"
+                }
+            },
+            {
+                id: "dourado-champanhe",
+                nome: "Dourado",
+                descricao: "Champanhe e luxo",
+                cores: {
+                    verde: "#8a7348",
+                    verdeEscuro: "#6e5c38",
+                    verdeClaro: "#a89368",
+                    fundo: "#fffef9",
+                    fundoBege: "#f2ebe0",
+                    texto: "#433f38",
+                    textoHero: "#4a4028"
+                }
+            },
+            {
+                id: "amarelo-mostarda",
+                nome: "Mostarda",
+                descricao: "Solar sem exagero",
+                cores: {
+                    verde: "#8a7a3a",
+                    verdeEscuro: "#6f6230",
+                    verdeClaro: "#a89858",
+                    fundo: "#fffef8",
+                    fundoBege: "#f0ecd8",
+                    texto: "#434038",
+                    textoHero: "#4a4020"
+                }
+            },
+            {
+                id: "lavanda",
+                nome: "Lavanda",
+                descricao: "Delicado e moderno",
+                cores: {
+                    verde: "#7a6b8f",
+                    verdeEscuro: "#615472",
+                    verdeClaro: "#9589a8",
+                    fundo: "#fefeff",
+                    fundoBege: "#ebe8f0",
+                    texto: "#3f3d42",
+                    textoHero: "#443d52"
+                }
+            },
+            {
+                id: "verde-agua",
+                nome: "Verde-água",
+                descricao: "Fresco e leve",
+                cores: {
+                    verde: "#4d7a72",
+                    verdeEscuro: "#3d625c",
+                    verdeClaro: "#6d9890",
+                    fundo: "#fefffe",
+                    fundoBege: "#e6efed",
+                    texto: "#3a403e",
+                    textoHero: "#2a4540"
+                }
+            },
+            {
+                id: "cinza-elegante",
+                nome: "Cinza",
+                descricao: "Neutro e editorial",
+                cores: {
+                    verde: "#5c5c5c",
+                    verdeEscuro: "#454545",
+                    verdeClaro: "#7a7a7a",
+                    fundo: "#ffffff",
+                    fundoBege: "#ececec",
+                    texto: "#3a3a3a",
+                    textoHero: "#2e2e2e"
+                }
+            }
+        ];
+
+        let paletaSelecionadaId = null;
+
+        function normalizarHex(valor) {
+            return (valor || "").trim().toLowerCase();
+        }
+
+        function coresIguais(a, b) {
+            const chaves = ["verde", "verdeEscuro", "verdeClaro", "fundo", "fundoBege", "texto", "textoHero"];
+            return chaves.every((k) => normalizarHex(a[k]) === normalizarHex(b[k]));
+        }
+
+        function aplicarCoresNosInputs(cores) {
+            setCor("cfg-cor-verde", cores.verde);
+            setCor("cfg-cor-verde-escuro", cores.verdeEscuro);
+            setCor("cfg-cor-verde-claro", cores.verdeClaro);
+            setCor("cfg-cor-fundo", cores.fundo);
+            setCor("cfg-cor-fundo-bege", cores.fundoBege);
+            setCor("cfg-cor-texto", cores.texto);
+            setCor("cfg-cor-texto-hero", cores.textoHero);
+        }
+
+        function marcarPaletaAtiva(id) {
+            paletaSelecionadaId = id || null;
+            document.querySelectorAll(".paleta-card").forEach((btn) => {
+                btn.classList.toggle("ativa", btn.dataset.paletaId === paletaSelecionadaId);
+                btn.setAttribute("aria-selected", btn.dataset.paletaId === paletaSelecionadaId ? "true" : "false");
+            });
+        }
+
+        function detectarPaletaAtiva(cores) {
+            const match = PALETAS_TEMA.find((p) => coresIguais(p.cores, cores));
+            marcarPaletaAtiva(match ? match.id : null);
+        }
+
+        function aplicarPaleta(paletaId) {
+            const paleta = PALETAS_TEMA.find((p) => p.id === paletaId);
+            if (!paleta) return;
+            aplicarCoresNosInputs(paleta.cores);
+            marcarPaletaAtiva(paleta.id);
+        }
+
+        function renderizarPaletasTema() {
+            const container = document.getElementById("paletas-tema");
+            if (!container || container.dataset.renderizado === "1") return;
+            container.dataset.renderizado = "1";
+            container.innerHTML = PALETAS_TEMA.map((p) => `
+                <button type="button" class="paleta-card" data-paleta-id="${p.id}" role="option" aria-selected="false" title="${p.descricao}">
+                    <div class="paleta-swatches" aria-hidden="true">
+                        <span style="background:${p.cores.verde}"></span>
+                        <span style="background:${p.cores.fundoBege}"></span>
+                        <span style="background:${p.cores.fundo}"></span>
+                    </div>
+                    <span class="paleta-card-nome">${p.nome}</span>
+                    <span class="paleta-card-desc">${p.descricao}</span>
+                </button>
+            `).join("");
+            container.addEventListener("click", (e) => {
+                const btn = e.target.closest(".paleta-card");
+                if (!btn) return;
+                aplicarPaleta(btn.dataset.paletaId);
+            });
+        }
+
+        function ligarCoresManuais() {
+            document.querySelectorAll(".cores-grid input[type='color']").forEach((input) => {
+                input.addEventListener("input", () => marcarPaletaAtiva(null));
+            });
+        }
+
+        renderizarPaletasTema();
+        ligarCoresManuais();
+
         function setCor(id, valor) {
             const el = document.getElementById(id);
             if (!el) return;
@@ -552,13 +770,8 @@
             }
 
             const cores = { ...CORES_PADRAO, ...(cfg.cores || {}) };
-            setCor("cfg-cor-verde", cores.verde);
-            setCor("cfg-cor-verde-escuro", cores.verdeEscuro);
-            setCor("cfg-cor-verde-claro", cores.verdeClaro);
-            setCor("cfg-cor-fundo", cores.fundo);
-            setCor("cfg-cor-fundo-bege", cores.fundoBege);
-            setCor("cfg-cor-texto", cores.texto);
-            setCor("cfg-cor-texto-hero", cores.textoHero);
+            aplicarCoresNosInputs(cores);
+            detectarPaletaAtiva(cores);
 
             mostrarPreviewMidia("preview-hero", cfg.fotoHeroUrl);
             mostrarPreviewMidia("preview-secundaria", cfg.fotoSecundariaUrl);

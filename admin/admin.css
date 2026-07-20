@@ -414,6 +414,69 @@ button,
     border-radius: var(--radius-sm);
 }
 
+.subtitulo-mini {
+    margin: 4px 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.paletas-tema {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.paleta-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+
+.paleta-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+}
+
+.paleta-card.ativa {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+.paleta-swatches {
+    display: flex;
+    gap: 4px;
+    height: 30px;
+}
+
+.paleta-swatches span {
+    flex: 1;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.paleta-card-nome {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.paleta-card-desc {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.25;
+}
+
 .upload-bloco {
     margin-bottom: 20px;
     padding-bottom: 16px;
