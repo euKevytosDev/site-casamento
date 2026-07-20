@@ -43,6 +43,12 @@
     --cor-branco: #ffffff;
     --cor-preto: #000000;
 
+    /* UI premium */
+    --fonte-nomes: 'Great Vibes', cursive;
+    --raio-ui: 12px;
+    --sombra-card: 0 1px 3px rgba(67, 63, 63, 0.05);
+    --sombra-modal: 0 6px 28px rgba(67, 63, 63, 0.08);
+
     /* ---- Flores decorativas (ajuste fino do tema / SaaS) ---- */
     --flor-z: 1;
     --flor-tamanho-sm: clamp(100px, 20vw, 150px);
@@ -87,6 +93,7 @@ html {
     background-color: var(--cor-fundo);
     color-scheme: light only;
     min-height: 100%;
+    scroll-behavior: smooth;
 }
 
 * {
@@ -481,17 +488,31 @@ img.foto-vazia-img {
 }
 
 .texto h1 {
-    font-family: "Playfair", serif;
-    font-style: italic;
-    font-size: clamp(26px, 6.5vw, 36px);
-    font-weight: 500;
+    font-family: var(--fonte-nomes);
+    font-style: normal;
+    font-size: clamp(30px, 7.5vw, 44px);
+    font-weight: normal;
     color: var(--cor-texto-hero);
-    letter-spacing: 3px;
+    letter-spacing: 0;
+    line-height: 1.15;
     text-shadow:
         0 0 10px rgba(255, 255, 255, 1),
         0 0 22px rgba(255, 255, 255, 0.95),
         0 1px 3px rgba(0, 0, 0, 0.12);
     margin-bottom: 24px;
+}
+
+html[data-fonte-nomes="playfair-italic"] .texto h1,
+html[data-fonte-nomes="playfair-italic"] .nomes-noivos {
+    font-family: "Playfair", serif;
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
+
+html[data-fonte-nomes="playfair-italic"] .texto h1 {
+    font-size: clamp(26px, 6.5vw, 36px);
+    letter-spacing: 3px;
 }
 
 .site {
@@ -598,11 +619,12 @@ img.foto-vazia-img {
 .nomes-noivos {
     position: relative;
     color: var(--cor-verde);
-    font-family: 'Great Vibes', cursive;
-    font-size: clamp(65px, 12vw, 70px);
+    font-family: var(--fonte-nomes);
+    font-size: clamp(58px, 11vw, 72px);
     font-weight: normal;
-    line-height: 1.2;
-    letter-spacing: 0px;
+    font-style: normal;
+    line-height: 1.15;
+    letter-spacing: 0;
     margin-top: 8px;
     z-index: 2;
 }
@@ -717,19 +739,21 @@ img.foto-vazia-img {
     position: relative;
     width: 100%;
     aspect-ratio: 3 / 4;
-    border-radius: 2px;
+    border-radius: 6px;
     overflow: hidden;
-    background: var(--cor-fundo-creme-2);
-    border: 1px solid rgba(97, 110, 72, 0.14);
-    box-shadow:
-        0 1px 2px rgba(67, 63, 63, 0.04),
-        0 18px 40px rgba(67, 63, 63, 0.1);
+    background: var(--cor-fundo);
+    border: 1px solid rgba(97, 110, 72, 0.12);
+    box-shadow: var(--sombra-card);
     touch-action: pan-y;
+    padding: 10px;
 }
 
 .carrossel-slides {
     position: absolute;
-    inset: 0;
+    inset: 10px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--cor-fundo-creme-2);
 }
 
 .carrossel-slide {
@@ -756,8 +780,8 @@ img.foto-vazia-img {
     display: block;
     user-select: none;
     -webkit-user-drag: none;
-    transform: scale(1.04);
-    transition: transform 6.5s ease-out;
+    transform: scale(1.02);
+    transition: transform 8s ease-out;
 }
 
 .carrossel-slide.ativo img {
@@ -771,10 +795,10 @@ img.foto-vazia-img {
     pointer-events: none;
     background: linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0.06) 0%,
-        transparent 18%,
-        transparent 78%,
-        rgba(0, 0, 0, 0.1) 100%
+        rgba(0, 0, 0, 0.03) 0%,
+        transparent 16%,
+        transparent 84%,
+        rgba(0, 0, 0, 0.05) 100%
     );
 }
 
@@ -783,19 +807,19 @@ img.foto-vazia-img {
     top: 50%;
     z-index: 3;
     transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     padding: 0;
-    border: none;
-    border-radius: 50%;
+    border: 1px solid rgba(97, 110, 72, 0.12);
+    border-radius: var(--raio-ui);
     display: grid;
     place-items: center;
     cursor: pointer;
     color: var(--cor-verde);
-    background: rgba(255, 255, 255, 0.82);
-    box-shadow: 0 4px 14px rgba(67, 63, 63, 0.12);
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: var(--sombra-card);
     opacity: 0;
-    transition: opacity 0.25s ease, background 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.35s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 .carrossel:hover .carrossel-nav,
@@ -844,18 +868,18 @@ img.foto-vazia-img {
 }
 
 .carrossel-dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     padding: 0;
     border: none;
     border-radius: 999px;
     background: var(--cor-borda-suave);
     cursor: pointer;
-    transition: background 0.35s ease, width 0.35s ease, transform 0.35s ease;
+    transition: background 0.4s ease, width 0.4s ease;
 }
 
 .carrossel-dot.ativo {
-    width: 18px;
+    width: 14px;
     background: var(--cor-verde);
 }
 
@@ -1302,9 +1326,9 @@ img.foto-vazia-img {
     font-size: 14px;
     letter-spacing: 0.4px;
     padding: 11px 18px;
-    border-radius: 999px;
+    border-radius: var(--raio-ui);
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.15s ease;
+    transition: background 0.25s ease, transform 0.15s ease;
 }
 
 .btn-enviar-recado:hover {
@@ -1503,13 +1527,13 @@ button.linha-interacao:focus-visible,
     width: 85%;
     max-width: 340px;
     padding: 30px 20px;
-    border-radius: 16px;
+    border-radius: var(--raio-ui);
     position: relative;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--sombra-modal);
     text-align: center;
     opacity: 0;
     transform: scale(0.98) translateY(8px);
-    transition: opacity 0.28s ease, transform 0.28s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .modal-backdrope.modal-aberto .modal-conteudo {
@@ -1556,19 +1580,25 @@ button.linha-interacao:focus-visible,
     margin-bottom: 5px;
 }
 
-.grupo-campo input {
+.grupo-campo input,
+.grupo-campo textarea,
+.grupo-campo select {
     width: 100%;
-    /* Faz a caixinha de texto ocupar toda a largura disponível dentro do modal */
-    padding: 10px;
-    /* Espaço interno na caixinha para o texto digitado não encostar nas bordas */
-    border: 1px solid var(--cor-borda);
-    /* Cria uma borda fina cinza claro ao redor do campo de texto */
-    border-radius: 6px;
-    /* Arredonda levemente os cantos do campo de digitação */
+    padding: 11px 12px;
+    border: 1px solid rgba(67, 63, 63, 0.16);
+    border-radius: var(--raio-ui);
     font-family: sans-serif;
-    /* Altera para uma fonte limpa sem serifa para facilitar a digitação do nome */
     font-size: 14px;
-    /* Define o tamanho da letra do texto que o convidado vai digitar */
+    background: var(--cor-fundo);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.grupo-campo input:focus,
+.grupo-campo textarea:focus,
+.grupo-campo select:focus {
+    outline: none;
+    border-color: var(--cor-verde-claro);
+    box-shadow: 0 0 0 3px rgba(97, 110, 72, 0.1);
 }
 
 .btn-enviar-presenca {
@@ -1577,10 +1607,10 @@ button.linha-interacao:focus-visible,
     border: none;
     width: 100%;
     padding: 12px;
-    border-radius: 6px;
+    border-radius: var(--raio-ui);
     font-family: "Playfair", serif;
     font-size: 16px;
-    transition: background 0.2s;
+    transition: background 0.25s ease;
     cursor: pointer;
 }
 
@@ -1650,12 +1680,12 @@ button.linha-interacao:focus-visible,
     border: 1px solid var(--cor-verde);
     width: 100%;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: var(--raio-ui);
     font-family: "Playfair", serif;
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s;
     margin-bottom: 20px;
 }
 
@@ -1862,7 +1892,7 @@ button.linha-interacao:focus-visible,
     max-height: 90vh;
     overflow-y: auto;
     padding: 28px 16px 22px;
-    border-radius: 16px;
+    border-radius: var(--raio-ui);
 }
 
 .loading-presentes {
@@ -1904,12 +1934,13 @@ button.linha-interacao:focus-visible,
 
 .card-presente {
     background: var(--cor-fundo-creme);
-    border: 1px solid var(--cor-fundo-bege);
-    border-radius: 12px;
+    border: 1px solid rgba(97, 110, 72, 0.1);
+    border-radius: var(--raio-ui);
     overflow: hidden;
     text-align: left;
     display: flex;
     flex-direction: column;
+    box-shadow: var(--sombra-card);
 }
 
 .card-presente.comprado {
@@ -2019,11 +2050,11 @@ button.linha-interacao:focus-visible,
     border: none;
     width: 100%;
     padding: 8px 6px;
-    border-radius: 6px;
+    border-radius: var(--raio-ui);
     font-family: "Playfair", serif;
     font-size: 12px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.25s;
     margin-top: auto;
 }
 
@@ -2179,7 +2210,7 @@ button.linha-interacao:focus-visible,
 .btn-confirmar-compra {
     flex: 1;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: var(--raio-ui);
     font-family: "Playfair", serif;
     font-size: 14px;
     cursor: pointer;
@@ -2281,12 +2312,12 @@ button.linha-interacao:focus-visible,
 .revelar-scroll {
     opacity: 0;
     transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
 .revelar-scroll.revelar-suave {
     transform: translateY(12px);
-    transition: opacity 0.85s ease, transform 0.85s ease;
+    transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
 .revelar-scroll.visivel {

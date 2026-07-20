@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Alex+Brush&family=Bona+Nova:ital@1&family=Great+Vibes&family=Meie+Script&family=Monsieur+La+Doulaise&family=Parisienne&family=Pinyon+Script&family=Playfair:ital@1&family=Sacramento&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
@@ -168,6 +169,11 @@
                             <input type="file" id="file-musica" accept="audio/mpeg,audio/mp3,.mp3">
                             <input type="hidden" id="cfg-musica-url">
                             <p class="dica-admin" id="musica-atual-dica">A música começa quando o convidado abre o selo.</p>
+
+                            <h3 class="subtitulo-card">Fonte dos nomes</h3>
+                            <p class="dica-admin">Estilo cursivo na capa e no bloco principal — como convite impresso.</p>
+                            <div class="fontes-nomes" id="fontes-nomes" role="listbox" aria-label="Fontes dos nomes dos noivos"></div>
+                            <input type="hidden" id="cfg-fonte-nomes" value="great-vibes">
 
                             <h3 class="subtitulo-card">Cores do tema</h3>
                             <p class="dica-admin">Escolha uma paleta pronta — as cores já combinam entre si. Depois você pode ajustar manualmente se quiser.</p>
@@ -638,7 +644,22 @@
             }
         ];
 
+        const FONTES_NOMES = [
+            { id: "great-vibes", nome: "Great Vibes", descricao: "Clássica de casamento", family: "'Great Vibes', cursive", amostra: "Ana & João" },
+            { id: "pinyon-script", nome: "Pinyon Script", descricao: "Elegante e inclinada", family: "'Pinyon Script', cursive", amostra: "Ana & João" },
+            { id: "allura", nome: "Allura", descricao: "Leve e fluida", family: "'Allura', cursive", amostra: "Ana & João" },
+            { id: "alex-brush", nome: "Alex Brush", descricao: "Caligrafia legível", family: "'Alex Brush', cursive", amostra: "Ana & João" },
+            { id: "meie-script", nome: "Meie Script", descricao: "Formal tradicional", family: "'Meie Script', cursive", amostra: "Ana & João" },
+            { id: "monsieur-la-doulaise", nome: "Monsieur La Doulaise", descricao: "Super ornamentada", family: "'Monsieur La Doulaise', cursive", amostra: "Ana & João" },
+            { id: "sacramento", nome: "Sacramento", descricao: "Romântica suave", family: "'Sacramento', cursive", amostra: "Ana & João" },
+            { id: "parisienne", nome: "Parisienne", descricao: "Francesa delicada", family: "'Parisienne', cursive", amostra: "Ana & João" },
+            { id: "tangerine", nome: "Tangerine", descricao: "Caligrafia moderna", family: "'Tangerine', cursive", amostra: "Ana & João" },
+            { id: "bona-nova", nome: "Bona Nova", descricao: "Serifada itálica", family: "'Bona Nova', serif", amostra: "Ana & João", italic: true },
+            { id: "playfair-italic", nome: "Playfair Itálico", descricao: "Editorial clássico", family: '"Playfair", serif', amostra: "Ana & João", italic: true }
+        ];
+
         let paletaSelecionadaId = null;
+        let fonteNomesSelecionadaId = "great-vibes";
 
         function normalizarHex(valor) {
             return (valor || "").trim().toLowerCase();
@@ -701,6 +722,39 @@
             });
         }
 
+        function renderizarFontesNomes() {
+            const container = document.getElementById("fontes-nomes");
+            if (!container || container.dataset.renderizado === "1") return;
+            container.dataset.renderizado = "1";
+            container.innerHTML = FONTES_NOMES.map((f) => `
+                <button type="button" class="fonte-card" data-fonte-id="${f.id}" role="option" aria-selected="false" title="${f.descricao}">
+                    <span class="fonte-amostra" style="font-family:${f.family};${f.italic ? "font-style:italic;" : ""}">${f.amostra}</span>
+                    <span class="fonte-card-nome">${f.nome}</span>
+                    <span class="fonte-card-desc">${f.descricao}</span>
+                </button>
+            `).join("");
+            container.addEventListener("click", (e) => {
+                const btn = e.target.closest(".fonte-card");
+                if (!btn) return;
+                selecionarFonteNomes(btn.dataset.fonteId);
+            });
+        }
+
+        function marcarFonteNomesAtiva(id) {
+            fonteNomesSelecionadaId = id || "great-vibes";
+            const hidden = document.getElementById("cfg-fonte-nomes");
+            if (hidden) hidden.value = fonteNomesSelecionadaId;
+            document.querySelectorAll(".fonte-card").forEach((btn) => {
+                btn.classList.toggle("ativa", btn.dataset.fonteId === fonteNomesSelecionadaId);
+                btn.setAttribute("aria-selected", btn.dataset.fonteId === fonteNomesSelecionadaId ? "true" : "false");
+            });
+        }
+
+        function selecionarFonteNomes(id) {
+            if (!FONTES_NOMES.some((f) => f.id === id)) return;
+            marcarFonteNomesAtiva(id);
+        }
+
         function ligarCoresManuais() {
             document.querySelectorAll(".cores-grid input[type='color']").forEach((input) => {
                 input.addEventListener("input", () => marcarPaletaAtiva(null));
@@ -708,6 +762,7 @@
         }
 
         renderizarPaletasTema();
+        renderizarFontesNomes();
         ligarCoresManuais();
 
         function setCor(id, valor) {
@@ -758,6 +813,7 @@
             const cores = { ...CORES_PADRAO, ...(cfg.cores || {}) };
             aplicarCoresNosInputs(cores);
             detectarPaletaAtiva(cores);
+            marcarFonteNomesAtiva(cfg.fonteNomes || "great-vibes");
 
             mostrarPreviewMidia("preview-hero", cfg.fotoHeroUrl);
             mostrarPreviewMidia("preview-secundaria", cfg.fotoSecundariaUrl);
@@ -909,6 +965,7 @@
                 pixNomeRecebedor: document.getElementById("cfg-pix-nome").value.trim(),
                 pixCidade: document.getElementById("cfg-pix-cidade").value.trim(),
                 musicaUrl: document.getElementById("cfg-musica-url")?.value || "",
+                fonteNomes: document.getElementById("cfg-fonte-nomes")?.value || "great-vibes",
                 cores: {
                     verde: getCor("cfg-cor-verde", CORES_PADRAO.verde),
                     verdeEscuro: getCor("cfg-cor-verde-escuro", CORES_PADRAO.verdeEscuro),

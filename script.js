@@ -49,6 +49,28 @@ function safeUrl(valor, fallback = "") {
     return fallback;
 }
 
+/** Fontes cursivas disponíveis para os nomes dos noivos (slug = id salvo no painel). */
+const FONTES_NOMES = {
+    "great-vibes": { family: "'Great Vibes', cursive" },
+    "allura": { family: "'Allura', cursive" },
+    "pinyon-script": { family: "'Pinyon Script', cursive" },
+    "alex-brush": { family: "'Alex Brush', cursive" },
+    "tangerine": { family: "'Tangerine', cursive" },
+    "sacramento": { family: "'Sacramento', cursive" },
+    "parisienne": { family: "'Parisienne', cursive" },
+    "meie-script": { family: "'Meie Script', cursive" },
+    "monsieur-la-doulaise": { family: "'Monsieur La Doulaise', cursive" },
+    "bona-nova": { family: "'Bona Nova', serif" },
+    "playfair-italic": { family: '"Playfair", serif' }
+};
+
+function aplicarFonteNomes(slug) {
+    const id = FONTES_NOMES[slug] ? slug : "great-vibes";
+    const fonte = FONTES_NOMES[id];
+    document.documentElement.style.setProperty("--fonte-nomes", fonte.family);
+    document.documentElement.dataset.fonteNomes = id;
+}
+
 // Lê o config e preenche a página (nomes, data, pais...)
 function aplicarConfigDoSite() {
     const c = window.SITE_CONFIG;
@@ -173,6 +195,8 @@ function aplicarConfigDoSite() {
             if (c.cores[chave]) root.setProperty(cssVar, c.cores[chave]);
         });
     }
+
+    aplicarFonteNomes(c.fonteNomes);
 
     aplicarFotosDoSite(c);
     atualizarOpcaoCartaoPresente(c);
