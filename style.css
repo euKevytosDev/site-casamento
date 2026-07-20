@@ -78,12 +78,8 @@
 
     /* Laterais desktop (estilo papel / moldura dourada) */
     --cor-lateral-bege: #faf6ef;
-    --cor-linha-dourada: rgba(184, 145, 47, 0.4);
-    --cor-linha-dourada-suave: rgba(184, 145, 47, 0.22);
-    /* Espaço entre a borda do convite e a 1ª linha dourada */
-    --moldura-inset: 12px;
-    /* Espaço entre as duas linhas douradas */
-    --moldura-gap: 6px;
+    --cor-linha-dourada: rgba(184, 145, 47, 0.35);
+    --cor-linha-dourada-suave: rgba(184, 145, 47, 0.18);
 }
 
 html {
@@ -309,7 +305,7 @@ body {
         background-color: transparent;
     }
 
-    /* Moldura dourada dupla — inset cria a “bordinha” de papel antes das linhas */
+    /* Moldura dourada dupla nas laterais do convite (desktop) */
     .hero,
     .site {
         box-shadow:
@@ -321,10 +317,7 @@ body {
     .site::before {
         content: "";
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: var(--moldura-inset);
-        right: var(--moldura-inset);
+        inset: 0;
         border-left: 1px solid var(--cor-linha-dourada);
         border-right: 1px solid var(--cor-linha-dourada);
         pointer-events: none;
@@ -337,8 +330,8 @@ body {
         position: absolute;
         top: 0;
         bottom: 0;
-        left: calc(var(--moldura-inset) + var(--moldura-gap));
-        right: calc(var(--moldura-inset) + var(--moldura-gap));
+        left: 5px;
+        right: 5px;
         border-left: 1px solid var(--cor-linha-dourada-suave);
         border-right: 1px solid var(--cor-linha-dourada-suave);
         pointer-events: none;
