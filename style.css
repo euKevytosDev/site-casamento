@@ -488,13 +488,13 @@ img.foto-vazia-img {
 }
 
 .texto h1 {
-    font-family: var(--fonte-nomes);
-    font-style: normal;
-    font-size: clamp(30px, 7.5vw, 44px);
-    font-weight: normal;
+    font-family: "Playfair", serif;
+    font-style: italic;
+    font-size: clamp(26px, 6.5vw, 36px);
+    font-weight: 500;
     color: var(--cor-texto-hero);
-    letter-spacing: 0;
-    line-height: 1.15;
+    letter-spacing: 3px;
+    line-height: 1.2;
     text-shadow:
         0 0 10px rgba(255, 255, 255, 1),
         0 0 22px rgba(255, 255, 255, 0.95),
@@ -502,17 +502,16 @@ img.foto-vazia-img {
     margin-bottom: 24px;
 }
 
-html[data-fonte-nomes="playfair-italic"] .texto h1,
 html[data-fonte-nomes="playfair-italic"] .nomes-noivos {
     font-family: "Playfair", serif;
     font-style: italic;
     font-weight: 500;
     letter-spacing: 2px;
+    font-size: clamp(52px, 10vw, 64px);
 }
 
-html[data-fonte-nomes="playfair-italic"] .texto h1 {
-    font-size: clamp(26px, 6.5vw, 36px);
-    letter-spacing: 3px;
+html[data-fonte-nomes="bona-nova"] .nomes-noivos {
+    font-style: italic;
 }
 
 .site {

@@ -17,6 +17,10 @@
                 <h1>Painel do casamento</h1>
                 <span id="usuario-logado"></span>
                 <span id="site-ativo-label" class="site-ativo-label"></span>
+                <div id="bloco-seletor-site" class="seletor-site-admin escondido">
+                    <label for="admin-seletor-site">Editar site</label>
+                    <select id="admin-seletor-site" aria-label="Selecionar site para editar"></select>
+                </div>
             </div>
             <div class="topo-acoes">
                 <a href="../index.html" class="link-site" id="link-ver-site">Ver site</a>
@@ -170,8 +174,8 @@
                             <input type="hidden" id="cfg-musica-url">
                             <p class="dica-admin" id="musica-atual-dica">A música começa quando o convidado abre o selo.</p>
 
-                            <h3 class="subtitulo-card">Fonte dos nomes</h3>
-                            <p class="dica-admin">Estilo cursivo na capa e no bloco principal — como convite impresso.</p>
+                            <h3 class="subtitulo-card">Fonte dos nomes (bloco principal)</h3>
+                            <p class="dica-admin">Só altera os nomes dos noivos <strong>abaixo dos pais</strong>. A capa (hero) continua com Playfair itálico.</p>
                             <div class="fontes-nomes" id="fontes-nomes" role="listbox" aria-label="Fontes dos nomes dos noivos"></div>
                             <input type="hidden" id="cfg-fonte-nomes" value="great-vibes">
 
@@ -424,7 +428,9 @@
         const siteLabel = document.getElementById("site-ativo-label");
         if (siteLabel) {
             const slug = getSiteIdAtivo();
-            siteLabel.textContent = slug === "rafaekevin" ? "Site: demonstração" : `Site: ${slug}`;
+            siteLabel.textContent = slug === "rafaekevin"
+                ? "Site: rafaekevin (seu convite)"
+                : `Site: ${slug}`;
         }
         document.getElementById("btn-sair").addEventListener("click", logout);
 
@@ -468,10 +474,53 @@
         const linkVerSite = document.getElementById("link-ver-site");
         if (linkVerSite) {
             const slug = getSiteIdAtivo();
-            linkVerSite.href = `../index.html?site=${encodeURIComponent(slug)}`;
+            linkVerSite.href = slug === "rafaekevin"
+                ? "../index.html"
+                : `../index.html?site=${encodeURIComponent(slug)}`;
             linkVerSite.target = "_blank";
             linkVerSite.rel = "noopener";
         }
+
+        async function initSeletorSiteAdmin() {
+            if (getRole() !== "ADMIN") return;
+            const bloco = document.getElementById("bloco-seletor-site");
+            const select = document.getElementById("admin-seletor-site");
+            if (!bloco || !select) return;
+            bloco.classList.remove("escondido");
+            try {
+                const res = await apiFetch("/api/admin/sites");
+                if (!res.ok) throw new Error(await res.text());
+                const sites = await res.json();
+                const ativos = (Array.isArray(sites) ? sites : [])
+                    .filter((s) => s && s.slug && s.ativo !== false)
+                    .sort((a, b) => String(a.slug).localeCompare(String(b.slug)));
+                if (!ativos.length) {
+                    select.innerHTML = `<option value="rafaekevin">rafaekevin</option>`;
+                } else {
+                    select.innerHTML = ativos.map((s) => {
+                        const nomes = [s.nomeNoiva, s.nomeNoivo].filter(Boolean).join(" & ");
+                        const rotulo = nomes ? `${nomes} (${s.slug})` : s.slug;
+                        return `<option value="${escapeHtml(s.slug)}">${escapeHtml(rotulo)}</option>`;
+                    }).join("");
+                }
+                const atual = getSiteIdAtivo();
+                if (atual && [...select.options].some((o) => o.value === atual)) {
+                    select.value = atual;
+                } else if (select.options.length) {
+                    setSiteIdAtivo(select.options[0].value);
+                    select.value = select.options[0].value;
+                }
+                select.addEventListener("change", () => {
+                    setSiteIdAtivo(select.value);
+                    window.location.reload();
+                });
+            } catch (e) {
+                select.innerHTML = `<option value="${escapeHtml(getSiteIdAtivo())}">${escapeHtml(getSiteIdAtivo())}</option>`;
+                toast(e.message || "Não foi possível listar sites", "erro");
+            }
+        }
+
+        initSeletorSiteAdmin();
 
         // Abas
         document.querySelectorAll(".aba").forEach(aba => {

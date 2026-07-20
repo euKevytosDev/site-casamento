@@ -49,6 +49,15 @@ function getLogin() {
     return localStorage.getItem(LOGIN_KEY) || "";
 }
 
+function getRole() {
+    return localStorage.getItem(ROLE_KEY) || "NOIVA";
+}
+
+function setSiteIdAtivo(slug) {
+    if (slug) localStorage.setItem(SITE_KEY, slug);
+    else localStorage.removeItem(SITE_KEY);
+}
+
 function logout() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(LOGIN_KEY);

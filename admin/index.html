@@ -81,7 +81,12 @@
                     throw new Error(typeof dados === "string" ? dados : (dados.message || "Login ou senha inválidos"));
                 }
 
-                setAuth(dados.token, dados.login, dados.siteId || null, dados.role || "ADMIN");
+                setAuth(
+                    dados.token,
+                    dados.login,
+                    dados.siteId || (dados.role === "ADMIN" ? "rafaekevin" : null),
+                    dados.role || "ADMIN"
+                );
                 window.location.href = "painel.html";
             } catch (erro) {
                 mensagem.className = "mensagem erro";

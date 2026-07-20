@@ -477,6 +477,30 @@ button,
     line-height: 1.25;
 }
 
+.seletor-site-admin {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.seletor-site-admin label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.seletor-site-admin select {
+    min-width: min(100%, 280px);
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: 13px;
+    background: var(--surface);
+}
+
 .fontes-nomes {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
