@@ -297,8 +297,8 @@ body {
     }
 }
 
-/* Só aparece quando existe faixa lateral (fora do site de 445px) */
-@media (min-width: 640px) {
+/* Só aparece em tablet (ainda no formato “convite estreito”) */
+@media (min-width: 640px) and (max-width: 1023px) {
     .laterais-decor {
         display: block;
     }
@@ -312,7 +312,7 @@ body {
         background-color: transparent;
     }
 
-    /* Moldura dourada dupla nas laterais do convite (desktop) */
+    /* Moldura dourada dupla nas laterais do convite (tablet) */
     .hero,
     .site {
         box-shadow:
@@ -346,7 +346,7 @@ body {
     }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 900px) and (max-width: 1023px) {
     .bolha-e1,
     .bolha-d1 {
         width: 118px;
@@ -2408,3 +2408,375 @@ button.linha-interacao:focus-visible,
 .toast-info {
     background: var(--cor-texto);
 }
+
+/* =========================================================
+   Desktop profissional (≥1024px)
+   Layout editorial — não é o “celular no meio”
+   ========================================================= */
+@media (min-width: 1024px) {
+    html {
+        background-color: var(--cor-fundo-creme);
+    }
+
+    body {
+        background-color: var(--cor-fundo-creme);
+    }
+
+    /* Remove moldura / bolhas do formato mobile */
+    .laterais-decor {
+        display: none !important;
+    }
+
+    .hero::before,
+    .hero::after,
+    .site::before,
+    .site::after {
+        content: none !important;
+        display: none !important;
+    }
+
+    .hero,
+    .site {
+        max-width: none;
+        width: 100%;
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    /* —— Hero full-bleed —— */
+    .hero {
+        height: 100dvh;
+        min-height: 640px;
+        background-position: center 28%;
+        background-size: cover;
+    }
+
+    .hero .overlay {
+        background: linear-gradient(
+            105deg,
+            rgba(250, 249, 245, 0.72) 0%,
+            rgba(250, 249, 245, 0.28) 42%,
+            rgba(0, 0, 0, 0.18) 100%
+        );
+    }
+
+    .hero .texto {
+        left: 8vw;
+        right: auto;
+        bottom: 10vh;
+        max-width: 520px;
+        text-align: left;
+        padding: 0;
+    }
+
+    .hero .texto h1 {
+        font-size: clamp(48px, 4.2vw, 72px);
+        letter-spacing: 1px;
+        margin-bottom: 28px;
+        text-align: left;
+        text-shadow:
+            0 0 28px rgba(255, 255, 255, 0.9),
+            0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .selo-convite {
+        margin: 0;
+    }
+
+    .selo-convite img {
+        width: 92px;
+    }
+
+    .selo-convite:hover {
+        transform: translateZ(0) scale(1.04);
+        filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.32));
+    }
+
+    /* —— Conteúdo com coluna editorial —— */
+    .site {
+        background: var(--cor-fundo);
+    }
+
+    .foto2 {
+        height: 78vh;
+        min-height: 520px;
+        max-height: 820px;
+        background-position: center 30%;
+    }
+
+    .overlay2 {
+        background: linear-gradient(
+            to bottom,
+            transparent 45%,
+            rgba(255, 255, 255, 0.55) 72%,
+            var(--cor-fundo) 100%
+        );
+    }
+
+    .conteudo,
+    .bencao,
+    .secao-nomes,
+    .chamada-casamento,
+    .calendario-casamento,
+    .nossos-momentos,
+    .regressiva,
+    .container-local,
+    .container-interacoes {
+        max-width: 920px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .conteudo {
+        padding-top: 64px;
+        padding-bottom: 28px;
+    }
+
+    .versiculo {
+        max-width: 560px;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* Flores mais discretas no desktop */
+    .decoracao-flores--centro,
+    .decoracao-flores--nomes,
+    .decoracao-flores--local,
+    .decoracao-flores--interacoes {
+        opacity: 0.55;
+    }
+
+    .flor--centro {
+        width: 140px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .pais {
+        max-width: 420px;
+        font-size: 16px;
+        margin-bottom: 40px;
+    }
+
+    .frase-bencao {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .nomes-noivos {
+        font-size: clamp(64px, 5vw, 88px);
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
+
+    .chamada-casamento .retangulo {
+        max-width: 480px;
+        margin: 28px auto;
+    }
+
+    .calendario-casamento {
+        max-width: 520px;
+        margin-top: 12px;
+        margin-bottom: 48px;
+    }
+
+    /* —— Galeria: carrossel mais largo, proporção editorial —— */
+    .galeria-cabecalho {
+        max-width: 520px;
+        margin-bottom: 28px;
+    }
+
+    .titulo-galeria {
+        font-size: 32px;
+    }
+
+    .historia-curta {
+        font-size: 17px;
+    }
+
+    .carrossel {
+        max-width: 720px;
+    }
+
+    .carrossel-viewport {
+        aspect-ratio: 16 / 10;
+        padding: 14px;
+        border-radius: 4px;
+    }
+
+    .carrossel-slides {
+        inset: 14px;
+    }
+
+    .carrossel-nav {
+        opacity: 0.85;
+    }
+
+    .carrossel:hover .carrossel-nav {
+        opacity: 1;
+    }
+
+    .regressiva {
+        margin: 48px auto 56px;
+        max-width: 640px;
+    }
+
+    #contador {
+        gap: 28px;
+    }
+
+    /* —— Local: foto + texto lado a lado —— */
+    .container-local {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 48px;
+        align-items: center;
+        text-align: left;
+        padding-top: 24px;
+        padding-bottom: 48px;
+        max-width: 980px;
+    }
+
+    .container-local .local {
+        order: 2;
+        text-align: left;
+    }
+
+    .container-local .local p {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .container-local .local-cena {
+        order: 1;
+        max-width: none;
+        margin: 0;
+    }
+
+    .espaco-foto-wrapper img {
+        width: 100%;
+        max-width: none;
+        border-radius: 8px;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+    }
+
+    .decoracao-flores--local {
+        display: none;
+    }
+
+    /* —— Interações em grade —— */
+    .container-interacoes {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 40px;
+        align-items: start;
+        text-align: left;
+        padding-bottom: 72px;
+        max-width: 980px;
+        margin-top: 48px;
+        margin-bottom: 40px;
+        position: relative;
+        width: 100%;
+    }
+
+    .chamada-icones {
+        padding-top: 12px;
+    }
+
+    .chamada-icones p,
+    .chamada-icones h2 {
+        margin-left: 0;
+        text-align: left;
+    }
+
+    .chamada-icones p {
+        font-size: 18px;
+    }
+
+    .chamada-icones h2 {
+        font-size: 44px;
+        margin-top: -8px;
+    }
+
+    .lista-botoes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 18px;
+        padding-left: 0;
+    }
+
+    .linha-interacao,
+    button.linha-interacao,
+    a.linha-interacao {
+        margin: 0;
+        padding: 14px 16px;
+        border: 1px solid var(--cor-borda-clara);
+        border-radius: var(--raio-ui);
+        background: var(--cor-fundo);
+        text-decoration: none;
+        color: inherit;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .linha-interacao:hover,
+    button.linha-interacao:hover,
+    a.linha-interacao:hover {
+        border-color: var(--cor-borda-suave);
+        box-shadow: var(--sombra-card);
+        transform: translateY(-1px);
+    }
+
+    .decoracao-flores--interacoes {
+        display: none;
+    }
+
+    .desenvolvedor-rodape {
+        font-size: 12px;
+        bottom: 20px;
+    }
+
+    .secao-recados {
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .hero .texto {
+        left: 10vw;
+        max-width: 560px;
+    }
+
+    .conteudo,
+    .bencao,
+    .secao-nomes,
+    .chamada-casamento,
+    .calendario-casamento,
+    .nossos-momentos,
+    .regressiva {
+        max-width: 980px;
+    }
+
+    .carrossel {
+        max-width: 820px;
+    }
+
+    .container-local,
+    .container-interacoes {
+        max-width: 1080px;
+        gap: 56px;
+    }
+
+    .secao-recados {
+        max-width: 800px;
+    }
+}
+
