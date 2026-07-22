@@ -132,18 +132,7 @@ function aplicarConfigDoSite() {
     const horaEl = document.getElementById("cfg-hora");
     if (horaEl) horaEl.textContent = (c.horaCasamento || "") + "H";
 
-    // Local + Maps
-    const localEl = document.getElementById("cfg-local");
-    if (localEl && c.localNome) {
-        localEl.textContent = `Local: ${c.localNome}`;
-    }
-    const mapsEl = document.getElementById("cfg-maps");
-    if (mapsEl && c.mapsUrl) {
-        const url = safeUrl(c.mapsUrl);
-        if (url) mapsEl.setAttribute("href", url);
-    }
-
-    // Título da aba + meta / OG (WhatsApp usa o HTML estático; JS ajuda no navegador)
+    // Título da aba + data legível (meta / painel do local)
     const curto = c.nomeCurto || nomes;
     let tituloAba = nomes;
     let dataLegivel = "";
@@ -155,6 +144,34 @@ function aplicarConfigDoSite() {
         dataLegivel = `${Number(partes[2])} de ${meses[mesNum] || partes[1]} de ${partes[0]}`;
     }
     document.title = tituloAba;
+
+    // Local + Maps
+    const localEl = document.getElementById("cfg-local");
+    if (localEl && c.localNome) {
+        localEl.textContent = c.localNome;
+    }
+    const mapsUrl = c.mapsUrl ? safeUrl(c.mapsUrl) : "";
+    const mapsEl = document.getElementById("cfg-maps");
+    if (mapsEl && mapsUrl) {
+        mapsEl.setAttribute("href", mapsUrl);
+    }
+    const mapsLocalEl = document.getElementById("cfg-maps-local");
+    if (mapsLocalEl && mapsUrl) {
+        mapsLocalEl.setAttribute("href", mapsUrl);
+    }
+
+    const localQuando = document.getElementById("cfg-local-quando");
+    if (localQuando) {
+        const diaSem = (c.diaSemana || "").trim();
+        const partesQuando = [];
+        if (diaSem) partesQuando.push(diaSem.charAt(0) + diaSem.slice(1).toLowerCase());
+        if (dataLegivel) partesQuando.push(dataLegivel);
+        if (partesQuando.length) localQuando.textContent = partesQuando.join(" · ");
+    }
+    const localHora = document.getElementById("cfg-local-hora");
+    if (localHora && c.horaCasamento) {
+        localHora.textContent = c.horaCasamento;
+    }
 
     const descricaoPadrao = dataLegivel
         ? `Convite de casamento de ${nomes} — ${dataLegivel}.`
