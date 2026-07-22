@@ -2515,11 +2515,17 @@ button.linha-interacao:focus-visible,
         );
     }
 
-    .conteudo,
+    /* Bloco bênção + nomes + convite + data: coluna mais larga */
     .bencao,
     .secao-nomes,
     .chamada-casamento,
-    .calendario-casamento,
+    .calendario-casamento {
+        max-width: 720px;
+        padding-left: 48px;
+        padding-right: 48px;
+    }
+
+    .conteudo,
     .nossos-momentos,
     .regressiva,
     .container-local,
@@ -2537,51 +2543,107 @@ button.linha-interacao:focus-visible,
     }
 
     .versiculo {
-        max-width: 560px;
+        max-width: 570px;
         font-size: 24px;
         margin-bottom: 20px;
     }
 
-    /* Flores mais discretas no desktop */
-    .decoracao-flores--centro,
-    .decoracao-flores--nomes,
+    .decoracao-flores--centro {
+        opacity: 0.7;
+    }
+
     .decoracao-flores--local,
     .decoracao-flores--interacoes {
         opacity: 0.55;
     }
 
     .flor--centro {
-        width: 140px;
+        width: 180px;
         margin-left: auto;
         margin-right: auto;
     }
 
     .pais {
-        max-width: 420px;
-        font-size: 16px;
-        margin-bottom: 40px;
+        max-width: 520px;
+        font-size: 18px;
+        margin-bottom: 48px;
+        gap: 48px;
     }
 
     .frase-bencao {
-        font-size: 22px;
-        margin-bottom: 20px;
+        font-size: 28px;
+        margin-bottom: 24px;
+    }
+
+    .secao-nomes {
+        max-width: 760px;
+        padding-left: 56px;
+        padding-right: 56px;
     }
 
     .nomes-noivos {
-        font-size: clamp(64px, 5vw, 88px);
-        margin-top: 12px;
-        margin-bottom: 8px;
+        font-size: clamp(72px, 5.5vw, 96px);
+        margin-top: 16px;
+        margin-bottom: 12px;
+    }
+
+    /* Flores dos nomes: maiores e mais abertas nas laterais */
+    .decoracao-flores--nomes {
+        opacity: 0.88;
+        height: 96px;
+        max-width: 720px;
+        --flor-nomes-esq-x: -88px;
+        --flor-nomes-esq-y: -100px;
+        --flor-nomes-dir-x: -72px;
+        --flor-nomes-dir-y: -200px;
+    }
+
+    .flor--nomes-esq {
+        width: 200px;
+    }
+
+    .flor--nomes-dir {
+        width: 220px;
+    }
+
+    .chamada-casamento {
+        margin-top: -40px;
     }
 
     .chamada-casamento .retangulo {
-        max-width: 480px;
-        margin: 28px auto;
+        max-width: 640px;
+        margin: 32px auto;
+        padding: 18px 28px;
+    }
+
+    .chamada-casamento .retangulo p {
+        font-size: 22px;
     }
 
     .calendario-casamento {
-        max-width: 520px;
-        margin-top: 12px;
-        margin-bottom: 48px;
+        max-width: 680px;
+        gap: 48px;
+        margin-top: 20px;
+        margin-bottom: 56px;
+    }
+
+    .coluna-data.centro {
+        padding: 0 40px;
+    }
+
+    .texto-pequeno {
+        font-size: 17px;
+        letter-spacing: 3px;
+    }
+
+    .mes-ano {
+        font-size: 15px;
+        letter-spacing: 4px;
+    }
+
+    .dia-numero {
+        font-size: 64px;
+        margin: 8px 0;
     }
 
     /* —— Galeria: carrossel mais largo, proporção editorial —— */
@@ -2757,13 +2819,33 @@ button.linha-interacao:focus-visible,
     }
 
     .conteudo,
-    .bencao,
-    .secao-nomes,
-    .chamada-casamento,
-    .calendario-casamento,
     .nossos-momentos,
     .regressiva {
         max-width: 980px;
+    }
+
+    .bencao,
+    .secao-nomes,
+    .chamada-casamento,
+    .calendario-casamento {
+        max-width: 780px;
+    }
+
+    .secao-nomes {
+        max-width: 820px;
+    }
+
+    .calendario-casamento {
+        max-width: 720px;
+        gap: 56px;
+    }
+
+    .flor--nomes-esq {
+        width: 220px;
+    }
+
+    .flor--nomes-dir {
+        width: 240px;
     }
 
     .carrossel {
