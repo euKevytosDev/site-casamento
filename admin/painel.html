@@ -244,9 +244,16 @@
                         </div>
 
                         <div class="upload-bloco">
-                            <h3>Foto do local</h3>
+                            <h3 id="titulo-foto-local">Foto do local</h3>
                             <img id="preview-local" class="preview-midia" alt="Local">
                             <input type="file" id="file-local" accept="image/jpeg,image/png,image/webp,image/gif">
+                        </div>
+
+                        <div class="upload-bloco" id="upload-local-festa" hidden>
+                            <h3>Foto do local da festa</h3>
+                            <img id="preview-local-festa" class="preview-midia" alt="Local da festa">
+                            <input type="file" id="file-local-festa" accept="image/jpeg,image/png,image/webp,image/gif">
+                            <p class="dica-admin">Aparece ao lado da cerimônia quando os locais são separados.</p>
                         </div>
 
                         <div class="upload-bloco">
@@ -889,6 +896,7 @@
             mostrarPreviewMidia("preview-hero", cfg.fotoHeroUrl);
             mostrarPreviewMidia("preview-secundaria", cfg.fotoSecundariaUrl);
             mostrarPreviewMidia("preview-local", cfg.fotoLocalUrl);
+            mostrarPreviewMidia("preview-local-festa", cfg.fotoLocalFestaUrl);
             mostrarPreviewMidia("preview-rodape", cfg.fotoRodapeUrl);
             renderCarrosselAdmin(cfg.fotosCarrossel || []);
             atualizarQualidadeSite();
@@ -918,7 +926,13 @@
                 },
                 { ok: temTexto(cfg.pixChave), falta: "Cadastrar a chave PIX" },
                 { ok: temTexto(cfg.fotoHeroUrl), falta: "Enviar a foto da capa (hero)" },
-                { ok: temTexto(cfg.fotoLocalUrl), falta: "Enviar a foto do local" },
+                { ok: temTexto(cfg.fotoLocalUrl), falta: cfg.mesmoLocal !== false
+                    ? "Enviar a foto do local"
+                    : "Enviar a foto da cerimônia" },
+                {
+                    ok: cfg.mesmoLocal !== false || temTexto(cfg.fotoLocalFestaUrl),
+                    falta: "Enviar a foto da festa"
+                },
                 { ok: temTexto(cfg.fotoRodapeUrl), falta: "Enviar a foto do rodapé" },
                 { ok: carrossel.length >= 2, falta: "Colocar pelo menos 2 fotos no carrossel" },
                 { ok: temTexto(cfg.historiaCurta), falta: "Escrever a história curta do casal" },
@@ -1011,13 +1025,23 @@
             const mesmo = document.getElementById("cfg-mesmo-local")?.checked !== false;
             const bloco = document.getElementById("bloco-local-festa");
             if (bloco) bloco.hidden = mesmo;
+            const uploadFesta = document.getElementById("upload-local-festa");
+            if (uploadFesta) uploadFesta.hidden = mesmo;
             const labelLocal = document.getElementById("label-cfg-local");
             const labelMaps = document.getElementById("label-cfg-maps");
+            const tituloFoto = document.getElementById("titulo-foto-local");
             if (labelLocal) labelLocal.textContent = mesmo ? "Local" : "Local da cerimônia";
             if (labelMaps) labelMaps.textContent = mesmo ? "Link do Google Maps" : "Link do Google Maps (cerimônia)";
+            if (tituloFoto) tituloFoto.textContent = mesmo ? "Foto do local" : "Foto do local da cerimônia";
         }
 
-        document.getElementById("cfg-mesmo-local")?.addEventListener("change", atualizarCamposLocalFesta);
+        document.getElementById("cfg-mesmo-local")?.addEventListener("change", () => {
+            atualizarCamposLocalFesta();
+            if (window.__cfgQualidade) {
+                window.__cfgQualidade.mesmoLocal = document.getElementById("cfg-mesmo-local")?.checked !== false;
+                atualizarQualidadeSite();
+            }
+        });
 
         async function carregarPersonalizacao() {
             try {
@@ -1125,6 +1149,7 @@
         ligarUpload("file-hero", "hero");
         ligarUpload("file-secundaria", "secundaria");
         ligarUpload("file-local", "local");
+        ligarUpload("file-local-festa", "local-festa");
         ligarUpload("file-rodape", "rodape");
 
         const fileMusica = document.getElementById("file-musica");

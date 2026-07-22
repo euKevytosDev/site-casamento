@@ -147,12 +147,31 @@ function aplicarConfigDoSite() {
 
     // Local + Maps
     const localEl = document.getElementById("cfg-local");
-    if (localEl && c.localNome) {
-        localEl.textContent = c.localNome;
-    }
     const mapsUrl = c.mapsUrl ? safeUrl(c.mapsUrl) : "";
     const mapsUrlFesta = c.mapsUrlFesta ? safeUrl(c.mapsUrlFesta) : "";
     const mesmoLocal = c.mesmoLocal !== false;
+
+    if (localEl) {
+        if (mesmoLocal) {
+            localEl.textContent = c.localNome || "Local do casamento";
+        } else {
+            localEl.textContent = "Cerimônia e festa";
+        }
+    }
+
+    const nomeCerFoto = document.getElementById("cfg-foto-nome-cerimonia");
+    if (nomeCerFoto) nomeCerFoto.textContent = c.localNome || "Local da cerimônia";
+    const nomeFesFoto = document.getElementById("cfg-foto-nome-festa");
+    if (nomeFesFoto) nomeFesFoto.textContent = c.localNomeFesta || "Local da festa";
+
+    const cenaLocal = document.getElementById("local-cena");
+    const fotoFestaEl = document.querySelector(".local-foto--festa");
+    if (cenaLocal) {
+        cenaLocal.dataset.doisLocais = mesmoLocal ? "false" : "true";
+    }
+    if (fotoFestaEl) {
+        fotoFestaEl.hidden = mesmoLocal;
+    }
 
     const mapsEl = document.getElementById("cfg-maps");
     if (mapsEl && mapsUrl) {
@@ -181,6 +200,11 @@ function aplicarConfigDoSite() {
         painelTexto.textContent = mesmoLocal
             ? "Será uma alegria receber você neste dia especial."
             : `Cerimônia: ${c.localNome || "—"}. Festa: ${c.localNomeFesta || "—"}.`;
+    }
+
+    const painelEyebrow = document.querySelector(".local-painel-eyebrow");
+    if (painelEyebrow) {
+        painelEyebrow.textContent = mesmoLocal ? "Cerimônia e recepção" : "Dois endereços";
     }
 
     document.documentElement.dataset.mesmoLocal = mesmoLocal ? "true" : "false";
@@ -259,6 +283,25 @@ function ehSiteVitrine() {
     return SITE_ID === SITE_VITRINE;
 }
 
+function aplicarFotoLocalImg(img, wrap, url, placeholderTexto, vitrine) {
+    if (!img) return;
+    if (url) {
+        img.src = url;
+        img.style.display = "";
+        img.classList.remove("foto-vazia-img");
+        wrap?.querySelector(".placeholder-foto")?.remove();
+    } else if (!vitrine) {
+        img.removeAttribute("src");
+        img.style.display = "none";
+        if (wrap && !wrap.querySelector(".placeholder-foto")) {
+            const ph = document.createElement("div");
+            ph.className = "placeholder-foto";
+            ph.textContent = placeholderTexto;
+            wrap.insertBefore(ph, img);
+        }
+    }
+}
+
 /** Aplica URLs de fotos da API. Fora da vitrine, sem URL = placeholder (nunca herda foto do Rafa). */
 function aplicarFotosDoSite(c) {
     if (!c) return;
@@ -286,24 +329,15 @@ function aplicarFotosDoSite(c) {
         }
     }
 
-    const imgLocal = document.querySelector(".espaco-foto-wrapper img");
-    const wrapLocal = document.querySelector(".espaco-foto-wrapper");
-    if (imgLocal) {
-        if (c.fotoLocalUrl) {
-            imgLocal.src = c.fotoLocalUrl;
-            imgLocal.style.display = "";
-            imgLocal.classList.remove("foto-vazia-img");
-            wrapLocal?.querySelector(".placeholder-foto")?.remove();
-        } else if (!vitrine) {
-            imgLocal.removeAttribute("src");
-            imgLocal.style.display = "none";
-            if (wrapLocal && !wrapLocal.querySelector(".placeholder-foto")) {
-                const ph = document.createElement("div");
-                ph.className = "placeholder-foto";
-                ph.textContent = "Foto do local";
-                wrapLocal.insertBefore(ph, imgLocal);
-            }
-        }
+    const imgLocal = document.getElementById("cfg-foto-local")
+        || document.querySelector(".local-foto[data-local='cerimonia'] .espaco-foto-wrapper img");
+    const wrapLocal = imgLocal?.closest(".espaco-foto-wrapper");
+    aplicarFotoLocalImg(imgLocal, wrapLocal, c.fotoLocalUrl, "Foto do local", vitrine);
+
+    const imgLocalFesta = document.getElementById("cfg-foto-local-festa");
+    const wrapLocalFesta = imgLocalFesta?.closest(".espaco-foto-wrapper");
+    if (c.mesmoLocal === false) {
+        aplicarFotoLocalImg(imgLocalFesta, wrapLocalFesta, c.fotoLocalFestaUrl, "Foto da festa", vitrine);
     }
 
     const imgRodape = document.getElementById("cfg-foto-rodape")

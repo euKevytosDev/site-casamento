@@ -36,6 +36,7 @@ window.SITE_CONFIG = {
     mesmoLocal: true,
     localNomeFesta: "",
     mapsUrlFesta: "",
+    fotoLocalFestaUrl: "",
 
     // Pais (opcional — cada casal muda)
     paisNoiva: "Warlen e Rosimar",

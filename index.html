@@ -205,10 +205,28 @@
                 <h3 class="local-titulo" id="cfg-local">Espaço Salaberry</h3>
             </header>
             <div class="local-corpo">
-                <div class="local-cena">
-                    <div class="espaco-foto-wrapper">
-                        <div class="overlay-local"></div>
-                        <img src="imagens/fotoespaço.jpg" alt="Local do casamento">
+                <div class="local-cena" id="local-cena" data-dois-locais="false">
+                    <div class="local-fotos">
+                        <figure class="local-foto" data-local="cerimonia">
+                            <div class="espaco-foto-wrapper">
+                                <div class="overlay-local"></div>
+                                <img id="cfg-foto-local" src="imagens/fotoespaço.jpg" alt="Local da cerimônia">
+                            </div>
+                            <figcaption class="local-foto-meta">
+                                <span class="local-foto-rotulo">Cerimônia</span>
+                                <span class="local-foto-nome" id="cfg-foto-nome-cerimonia">Espaço Salaberry</span>
+                            </figcaption>
+                        </figure>
+                        <figure class="local-foto local-foto--festa" data-local="festa" hidden>
+                            <div class="espaco-foto-wrapper">
+                                <div class="overlay-local"></div>
+                                <img id="cfg-foto-local-festa" src="" alt="Local da festa">
+                            </div>
+                            <figcaption class="local-foto-meta">
+                                <span class="local-foto-rotulo">Festa</span>
+                                <span class="local-foto-nome" id="cfg-foto-nome-festa">Local da festa</span>
+                            </figcaption>
+                        </figure>
                     </div>
                     <div class="decoracao-flores decoracao-flores--local" aria-hidden="true">
                         <img src="imagens/floresquerda2.png" class="flor flor--local-esq" alt="">
