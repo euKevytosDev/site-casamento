@@ -2780,6 +2780,8 @@ button.linha-interacao:focus-visible,
     .conteudo {
         padding-top: 72px;
         padding-bottom: 36px;
+        /* libera flores dos nomes até as bordas da janela */
+        overflow: visible;
     }
 
     .versiculo {
@@ -2841,7 +2843,7 @@ button.linha-interacao:focus-visible,
         margin-bottom: 20px;
     }
 
-    /* Flores dos nomes: maiores, mas contidas (sem empurrar o layout) */
+    /* Flores dos nomes: ancoradas nas bordas da viewport (qualquer monitor) */
     .decoracao-flores--nomes {
         opacity: 0.88;
         height: 88px;
@@ -2849,9 +2851,10 @@ button.linha-interacao:focus-visible,
         width: 100%;
         margin-left: auto;
         margin-right: auto;
-        --flor-nomes-esq-x: -455px;
+        /* 50% - 50vw = borda da janela; +16px = folga da borda */
+        --flor-nomes-esq-x: calc(50% - 50vw + 16px);
         --flor-nomes-esq-y: -58px;
-        --flor-nomes-dir-x: -500px;
+        --flor-nomes-dir-x: calc(50% - 50vw + 16px);
         --flor-nomes-dir-y: -330px;
     }
 
