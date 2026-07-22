@@ -114,6 +114,24 @@ function aplicarConfigDoSite() {
         historiaEl.hidden = !hist;
     }
 
+    const dcTrajePadrao = "Esporte Fino";
+    const dcTextoPadrao =
+        "Pedimos um traje elegante e confortável para curtir a festa do início ao fim. Elas, vestidos ou conjuntos sociais; eles, calça, camisa e, se quiserem, blazer.";
+    const dcCoresPadrao =
+        "Com todo carinho, pedimos que evitem o off-white e o branco (exclusivo da noiva) e o verde oliva, que será a cor exclusiva do nosso cortejo de padrinhos.";
+    const dcRodapePadrao = "O mais importante é a sua presença. Nos vemos lá!";
+    const trajeEl = document.getElementById("cfg-dresscode-traje");
+    if (trajeEl) trajeEl.textContent = (c.dresscodeTraje || "").trim() || dcTrajePadrao;
+    const dcTextoEl = document.getElementById("cfg-dresscode-texto");
+    if (dcTextoEl) dcTextoEl.textContent = (c.dresscodeTexto || "").trim() || dcTextoPadrao;
+    const coresDc = (c.dresscodeCores != null ? c.dresscodeCores : dcCoresPadrao).trim();
+    const blocoCores = document.getElementById("cfg-dresscode-bloco-cores");
+    if (blocoCores) blocoCores.hidden = !coresDc;
+    const coresEl = document.getElementById("cfg-dresscode-cores");
+    if (coresEl) coresEl.textContent = coresDc;
+    const rodapeEl = document.getElementById("cfg-dresscode-rodape");
+    if (rodapeEl) rodapeEl.textContent = (c.dresscodeRodape || "").trim() || dcRodapePadrao;
+
     // dataCasamento = "2027-04-24" → ano, mês, dia
     const partes = (c.dataCasamento || "").split("-"); // [ano, mes, dia]
     if (partes.length === 3) {

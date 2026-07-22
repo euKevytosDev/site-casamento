@@ -48,6 +48,12 @@ window.SITE_CONFIG = {
     tituloGaleria: "Nossos momentos",
     historiaCurta: "Um encontro, um sim e o começo da nossa história juntos.",
 
+    // Dress code (editável no painel; vazio = texto padrão do site)
+    dresscodeTraje: "Esporte Fino",
+    dresscodeTexto: "Pedimos um traje elegante e confortável para curtir a festa do início ao fim. Elas, vestidos ou conjuntos sociais; eles, calça, camisa e, se quiserem, blazer.",
+    dresscodeCores: "Com todo carinho, pedimos que evitem o off-white e o branco (exclusivo da noiva) e o verde oliva, que será a cor exclusiva do nosso cortejo de padrinhos.",
+    dresscodeRodape: "O mais importante é a sua presença. Nos vemos lá!",
+
     // Cores do tema (iguais às do CSS :root — outra noiva muda só aqui)
     cores: {
         verde: "#616e48",

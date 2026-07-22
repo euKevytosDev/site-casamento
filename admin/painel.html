@@ -154,6 +154,25 @@
                                 placeholder="Um encontro, um sim e o começo da nossa história juntos."></textarea>
                             <p class="dica-admin">Texto curto acima das fotos — convidado lê em 5 segundos.</p>
 
+                            <h3 class="subtitulo-card">Dress code</h3>
+                            <p class="dica-admin">Aparece no modal “Dress code” do site. Deixe em branco para usar o texto padrão.</p>
+
+                            <label for="cfg-dresscode-traje">Traje sugerido</label>
+                            <input type="text" id="cfg-dresscode-traje" maxlength="80" placeholder="Esporte Fino">
+
+                            <label for="cfg-dresscode-texto">Descrição do traje</label>
+                            <textarea id="cfg-dresscode-texto" rows="3" maxlength="800"
+                                placeholder="Pedimos um traje elegante e confortável..."></textarea>
+
+                            <label for="cfg-dresscode-cores">Cores reservadas</label>
+                            <textarea id="cfg-dresscode-cores" rows="3" maxlength="800"
+                                placeholder="Evitem branco, off-white e verde oliva..."></textarea>
+                            <p class="dica-admin">Se deixar vazio, o bloco de cores reservadas some do site.</p>
+
+                            <label for="cfg-dresscode-rodape">Frase final</label>
+                            <input type="text" id="cfg-dresscode-rodape" maxlength="200"
+                                placeholder="O mais importante é a sua presença. Nos vemos lá!">
+
                             <h3 class="subtitulo-card">PIX</h3>
                             <label for="cfg-pix-chave">Chave PIX</label>
                             <input type="text" id="cfg-pix-chave">
@@ -872,6 +891,14 @@
             if (tituloGal) tituloGal.value = cfg.tituloGaleria || "Nossos momentos";
             const hist = document.getElementById("cfg-historia-curta");
             if (hist) hist.value = cfg.historiaCurta || "";
+            const dcTraje = document.getElementById("cfg-dresscode-traje");
+            if (dcTraje) dcTraje.value = cfg.dresscodeTraje || "";
+            const dcTexto = document.getElementById("cfg-dresscode-texto");
+            if (dcTexto) dcTexto.value = cfg.dresscodeTexto || "";
+            const dcCores = document.getElementById("cfg-dresscode-cores");
+            if (dcCores) dcCores.value = cfg.dresscodeCores || "";
+            const dcRodape = document.getElementById("cfg-dresscode-rodape");
+            if (dcRodape) dcRodape.value = cfg.dresscodeRodape || "";
             document.getElementById("cfg-pix-chave").value = cfg.pixChave || "";
             document.getElementById("cfg-pix-nome").value = cfg.pixNomeRecebedor || "";
             document.getElementById("cfg-pix-cidade").value = cfg.pixCidade || "";
@@ -1079,6 +1106,10 @@
                 fraseBencao: document.getElementById("cfg-frase-bencao").value.trim(),
                 tituloGaleria: document.getElementById("cfg-titulo-galeria")?.value.trim() || "Nossos momentos",
                 historiaCurta: document.getElementById("cfg-historia-curta")?.value.trim() || "",
+                dresscodeTraje: document.getElementById("cfg-dresscode-traje")?.value.trim() || "",
+                dresscodeTexto: document.getElementById("cfg-dresscode-texto")?.value.trim() || "",
+                dresscodeCores: document.getElementById("cfg-dresscode-cores")?.value.trim() || "",
+                dresscodeRodape: document.getElementById("cfg-dresscode-rodape")?.value.trim() || "",
                 pixChave: document.getElementById("cfg-pix-chave").value.trim(),
                 pixNomeRecebedor: document.getElementById("cfg-pix-nome").value.trim(),
                 pixCidade: document.getElementById("cfg-pix-cidade").value.trim(),
