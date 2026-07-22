@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar senha — Área da noiva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="pagina-login">
+        <div class="card-login">
+            <span class="marca-admin">Site de casamento</span>
+            <h1>Esqueci minha senha</h1>
+            <p class="subtitulo">Confirme o e-mail da conta e o link do seu site para criar uma nova senha.</p>
+
+            <form id="form-recuperar">
+                <label for="email">E-mail da conta</label>
+                <input type="email" id="email" autocomplete="email" required placeholder="seu@email.com">
+
+                <label for="slug">Link do site</label>
+                <input type="text" id="slug" required placeholder="maria-e-joao"
+                    title="Só o slug, ou cole a URL completa">
+                <p class="campo-dica-admin">Ex.: <code>luizaericardo</code> ou a URL com <code>?site=…</code></p>
+
+                <label for="novaSenha">Nova senha</label>
+                <input type="password" id="novaSenha" autocomplete="new-password" required minlength="6">
+
+                <label for="confirmaSenha">Confirmar nova senha</label>
+                <input type="password" id="confirmaSenha" autocomplete="new-password" required minlength="6">
+
+                <button type="submit" class="btn-primario" id="btn-recuperar">Redefinir senha</button>
+            </form>
+
+            <p id="mensagem" class="mensagem"></p>
+            <div class="links-login">
+                <a href="index.html" class="link-voltar">Voltar ao login</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../config.js"></script>
+    <script src="admin.js"></script>
+    <script>
+        const form = document.getElementById("form-recuperar");
+        const mensagem = document.getElementById("mensagem");
+        const btn = document.getElementById("btn-recuperar");
+        const slugInput = document.getElementById("slug");
+
+        slugInput.addEventListener("blur", () => {
+            const v = slugInput.value.trim();
+            const m = v.match(/[?&]site=([a-z0-9-]+)/i);
+            if (m) slugInput.value = m[1].toLowerCase();
+        });
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            mensagem.className = "mensagem";
+            mensagem.textContent = "";
+
+            const novaSenha = document.getElementById("novaSenha").value;
+            const confirma = document.getElementById("confirmaSenha").value;
+            if (novaSenha !== confirma) {
+                mensagem.className = "mensagem erro";
+                mensagem.textContent = "As senhas não conferem.";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Salvando...";
+
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/recuperar-senha`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: document.getElementById("email").value.trim(),
+                        slug: slugInput.value.trim(),
+                        novaSenha
+                    })
+                });
+                const texto = await res.text();
+                let data;
+                try { data = JSON.parse(texto); } catch { data = texto; }
+                if (!res.ok) {
+                    throw new Error(typeof data === "string" ? data : (data.message || "Não foi possível redefinir."));
+                }
+                mensagem.className = "mensagem sucesso";
+                mensagem.textContent = data.mensagem || "Senha atualizada. Redirecionando...";
+                setTimeout(() => { window.location.href = "index.html"; }, 1600);
+            } catch (err) {
+                mensagem.className = "mensagem erro";
+                mensagem.textContent = err.message || "Erro ao redefinir senha.";
+                btn.disabled = false;
+                btn.textContent = "Redefinir senha";
+            }
+        });
+    </script>
+</body>
+</html>

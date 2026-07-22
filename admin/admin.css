@@ -120,6 +120,36 @@ a:hover {
     text-decoration: underline;
 }
 
+.link-esqueci-wrap {
+    margin: 14px 0 0;
+    text-align: center;
+}
+
+.link-esqueci {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.link-esqueci:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.campo-dica-admin {
+    margin: -4px 0 14px;
+    font-size: 12px;
+    color: var(--text-soft);
+    line-height: 1.4;
+}
+
+.campo-dica-admin code {
+    font-size: 11px;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
 .site-ativo-label {
     display: block;
     font-size: 12px;
