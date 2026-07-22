@@ -195,11 +195,20 @@ function aplicarConfigDoSite() {
         if (nomeFes) nomeFes.textContent = c.localNomeFesta || "Local da festa";
     }
 
-    const painelTexto = document.querySelector(".local-painel-texto");
+    const painelTexto = document.getElementById("cfg-local-painel-texto")
+        || document.querySelector(".local-painel-texto");
     if (painelTexto) {
-        painelTexto.textContent = mesmoLocal
-            ? "Será uma alegria receber você neste dia especial."
-            : `Cerimônia: ${c.localNome || "—"}. Festa: ${c.localNomeFesta || "—"}.`;
+        if (mesmoLocal) {
+            painelTexto.classList.remove("local-painel-texto--dois");
+            painelTexto.textContent = "Será uma alegria receber você neste dia especial.";
+        } else {
+            painelTexto.classList.add("local-painel-texto--dois");
+            const cer = escapeHtml(c.localNome || "—");
+            const fes = escapeHtml(c.localNomeFesta || "—");
+            painelTexto.innerHTML =
+                `<span class="local-painel-endereco"><em>Cerimônia</em> ${cer}</span>` +
+                `<span class="local-painel-endereco"><em>Festa</em> ${fes}</span>`;
+        }
     }
 
     const painelEyebrow = document.querySelector(".local-painel-eyebrow");

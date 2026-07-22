@@ -2970,6 +2970,30 @@ button.linha-interacao:focus-visible,
         color: var(--cor-texto-suave);
     }
 
+    .local-painel-texto--dois {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-style: normal;
+    }
+
+    .local-painel-endereco {
+        display: block;
+        line-height: 1.4;
+    }
+
+    .local-painel-endereco em {
+        display: block;
+        margin-bottom: 2px;
+        font-family: "Playfair", serif;
+        font-style: normal;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--cor-verde);
+        font-weight: 500;
+    }
+
     .local-painel-cta {
         display: inline-flex;
         align-items: center;
