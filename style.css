@@ -53,7 +53,7 @@
     --flor-z: 1;
     --flor-tamanho-sm: clamp(100px, 20vw, 150px);
     --flor-tamanho-md: clamp(110px, 28vw, 150px);
-    --flor-tamanho-centro: 200px;
+    --flor-tamanho-centro: 230px;
     --flor-tamanho-rosa: clamp(125px, 28vw, 150px);
 
     /* Centro (entre versículo e bênção) */
@@ -2709,7 +2709,7 @@ button.linha-interacao:focus-visible,
     }
 
     .flor--centro {
-        width: 180px;
+        width: 220px;
         margin-left: auto;
         margin-right: auto;
     }
