@@ -681,13 +681,14 @@ html[data-fonte-nomes="bona-nova"] .nomes-noivos {
     left: var(--flor-nomes-esq-x);
     top: var(--flor-nomes-esq-y);
     width: var(--flor-tamanho-sm);
-    transform: scaleX(-1);
+    transform: none;
 }
 
 .flor--nomes-dir {
     right: var(--flor-nomes-dir-x);
     top: var(--flor-nomes-dir-y);
     width: var(--flor-tamanho-md);
+    transform: scaleX(-1);
 }
 
 /* ---- Carrossel "Nossos momentos" (fade suave) ---- */
@@ -2766,10 +2767,12 @@ button.linha-interacao:focus-visible,
 
     .flor--nomes-esq {
         width: 180px;
+        transform: none;
     }
 
     .flor--nomes-dir {
         width: 200px;
+        transform: scaleX(-1);
     }
 
     .chamada-casamento {
@@ -3128,10 +3131,12 @@ button.linha-interacao:focus-visible,
 
     .flor--nomes-esq {
         width: 200px;
+        transform: none;
     }
 
     .flor--nomes-dir {
         width: 220px;
+        transform: scaleX(-1);
     }
 
     .carrossel {
