@@ -62,8 +62,8 @@
     /* Ao redor dos nomes */
     --flor-nomes-slot-h: 72px;
     --flor-nomes-esq-x: -42px;
-    --flor-nomes-esq-y: -80px;
-    --flor-nomes-dir-x: -25px;
+    --flor-nomes-esq-y: -52px;
+    --flor-nomes-dir-x: -55px;
     --flor-nomes-dir-y: -180px;
 
     /* Sobre / atrás da foto do local (âncora = a própria foto) */
@@ -2760,8 +2760,8 @@ button.linha-interacao:focus-visible,
         margin-left: auto;
         margin-right: auto;
         --flor-nomes-esq-x: -64px;
-        --flor-nomes-esq-y: -92px;
-        --flor-nomes-dir-x: -52px;
+        --flor-nomes-esq-y: -58px;
+        --flor-nomes-dir-x: -88px;
         --flor-nomes-dir-y: -188px;
     }
 
