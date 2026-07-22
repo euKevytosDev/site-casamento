@@ -2454,10 +2454,11 @@ button.linha-interacao:focus-visible,
 
     .hero .overlay {
         background: linear-gradient(
-            105deg,
-            rgba(250, 249, 245, 0.72) 0%,
-            rgba(250, 249, 245, 0.28) 42%,
-            rgba(0, 0, 0, 0.18) 100%
+            to bottom,
+            transparent 35%,
+            rgba(250, 249, 245, 0.25) 55%,
+            rgba(250, 249, 245, 0.72) 78%,
+            rgba(250, 249, 245, 0.92) 100%
         );
     }
 
