@@ -1145,6 +1145,7 @@ html[data-fonte-nomes="bona-nova"] .nomes-noivos {
 
 .local-foto {
     margin: 0;
+    position: relative;
 }
 
 .local-foto-meta {
@@ -1202,6 +1203,92 @@ html[data-fonte-nomes="bona-nova"] .nomes-noivos {
 
 .local-cena[data-dois-locais="true"] .espaco-foto-wrapper img {
     width: 78%;
+}
+
+/* —— Mobile: collage cerimônia + festa sobreposta —— */
+@media (max-width: 1023px) {
+    .local-cena[data-dois-locais="true"] {
+        max-width: 360px;
+        padding: 0 8px 28px;
+        margin-bottom: calc(var(--espaco-apos-local) + 12px);
+    }
+
+    .local-cena[data-dois-locais="true"] .local-fotos {
+        display: block;
+        position: relative;
+        min-height: 420px;
+        gap: 0;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto[data-local="cerimonia"] {
+        width: 72%;
+        margin-left: -4%;
+        position: relative;
+        z-index: 1;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto--festa {
+        position: absolute;
+        width: 58%;
+        right: -2%;
+        bottom: -8px;
+        z-index: 2;
+        margin: 0;
+    }
+
+    .local-cena[data-dois-locais="true"] .espaco-foto-wrapper {
+        width: 100%;
+        margin: 0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 14px 32px rgba(67, 63, 63, 0.14);
+    }
+
+    .local-cena[data-dois-locais="true"] .espaco-foto-wrapper img {
+        width: 100%;
+        max-width: none;
+        aspect-ratio: 3 / 4;
+        object-fit: cover;
+        border-radius: 14px;
+        display: block;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto--festa .espaco-foto-wrapper {
+        box-shadow: 0 16px 36px rgba(67, 63, 63, 0.2);
+        outline: 3px solid var(--cor-fundo, #fff);
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto-meta {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        margin: 0;
+        padding: 28px 12px 12px;
+        text-align: left;
+        color: #fff;
+        background: linear-gradient(180deg, transparent 0%, rgba(30, 28, 24, 0.72) 100%);
+        border-radius: 0 0 14px 14px;
+        pointer-events: none;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto-rotulo {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 10px;
+        letter-spacing: 2.2px;
+        margin-bottom: 2px;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto-nome {
+        color: #fff;
+        font-size: 1.05rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    .local-cena[data-dois-locais="true"] .decoracao-flores--local {
+        display: none;
+    }
 }
 
 .decoracao-flores--local {
@@ -2915,6 +3002,56 @@ button.linha-interacao:focus-visible,
         grid-template-columns: 1fr 1fr;
         gap: 18px;
         align-items: start;
+        min-height: 0;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto[data-local="cerimonia"],
+    .local-cena[data-dois-locais="true"] .local-foto--festa {
+        position: static;
+        width: auto;
+        margin: 0;
+        right: auto;
+        bottom: auto;
+        z-index: auto;
+    }
+
+    .local-cena[data-dois-locais="true"] .espaco-foto-wrapper {
+        width: 100%;
+        box-shadow: none;
+        outline: none;
+        overflow: visible;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto--festa .espaco-foto-wrapper {
+        box-shadow: none;
+        outline: none;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto-meta {
+        position: static;
+        margin-top: 12px;
+        padding: 0;
+        text-align: center;
+        color: inherit;
+        background: none;
+        border-radius: 0;
+        pointer-events: auto;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto-rotulo {
+        color: var(--cor-texto-suave, #8a8178);
+        font-size: 11px;
+        letter-spacing: 2.5px;
+    }
+
+    .local-cena[data-dois-locais="true"] .local-foto-nome {
+        color: var(--cor-verde);
+        font-size: 1.15rem;
+        text-shadow: none;
+    }
+
+    .local-cena[data-dois-locais="true"] .decoracao-flores--local {
+        display: none;
     }
 
     .local-cena[data-dois-locais="true"] .espaco-foto-wrapper {
