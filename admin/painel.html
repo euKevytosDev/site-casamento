@@ -116,11 +116,26 @@
                                 </div>
                             </div>
 
-                            <label for="cfg-local">Local</label>
+                            <h3 class="subtitulo-card">Local do evento</h3>
+                            <label class="check-linha" for="cfg-mesmo-local">
+                                <input type="checkbox" id="cfg-mesmo-local" checked>
+                                <span>Cerimônia e festa no mesmo local</span>
+                            </label>
+                            <p class="dica-admin">Desmarque se a festa for em outro endereço — o convidado escolhe no “Como chegar”.</p>
+
+                            <label for="cfg-local" id="label-cfg-local">Local (cerimônia)</label>
                             <input type="text" id="cfg-local" placeholder="Espaço Salaberry">
 
-                            <label for="cfg-maps">Link do Google Maps</label>
+                            <label for="cfg-maps" id="label-cfg-maps">Link do Google Maps (cerimônia)</label>
                             <input type="url" id="cfg-maps" placeholder="https://maps.google.com/...">
+
+                            <div id="bloco-local-festa" class="bloco-local-festa" hidden>
+                                <label for="cfg-local-festa">Local da festa / recepção</label>
+                                <input type="text" id="cfg-local-festa" placeholder="Salão, casa de festas…">
+
+                                <label for="cfg-maps-festa">Link do Google Maps (festa)</label>
+                                <input type="url" id="cfg-maps-festa" placeholder="https://maps.google.com/...">
+                            </div>
 
                             <h3 class="subtitulo-card">Textos do convite</h3>
                             <label for="cfg-versiculo">Versículo</label>
@@ -837,6 +852,13 @@
             document.getElementById("cfg-pais-noivo").value = cfg.paisNoivo || "";
             document.getElementById("cfg-local").value = cfg.localNome || "";
             document.getElementById("cfg-maps").value = cfg.mapsUrl || "";
+            const mesmoLocalEl = document.getElementById("cfg-mesmo-local");
+            if (mesmoLocalEl) mesmoLocalEl.checked = cfg.mesmoLocal !== false;
+            const localFesta = document.getElementById("cfg-local-festa");
+            if (localFesta) localFesta.value = cfg.localNomeFesta || "";
+            const mapsFesta = document.getElementById("cfg-maps-festa");
+            if (mapsFesta) mapsFesta.value = cfg.mapsUrlFesta || "";
+            atualizarCamposLocalFesta();
             document.getElementById("cfg-versiculo").value = cfg.versiculo || "";
             document.getElementById("cfg-frase-bencao").value = cfg.fraseBencao || "";
             const tituloGal = document.getElementById("cfg-titulo-galeria");
@@ -884,8 +906,16 @@
             const checks = [
                 { ok: temTexto(cfg.dataCasamento), falta: "Definir a data do casamento" },
                 { ok: temTexto(cfg.horaCasamento), falta: "Informar o horário da cerimônia" },
-                { ok: temTexto(cfg.localNome), falta: "Cadastrar o local do evento" },
-                { ok: temTexto(cfg.mapsUrl), falta: "Adicionar o link do Google Maps" },
+                { ok: temTexto(cfg.localNome), falta: "Cadastrar o local da cerimônia" },
+                { ok: temTexto(cfg.mapsUrl), falta: "Adicionar o Maps da cerimônia" },
+                {
+                    ok: cfg.mesmoLocal !== false || temTexto(cfg.localNomeFesta),
+                    falta: "Cadastrar o local da festa"
+                },
+                {
+                    ok: cfg.mesmoLocal !== false || temTexto(cfg.mapsUrlFesta),
+                    falta: "Adicionar o Maps da festa"
+                },
                 { ok: temTexto(cfg.pixChave), falta: "Cadastrar a chave PIX" },
                 { ok: temTexto(cfg.fotoHeroUrl), falta: "Enviar a foto da capa (hero)" },
                 { ok: temTexto(cfg.fotoLocalUrl), falta: "Enviar a foto do local" },
@@ -977,6 +1007,18 @@
             });
         }
 
+        function atualizarCamposLocalFesta() {
+            const mesmo = document.getElementById("cfg-mesmo-local")?.checked !== false;
+            const bloco = document.getElementById("bloco-local-festa");
+            if (bloco) bloco.hidden = mesmo;
+            const labelLocal = document.getElementById("label-cfg-local");
+            const labelMaps = document.getElementById("label-cfg-maps");
+            if (labelLocal) labelLocal.textContent = mesmo ? "Local" : "Local da cerimônia";
+            if (labelMaps) labelMaps.textContent = mesmo ? "Link do Google Maps" : "Link do Google Maps (cerimônia)";
+        }
+
+        document.getElementById("cfg-mesmo-local")?.addEventListener("change", atualizarCamposLocalFesta);
+
         async function carregarPersonalizacao() {
             try {
                 const res = await apiFetch("/api/admin/site/atual");
@@ -1006,6 +1048,9 @@
                 paisNoivo: document.getElementById("cfg-pais-noivo").value.trim(),
                 localNome: document.getElementById("cfg-local").value.trim(),
                 mapsUrl: document.getElementById("cfg-maps").value.trim(),
+                mesmoLocal: document.getElementById("cfg-mesmo-local")?.checked !== false,
+                localNomeFesta: document.getElementById("cfg-local-festa")?.value.trim() || "",
+                mapsUrlFesta: document.getElementById("cfg-maps-festa")?.value.trim() || "",
                 versiculo: document.getElementById("cfg-versiculo").value.trim(),
                 fraseBencao: document.getElementById("cfg-frase-bencao").value.trim(),
                 tituloGaleria: document.getElementById("cfg-titulo-galeria")?.value.trim() || "Nossos momentos",

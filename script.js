@@ -151,6 +151,9 @@ function aplicarConfigDoSite() {
         localEl.textContent = c.localNome;
     }
     const mapsUrl = c.mapsUrl ? safeUrl(c.mapsUrl) : "";
+    const mapsUrlFesta = c.mapsUrlFesta ? safeUrl(c.mapsUrlFesta) : "";
+    const mesmoLocal = c.mesmoLocal !== false;
+
     const mapsEl = document.getElementById("cfg-maps");
     if (mapsEl && mapsUrl) {
         mapsEl.setAttribute("href", mapsUrl);
@@ -159,6 +162,28 @@ function aplicarConfigDoSite() {
     if (mapsLocalEl && mapsUrl) {
         mapsLocalEl.setAttribute("href", mapsUrl);
     }
+
+    const mapsCerimonia = document.getElementById("cfg-maps-cerimonia");
+    if (mapsCerimonia) {
+        if (mapsUrl) mapsCerimonia.setAttribute("href", mapsUrl);
+        const nomeCer = document.getElementById("cfg-maps-nome-cerimonia");
+        if (nomeCer) nomeCer.textContent = c.localNome || "Local da cerimônia";
+    }
+    const mapsFesta = document.getElementById("cfg-maps-festa");
+    if (mapsFesta) {
+        if (mapsUrlFesta) mapsFesta.setAttribute("href", mapsUrlFesta);
+        const nomeFes = document.getElementById("cfg-maps-nome-festa");
+        if (nomeFes) nomeFes.textContent = c.localNomeFesta || "Local da festa";
+    }
+
+    const painelTexto = document.querySelector(".local-painel-texto");
+    if (painelTexto) {
+        painelTexto.textContent = mesmoLocal
+            ? "Será uma alegria receber você neste dia especial."
+            : `Cerimônia: ${c.localNome || "—"}. Festa: ${c.localNomeFesta || "—"}.`;
+    }
+
+    document.documentElement.dataset.mesmoLocal = mesmoLocal ? "true" : "false";
 
     const localQuando = document.getElementById("cfg-local-quando");
     if (localQuando) {
@@ -708,6 +733,32 @@ function fecharModal(modalEl) {
         }
     }, DURACAO_MODAL_MS);
 }
+
+function locaisSeparados() {
+    const c = window.SITE_CONFIG || {};
+    if (c.mesmoLocal !== false) return false;
+    const festaHref = document.getElementById("cfg-maps-festa")?.getAttribute("href") || c.mapsUrlFesta || "";
+    return !!(festaHref && festaHref !== "#");
+}
+
+function abrirEscolhaMapa(evento) {
+    if (!locaisSeparados()) return;
+    evento.preventDefault();
+    abrirModal(document.getElementById("modal-mapas"));
+}
+
+document.querySelectorAll(".js-abrir-mapa").forEach((el) => {
+    el.addEventListener("click", abrirEscolhaMapa);
+});
+
+const modalMapas = document.getElementById("modal-mapas");
+document.getElementById("fechar-modal-mapas")?.addEventListener("click", () => fecharModal(modalMapas));
+modalMapas?.addEventListener("click", (evento) => {
+    if (evento.target === modalMapas) fecharModal(modalMapas);
+});
+modalMapas?.querySelectorAll(".mapa-escolha").forEach((a) => {
+    a.addEventListener("click", () => fecharModal(modalMapas));
+});
 
 function atualizarContador() {
     const dataIso = window.SITE_CONFIG?.dataCasamento || "2027-04-24";

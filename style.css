@@ -1559,6 +1559,50 @@ button.linha-interacao:focus-visible,
     transform: scale(1) translateY(0);
 }
 
+.modal-mapas {
+    max-width: 380px;
+}
+
+.mapa-escolhas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.mapa-escolha {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid var(--cor-borda-clara);
+    border-radius: var(--raio-ui);
+    text-decoration: none;
+    color: inherit;
+    text-align: left;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.mapa-escolha:hover {
+    border-color: var(--cor-verde-claro);
+    box-shadow: var(--sombra-card);
+    transform: translateY(-1px);
+}
+
+.mapa-escolha-titulo {
+    font-family: "Playfair", serif;
+    font-size: 16px;
+    color: var(--cor-verde);
+    font-weight: 500;
+}
+
+.mapa-escolha-local {
+    font-family: "Playfair", serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cor-texto-suave);
+}
+
 .botao-fechar {
     position: absolute;
     top: 10px;

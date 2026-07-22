@@ -407,6 +407,31 @@ button,
     line-height: 1.4;
 }
 
+.check-linha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.check-linha input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.bloco-local-festa {
+    margin: 8px 0 16px;
+    padding: 14px 14px 4px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+}
+
 .linha-dupla {
     display: grid;
     grid-template-columns: 1fr 1fr;

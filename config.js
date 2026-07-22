@@ -33,6 +33,9 @@ window.SITE_CONFIG = {
     // Local da festa + link do Google Maps
     localNome: "Espaço Salaberry",
     mapsUrl: "https://www.google.com/maps/dir/?api=1&destination=Espaço+Salaberry",
+    mesmoLocal: true,
+    localNomeFesta: "",
+    mapsUrlFesta: "",
 
     // Pais (opcional — cada casal muda)
     paisNoiva: "Warlen e Rosimar",
