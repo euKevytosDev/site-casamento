@@ -2515,14 +2515,18 @@ button.linha-interacao:focus-visible,
         );
     }
 
-    /* Bloco bênção + nomes + convite + data: coluna mais larga */
+    /* Bloco bênção + nomes + convite + data: coluna mais larga e centralizada */
     .bencao,
     .secao-nomes,
     .chamada-casamento,
     .calendario-casamento {
         max-width: 720px;
-        padding-left: 48px;
-        padding-right: 48px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 56px;
+        padding-right: 56px;
+        box-sizing: border-box;
     }
 
     .conteudo,
@@ -2531,25 +2535,28 @@ button.linha-interacao:focus-visible,
     .container-local,
     .container-interacoes {
         max-width: 920px;
+        width: 100%;
         margin-left: auto;
         margin-right: auto;
         padding-left: 40px;
         padding-right: 40px;
+        box-sizing: border-box;
     }
 
     .conteudo {
-        padding-top: 64px;
-        padding-bottom: 28px;
+        padding-top: 72px;
+        padding-bottom: 36px;
     }
 
     .versiculo {
         max-width: 570px;
         font-size: 24px;
-        margin-bottom: 20px;
+        margin-bottom: 28px;
     }
 
     .decoracao-flores--centro {
         opacity: 0.7;
+        margin-bottom: 12px;
     }
 
     .decoracao-flores--local,
@@ -2563,56 +2570,74 @@ button.linha-interacao:focus-visible,
         margin-right: auto;
     }
 
+    .bencao {
+        margin-top: 28px;
+        margin-bottom: 8px;
+    }
+
     .pais {
         max-width: 520px;
         font-size: 18px;
-        margin-bottom: 48px;
+        margin: 0 auto 56px;
         gap: 48px;
+        justify-content: center;
+    }
+
+    .pais .lado {
+        width: auto;
+        min-width: 160px;
+        text-align: center;
     }
 
     .frase-bencao {
         font-size: 28px;
-        margin-bottom: 24px;
+        margin-bottom: 28px;
     }
 
     .secao-nomes {
         max-width: 760px;
-        padding-left: 56px;
-        padding-right: 56px;
+        margin-top: 12px;
+        margin-bottom: 8px;
+        overflow: visible;
     }
 
     .nomes-noivos {
         font-size: clamp(72px, 5.5vw, 96px);
         margin-top: 16px;
-        margin-bottom: 12px;
+        margin-bottom: 20px;
     }
 
-    /* Flores dos nomes: maiores e mais abertas nas laterais */
+    /* Flores dos nomes: maiores, mas contidas (sem empurrar o layout) */
     .decoracao-flores--nomes {
         opacity: 0.88;
-        height: 96px;
-        max-width: 720px;
-        --flor-nomes-esq-x: -88px;
-        --flor-nomes-esq-y: -100px;
-        --flor-nomes-dir-x: -72px;
-        --flor-nomes-dir-y: -200px;
+        height: 88px;
+        max-width: 100%;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        --flor-nomes-esq-x: -64px;
+        --flor-nomes-esq-y: -92px;
+        --flor-nomes-dir-x: -52px;
+        --flor-nomes-dir-y: -188px;
     }
 
     .flor--nomes-esq {
-        width: 200px;
+        width: 180px;
     }
 
     .flor--nomes-dir {
-        width: 220px;
+        width: 200px;
     }
 
     .chamada-casamento {
-        margin-top: -40px;
+        margin-top: -24px;
+        margin-bottom: 16px;
     }
 
     .chamada-casamento .retangulo {
         max-width: 640px;
-        margin: 32px auto;
+        width: 100%;
+        margin: 36px auto;
         padding: 18px 28px;
     }
 
@@ -2623,8 +2648,8 @@ button.linha-interacao:focus-visible,
     .calendario-casamento {
         max-width: 680px;
         gap: 48px;
-        margin-top: 20px;
-        margin-bottom: 56px;
+        margin-top: 28px;
+        margin-bottom: 72px;
     }
 
     .coluna-data.centro {
@@ -2644,6 +2669,11 @@ button.linha-interacao:focus-visible,
     .dia-numero {
         font-size: 64px;
         margin: 8px 0;
+    }
+
+    .nossos-momentos {
+        padding-top: 28px;
+        padding-bottom: 56px;
     }
 
     /* —— Galeria: carrossel mais largo, proporção editorial —— */
@@ -2829,6 +2859,8 @@ button.linha-interacao:focus-visible,
     .chamada-casamento,
     .calendario-casamento {
         max-width: 780px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .secao-nomes {
@@ -2841,15 +2873,17 @@ button.linha-interacao:focus-visible,
     }
 
     .flor--nomes-esq {
-        width: 220px;
+        width: 200px;
     }
 
     .flor--nomes-dir {
-        width: 240px;
+        width: 220px;
     }
 
     .carrossel {
         max-width: 460px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .container-local,
