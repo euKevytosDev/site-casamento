@@ -1264,21 +1264,15 @@ html[data-fonte-nomes="bona-nova"] .nomes-noivos {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 0;
+        top: 0;
         z-index: 3;
         margin: 0;
-        padding: 32px 12px 12px;
+        padding: 12px 12px 28px;
         text-align: left;
         color: #fff;
-        background: linear-gradient(180deg, transparent 0%, rgba(30, 28, 24, 0.78) 100%);
-        border-radius: 0 0 14px 14px;
+        background: linear-gradient(0deg, transparent 0%, rgba(30, 28, 24, 0.78) 100%);
+        border-radius: 14px 14px 0 0;
         pointer-events: none;
-    }
-
-    /* Texto da cerimônia fica na faixa esquerda, fora da sobreposição da festa */
-    .local-cena[data-dois-locais="true"] .local-foto[data-local="cerimonia"] .local-foto-meta {
-        right: 42%;
-        padding-right: 8px;
     }
 
     .local-cena[data-dois-locais="true"] .local-foto-rotulo {
