@@ -1568,36 +1568,12 @@ window.addEventListener("click", (evento) => {
     });
 })();
 
-/* Acesso discreto ao admin: tocar 3 vezes seguidas no número de dias */
-(function initAcessoAdminOculto() {
-    const gatilho = document.getElementById("dias");
-    if (!gatilho) return;
-
-    const TOQUES_NECESSARIOS = 3;
-    const TEMPO_ENTRE_TOQUES_MS = 800;
-    let contagem = 0;
-    let ultimoToque = 0;
-
-    function irParaAdmin() {
-        const token = localStorage.getItem("casamento_admin_token");
-        window.location.href = token ? "admin/painel.html" : "admin/index.html";
+(function initLinkPainel() {
+    const link = document.getElementById("link-painel");
+    if (!link) return;
+    const token = localStorage.getItem("casamento_admin_token");
+    if (token) {
+        link.href = "admin/painel.html";
+        link.textContent = "Abrir painel";
     }
-
-    function registrarToque() {
-        const agora = Date.now();
-
-        if (agora - ultimoToque > TEMPO_ENTRE_TOQUES_MS) {
-            contagem = 0;
-        }
-
-        contagem += 1;
-        ultimoToque = agora;
-
-        if (contagem >= TOQUES_NECESSARIOS) {
-            contagem = 0;
-            irParaAdmin();
-        }
-    }
-
-    gatilho.addEventListener("click", registrarToque);
 })();
