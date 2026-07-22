@@ -2849,10 +2849,10 @@ button.linha-interacao:focus-visible,
         width: 100%;
         margin-left: auto;
         margin-right: auto;
-        --flor-nomes-esq-x: -64px;
+        --flor-nomes-esq-x: -455px;
         --flor-nomes-esq-y: -58px;
-        --flor-nomes-dir-x: -88px;
-        --flor-nomes-dir-y: -188px;
+        --flor-nomes-dir-x: -500px;
+        --flor-nomes-dir-y: -330px;
     }
 
     .flor--nomes-esq {
