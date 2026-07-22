@@ -2891,8 +2891,8 @@ button.linha-interacao:focus-visible,
 
     .local-corpo {
         display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
-        gap: 48px;
+        grid-template-columns: 1.45fr 0.7fr;
+        gap: 36px;
         align-items: center;
         text-align: left;
     }
@@ -2905,7 +2905,7 @@ button.linha-interacao:focus-visible,
     .local-cena[data-dois-locais="true"] .local-fotos {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 16px;
         align-items: start;
     }
 
@@ -2917,7 +2917,7 @@ button.linha-interacao:focus-visible,
         width: 100%;
         max-width: none;
         border-radius: 8px;
-        aspect-ratio: 4 / 5;
+        aspect-ratio: 3 / 4;
         object-fit: cover;
     }
 
