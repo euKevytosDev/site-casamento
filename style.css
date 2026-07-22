@@ -2873,7 +2873,7 @@ button.linha-interacao:focus-visible,
         text-align: center;
         padding-top: 32px;
         padding-bottom: 64px;
-        max-width: 980px;
+        max-width: 1100px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -2894,8 +2894,8 @@ button.linha-interacao:focus-visible,
 
     .local-corpo {
         display: grid;
-        grid-template-columns: 1.45fr 0.7fr;
-        gap: 36px;
+        grid-template-columns: 1.65fr 0.55fr;
+        gap: 28px;
         align-items: center;
         text-align: left;
     }
@@ -2905,11 +2905,20 @@ button.linha-interacao:focus-visible,
         margin: 0;
     }
 
+    .local-cena[data-dois-locais="true"] {
+        max-width: none;
+        width: 100%;
+    }
+
     .local-cena[data-dois-locais="true"] .local-fotos {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        gap: 18px;
         align-items: start;
+    }
+
+    .local-cena[data-dois-locais="true"] .espaco-foto-wrapper {
+        width: 100%;
     }
 
     .local-cena[data-dois-locais="true"] .espaco-foto-wrapper img {
