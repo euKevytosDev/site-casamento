@@ -2854,7 +2854,7 @@ button.linha-interacao:focus-visible,
         /* negativo = empurra para fora da viewport (~metade cortada) */
         --flor-nomes-esq-x: calc(50% - 50vw - 72px);
         --flor-nomes-esq-y: -58px;
-        --flor-nomes-dir-x: calc(50% - 50vw - 72px);
+        --flor-nomes-dir-x: calc(50% - 50vw - 100px);
         --flor-nomes-dir-y: -330px;
     }
 
