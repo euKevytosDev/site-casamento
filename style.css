@@ -1118,7 +1118,7 @@ html[data-fonte-nomes="bona-nova"] .nomes-noivos {
     color: var(--cor-texto-suave);
 }
 
-.local-corpo {
+.local-coluna-fotos {
     width: 100%;
 }
 
@@ -2960,27 +2960,29 @@ button.linha-interacao:focus-visible,
         gap: 28px;
     }
 
-    /* —— Local: título alinhado às fotos + painel ao lado —— */
+    /* —— Local: título sobre as fotos + painel alinhado à esquerda —— */
     .container-local {
         display: grid;
-        text-align: center;
+        grid-template-columns: minmax(0, 1.7fr) minmax(240px, 300px);
+        column-gap: 40px;
+        align-items: center;
+        text-align: left;
         padding-top: 32px;
         padding-bottom: 64px;
         max-width: 1100px;
         margin-left: auto;
         margin-right: auto;
-        align-items: start;
-        row-gap: 20px;
     }
 
-    .local-corpo {
-        display: contents;
+    .local-coluna-fotos {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
     }
 
     .local-cabecalho {
-        grid-column: 1;
-        grid-row: 1;
-        margin-bottom: 0;
+        margin-bottom: 22px;
         padding: 0;
         text-align: center;
     }
@@ -2996,39 +2998,20 @@ button.linha-interacao:focus-visible,
     }
 
     .local-cena {
-        grid-column: 1;
-        grid-row: 2;
         max-width: none;
         margin: 0;
-    }
-
-    .local-painel {
-        grid-column: 2;
-        grid-row: 1 / span 2;
-        align-self: center;
-    }
-
-    /* Duas fotos: título centralizado sobre o par */
-    .container-local[data-dois-locais="true"] {
-        grid-template-columns: minmax(0, 1.7fr) minmax(220px, 0.55fr);
-        column-gap: 28px;
-    }
-
-    .container-local[data-dois-locais="true"] .local-cena {
         width: 100%;
     }
 
-    /* Uma foto: bloco mais central, título em cima da foto, painel mais perto */
+    /* Uma foto: coluna mais estreita, bloco centralizado, painel perto */
     .container-local:not([data-dois-locais="true"]) {
-        grid-template-columns: 420px minmax(200px, 260px);
+        grid-template-columns: 420px minmax(240px, 280px);
         justify-content: center;
         column-gap: 36px;
-        padding-left: 48px;
     }
 
     .container-local:not([data-dois-locais="true"]) .local-cena {
         max-width: 420px;
-        width: 100%;
     }
 
     .container-local:not([data-dois-locais="true"]) .espaco-foto-wrapper img {
@@ -3122,8 +3105,10 @@ button.linha-interacao:focus-visible,
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        text-align: left;
         gap: 10px;
-        padding: 8px 8px 8px 12px;
+        padding: 8px 8px 8px 4px;
+        justify-self: start;
     }
 
     .local-painel-eyebrow {
