@@ -3284,9 +3284,18 @@ button.linha-interacao:focus-visible,
         display: none;
     }
 
+    .rodape-final {
+        padding: 22px 28px 20px;
+    }
+
     .desenvolvedor-rodape {
-        font-size: 12px;
-        bottom: 20px;
+        font-size: 13px;
+    }
+
+    .btn-painel {
+        min-height: 40px;
+        padding: 9px 18px;
+        font-size: 0.88rem;
     }
 
     .secao-recados {
