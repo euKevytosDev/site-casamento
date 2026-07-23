@@ -209,7 +209,7 @@
                             <p class="dica-admin" id="musica-atual-dica">A música começa quando o convidado abre o selo.</p>
 
                             <h3 class="subtitulo-card">Fonte dos nomes (capa e bloco principal)</h3>
-                            <p class="dica-admin">Na capa (selo) os nomes são sempre <strong>branco puro</strong> — aqui você escolhe só o estilo da letra.</p>
+                            <p class="dica-admin">Altera a letra dos nomes na capa (selo) e no bloco principal.</p>
                             <div class="fontes-nomes" id="fontes-nomes" role="listbox" aria-label="Fontes dos nomes dos noivos"></div>
                             <input type="hidden" id="cfg-fonte-nomes" value="great-vibes">
 
@@ -236,8 +236,10 @@
                                 <label>Cor do texto
                                     <input type="color" id="cfg-cor-texto">
                                 </label>
+                                <label>Nomes na capa (selo)<br><small>padrão: branco</small>
+                                    <input type="color" id="cfg-cor-texto-hero" value="#ffffff">
+                                </label>
                             </div>
-                            <p class="dica-admin" style="margin-top:10px;">Os nomes na capa (ao lado do selo) ficam sempre em <strong>branco puro</strong>. Dá para trocar só a fonte abaixo.</p>
 
                             <button type="submit" class="btn-primario" id="btn-salvar-personalizar">Salvar personalização</button>
                             <p id="msg-personalizar" class="mensagem"></p>
@@ -587,7 +589,7 @@
             fundo: "#ffffff",
             fundoBege: "#e0e1cf",
             texto: "#433f3f",
-            textoHero: "#3a4332"
+            textoHero: "#ffffff"
         };
 
         /** Paletas curadas — mesma família de tom em destaque, fundo e texto */
@@ -603,7 +605,7 @@
                     fundo: "#ffffff",
                     fundoBege: "#e8e9dc",
                     texto: "#433f3f",
-                    textoHero: "#3a4332"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -617,7 +619,7 @@
                     fundo: "#ffffff",
                     fundoBege: "#e8eef2",
                     texto: "#3d3a38",
-                    textoHero: "#2e3f4d"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -631,7 +633,7 @@
                     fundo: "#fffdfd",
                     fundoBege: "#f3e8e9",
                     texto: "#4a3f40",
-                    textoHero: "#5c3d44"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -645,7 +647,7 @@
                     fundo: "#fffefe",
                     fundoBege: "#efe6e7",
                     texto: "#3f3637",
-                    textoHero: "#4a2a30"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -659,7 +661,7 @@
                     fundo: "#fffdfb",
                     fundoBege: "#f0e6df",
                     texto: "#443b36",
-                    textoHero: "#5c4030"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -673,7 +675,7 @@
                     fundo: "#fffef9",
                     fundoBege: "#f2ebe0",
                     texto: "#433f38",
-                    textoHero: "#4a4028"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -687,7 +689,7 @@
                     fundo: "#fffef8",
                     fundoBege: "#f0ecd8",
                     texto: "#434038",
-                    textoHero: "#4a4020"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -701,7 +703,7 @@
                     fundo: "#fefeff",
                     fundoBege: "#ebe8f0",
                     texto: "#3f3d42",
-                    textoHero: "#443d52"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -715,7 +717,7 @@
                     fundo: "#fefffe",
                     fundoBege: "#e6efed",
                     texto: "#3a403e",
-                    textoHero: "#2a4540"
+                    textoHero: "#ffffff"
                 }
             },
             {
@@ -729,7 +731,7 @@
                     fundo: "#ffffff",
                     fundoBege: "#ececec",
                     texto: "#3a3a3a",
-                    textoHero: "#2e2e2e"
+                    textoHero: "#ffffff"
                 }
             }
         ];
@@ -756,7 +758,7 @@
         }
 
         function coresIguais(a, b) {
-            const chaves = ["verde", "verdeEscuro", "verdeClaro", "fundo", "fundoBege", "texto"];
+            const chaves = ["verde", "verdeEscuro", "verdeClaro", "fundo", "fundoBege", "texto", "textoHero"];
             return chaves.every((k) => normalizarHex(a[k]) === normalizarHex(b[k]));
         }
 
@@ -767,6 +769,7 @@
             setCor("cfg-cor-fundo", cores.fundo);
             setCor("cfg-cor-fundo-bege", cores.fundoBege);
             setCor("cfg-cor-texto", cores.texto);
+            setCor("cfg-cor-texto-hero", cores.textoHero || CORES_PADRAO.textoHero);
         }
 
         function marcarPaletaAtiva(id) {
@@ -1121,8 +1124,7 @@
                     fundo: getCor("cfg-cor-fundo", CORES_PADRAO.fundo),
                     fundoBege: getCor("cfg-cor-fundo-bege", CORES_PADRAO.fundoBege),
                     texto: getCor("cfg-cor-texto", CORES_PADRAO.texto),
-                    // Nomes na capa: sempre branco (não editável no painel)
-                    textoHero: "#ffffff"
+                    textoHero: getCor("cfg-cor-texto-hero", CORES_PADRAO.textoHero)
                 }
             };
 

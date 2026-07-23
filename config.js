@@ -62,7 +62,7 @@ window.SITE_CONFIG = {
         fundo: "#ffffff",
         fundoBege: "#e0e1cf",
         texto: "#433f3f",
-        textoHero: "#3a4332"
+        textoHero: "#ffffff"
     },
 
     // Música ao abrir o selo (a noiva escolhe no painel)
