@@ -2998,6 +2998,16 @@ button.linha-interacao:focus-visible,
         margin: 0;
     }
 
+    /* Uma foto só (mesmo local): menor, sem ocupar a coluna inteira */
+    .local-cena:not([data-dois-locais="true"]) {
+        max-width: 420px;
+    }
+
+    .local-cena:not([data-dois-locais="true"]) .espaco-foto-wrapper img {
+        width: 100%;
+        max-width: 420px;
+    }
+
     .local-cena[data-dois-locais="true"] {
         max-width: none;
         width: 100%;
