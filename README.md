@@ -4,9 +4,10 @@ Site de casamento completo com design **mobile-first**, animações suaves, conf
 
 ## Demo
 
-- Site ao vivo (produto): https://app.somosloven.com/
-- Demo Sofia & Lucas: https://app.somosloven.com/?site=sofiaelucas
-- Landing Loven: https://somosloven.com/
+- Casamento Rafa & Kevin: https://rafaekevin.com.br/
+- Produto (sites Loven): https://app.somosloven.com.br/
+- Demo Sofia & Lucas: https://app.somosloven.com.br/?site=sofiaelucas
+- Landing Loven: https://somosloven.com.br/
 - Repositório: https://github.com/euKevytosDev/site-casamento
 - API (backend): https://site-casamento-backend-nrfb.onrender.com
 

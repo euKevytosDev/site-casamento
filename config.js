@@ -23,7 +23,7 @@ window.SITE_CONFIG = {
     mesExtenso: "ABRIL",
 
     // Domínio do site (pra meta/WhatsApp)
-    siteUrl: "https://app.somosloven.com/",
+    siteUrl: "https://rafaekevin.com.br/",
 
     // Texto do preview no WhatsApp / redes
     ogDescricao: "Com a bênção de Deus, convidamos você para o nosso casamento.",

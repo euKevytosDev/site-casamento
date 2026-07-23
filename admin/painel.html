@@ -477,9 +477,11 @@
 
         function linkPublicoDoSite() {
             const slug = getSiteIdAtivo();
-            const base = (window.SITE_CONFIG?.siteUrl || "https://app.somosloven.com/").replace(/\/?$/, "/");
-            if (slug === "rafaekevin") return base;
-            return `${base}index.html?site=${encodeURIComponent(slug)}`;
+            // Casamento próprio = domínio pessoal; demais noivas = app Loven
+            if (slug === "rafaekevin") {
+                return (window.SITE_CONFIG?.siteUrl || "https://rafaekevin.com.br/").replace(/\/?$/, "/");
+            }
+            return `https://app.somosloven.com.br/?site=${encodeURIComponent(slug)}`;
         }
 
         function atualizarBlocoCompartilhar() {
