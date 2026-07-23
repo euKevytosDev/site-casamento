@@ -408,6 +408,34 @@ html.site-via-url #cfg-pais-noivo {
     opacity: 0;
 }
 
+/* Feedback enquanto busca /api/site/config (cold start do Render) */
+html.site-carregando .hero .texto::before {
+    content: "Carregando o convite…";
+    display: block;
+    font-family: "Bona Nova", Georgia, serif;
+    font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+    font-style: italic;
+    letter-spacing: 0.04em;
+    color: #5c6548;
+    opacity: 0.85;
+    margin-bottom: 0.75rem;
+    animation: site-carregando-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes site-carregando-pulse {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.95; }
+}
+
+html.site-config-erro .hero .texto::before {
+    content: "Não foi possível carregar. Atualize a página.";
+    display: block;
+    font-family: "Bona Nova", Georgia, serif;
+    font-size: 0.95rem;
+    color: #6b4a3a;
+    margin-bottom: 0.75rem;
+}
+
 /* Espaços vazios (modelo / noiva sem upload) — nunca herda foto da vitrine */
 .hero.foto-vazia,
 .foto2.foto-vazia {

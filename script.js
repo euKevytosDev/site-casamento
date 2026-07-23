@@ -433,34 +433,40 @@ function aplicarFotosDoSite(c) {
 
 /**
  * Busca personalização no backend e mescla em SITE_CONFIG.
- * Se a API falhar (cold start), mantém o config.js local.
+ * Retenta em cold start do Render; se falhar de vez, tira o layout neutro
+ * e mostra placeholders (nunca as fotos da vitrine Rafa & Kevin).
  */
-async function carregarConfigRemota() {
-    try {
-        const res = await fetch(`${API_BASE}/api/site/config`, {
-            headers: apiHeaders()
-        });
-        if (!res.ok) return false;
-        const remoto = await res.json();
-        window.SITE_CONFIG = {
-            ...(window.SITE_CONFIG || {}),
-            ...Object.fromEntries(
-                Object.entries(remoto).filter(([, v]) => v !== null && v !== undefined && v !== "")
-            ),
-            cores: {
-                ...((window.SITE_CONFIG && window.SITE_CONFIG.cores) || {}),
-                ...(remoto.cores || {})
-            },
-            siteId: remoto.siteId || SITE_ID
-        };
-        if (remoto.siteId) {
-            SITE_ID = remoto.siteId;
+async function carregarConfigRemota(tentativas = 5) {
+    for (let i = 0; i < tentativas; i++) {
+        try {
+            const res = await fetch(`${API_BASE}/api/site/config`, {
+                headers: apiHeaders()
+            });
+            if (!res.ok) throw new Error(`config ${res.status}`);
+            const remoto = await res.json();
+            window.SITE_CONFIG = {
+                ...(window.SITE_CONFIG || {}),
+                ...Object.fromEntries(
+                    Object.entries(remoto).filter(([, v]) => v !== null && v !== undefined && v !== "")
+                ),
+                cores: {
+                    ...((window.SITE_CONFIG && window.SITE_CONFIG.cores) || {}),
+                    ...(remoto.cores || {})
+                },
+                siteId: remoto.siteId || SITE_ID
+            };
+            if (remoto.siteId) {
+                SITE_ID = remoto.siteId;
+            }
+            aplicarConfigDoSite();
+            return true;
+        } catch (_) {
+            if (i < tentativas - 1) {
+                await new Promise((r) => setTimeout(r, 700 * (i + 1)));
+            }
         }
-        aplicarConfigDoSite();
-        return true;
-    } catch (_) {
-        return false;
     }
+    return false;
 }
 
 const SITE_VIA_URL = !!slugDaUrl();
@@ -469,8 +475,27 @@ const SITE_VIA_URL = !!slugDaUrl();
 const USAR_LAYOUT_NEUTRO = SITE_VIA_URL && !ehSiteVitrine();
 
 if (USAR_LAYOUT_NEUTRO) {
+    document.documentElement.classList.add("site-carregando");
+    if (SITE_ID) document.title = "Carregando convite…";
     carregarConfigRemota().then((ok) => {
-        if (ok) document.documentElement.classList.remove("site-via-url");
+        document.documentElement.classList.remove("site-via-url", "site-carregando");
+        if (!ok) {
+            // Sem API: nomes genéricos + placeholders — não herda Rafa & Kevin
+            window.SITE_CONFIG = {
+                ...(window.SITE_CONFIG || {}),
+                nomeNoiva: "Noiva",
+                nomeNoivo: "Noivo",
+                nomeCurto: "Nosso casamento",
+                fotoHeroUrl: "",
+                fotoSecundariaUrl: "",
+                fotoLocalUrl: "",
+                fotoLocalFestaUrl: "",
+                fotoRodapeUrl: "",
+                fotosCarrossel: []
+            };
+            aplicarConfigDoSite();
+            document.documentElement.classList.add("site-config-erro");
+        }
     });
 } else {
     aplicarConfigDoSite();

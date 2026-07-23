@@ -17,7 +17,10 @@
                 }
                 var q = new URLSearchParams(location.search);
                 var s = (fromPath || q.get("site") || q.get("siteId") || "").trim().toLowerCase();
-                if (s && s !== "rafaekevin") document.documentElement.classList.add("site-via-url");
+                if (s && s !== "rafaekevin") {
+                    document.documentElement.classList.add("site-via-url", "site-carregando");
+                    document.title = "Carregando convite…";
+                }
             } catch (e) { /* ignore */ }
         })();
     </script>
