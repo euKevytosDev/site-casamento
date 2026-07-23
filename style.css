@@ -2496,38 +2496,43 @@ button.linha-interacao:focus-visible,
 }
 
 .rodape-final {
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 18px;
+    gap: 14px;
     text-align: center;
-    padding: 28px 24px 40px;
-    background: var(--cor-fundo, #fff);
+    padding: 40px 20px 22px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 55%, transparent 100%);
     box-sizing: border-box;
 }
 
 .desenvolvedor-rodape {
     margin: 0;
     max-width: 340px;
-    color: var(--cor-texto-fraco, #9a9688);
+    color: rgba(255, 255, 255, 0.82);
     font-size: 11px;
     letter-spacing: 0.2px;
     font-family: "Playfair", serif;
     font-style: normal;
     line-height: 1.65;
-    text-shadow: none;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 .desenvolvedor-rodape a {
-    color: inherit;
+    color: rgba(255, 255, 255, 0.92);
     text-decoration: none;
-    border-bottom: 1px solid rgba(154, 150, 136, 0.45);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 .desenvolvedor-rodape a:hover {
-    color: var(--cor-verde, #616e48);
-    border-bottom-color: var(--cor-verde, #616e48);
+    color: #fff;
+    border-bottom-color: rgba(255, 255, 255, 0.7);
 }
 
 .btn-painel {
@@ -2535,27 +2540,27 @@ button.linha-interacao:focus-visible,
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    min-height: 42px;
-    padding: 10px 22px;
-    border: 1px solid rgba(90, 74, 58, 0.28);
+    min-height: 40px;
+    padding: 9px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
     border-radius: 999px;
-    background: transparent;
-    color: #5a4a3a;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
     font-family: "Playfair", serif;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     font-weight: 500;
     letter-spacing: 0.04em;
     text-decoration: none;
-    text-shadow: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .btn-painel:hover {
-    background: rgba(90, 74, 58, 0.08);
-    border-color: rgba(90, 74, 58, 0.45);
-    color: #3f3429;
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.85);
+    color: #fff;
     text-decoration: none;
 }
 
@@ -3277,8 +3282,8 @@ button.linha-interacao:focus-visible,
     }
 
     .rodape-final {
-        padding: 36px 28px 48px;
-        gap: 20px;
+        padding: 48px 28px 28px;
+        gap: 16px;
     }
 
     .desenvolvedor-rodape {
