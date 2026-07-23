@@ -2843,7 +2843,7 @@ button.linha-interacao:focus-visible,
         margin-bottom: 20px;
     }
 
-    /* Flores dos nomes: ancoradas nas bordas da viewport (qualquer monitor) */
+    /* Flores dos nomes: coladas na borda (parte fica cortada pela janela) */
     .decoracao-flores--nomes {
         opacity: 0.88;
         height: 88px;
@@ -2851,10 +2851,10 @@ button.linha-interacao:focus-visible,
         width: 100%;
         margin-left: auto;
         margin-right: auto;
-        /* 50% - 50vw = borda da janela; +16px = folga da borda */
-        --flor-nomes-esq-x: calc(50% - 50vw + 16px);
+        /* negativo = empurra para fora da viewport (~metade cortada) */
+        --flor-nomes-esq-x: calc(50% - 50vw - 72px);
         --flor-nomes-esq-y: -58px;
-        --flor-nomes-dir-x: calc(50% - 50vw + 16px);
+        --flor-nomes-dir-x: calc(50% - 50vw - 72px);
         --flor-nomes-dir-y: -330px;
     }
 
