@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteBase /
+
+# Arquivos e pastas reais
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# /admin e assets
+RewriteRule ^(admin|imagens|musicas|landing)(/|$) - [L]
+
+# /slug-do-casal → index do convite
+RewriteRule ^([a-z0-9-]{3,40})/?$ /index.html [L,QSA]

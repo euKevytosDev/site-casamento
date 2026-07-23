@@ -481,7 +481,7 @@
             if (slug === "rafaekevin") {
                 return (window.SITE_CONFIG?.siteUrl || "https://rafaekevin.com.br/").replace(/\/?$/, "/");
             }
-            return `https://app.somosloven.com.br/?site=${encodeURIComponent(slug)}`;
+            return `https://somosloven.com.br/${encodeURIComponent(slug)}`;
         }
 
         function atualizarBlocoCompartilhar() {
@@ -518,8 +518,8 @@
         if (linkVerSite) {
             const slug = getSiteIdAtivo();
             linkVerSite.href = slug === "rafaekevin"
-                ? "../index.html"
-                : `../index.html?site=${encodeURIComponent(slug)}`;
+                ? "../"
+                : `/${encodeURIComponent(slug)}`;
             linkVerSite.target = "_blank";
             linkVerSite.rel = "noopener";
         }

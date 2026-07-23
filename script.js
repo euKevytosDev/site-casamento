@@ -4,11 +4,29 @@ const btnAbrirConvite = document.getElementById("btn-abrir-convite");
 
 const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
 
-/** Slug do casamento: ?site=nicole-teste (painel) ou config.js padrão */
-function resolverSiteId() {
+/** Paths reservados — não são slug de casamento (ex.: /admin, /imagens). */
+const PATHS_RESERVADOS = new Set([
+    "admin", "imagens", "musicas", "landing", "api", "assets", "css", "js",
+    "sucesso", "sucesso.html", "index.html", "favicon.ico", "robots.txt"
+]);
+
+/** Slug em /maria-e-joao (path) ou ?site=maria-e-joao (legado). */
+function slugDaUrl() {
+    const parts = window.location.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
+    if (parts.length === 1) {
+        const p = parts[0].toLowerCase();
+        if (!PATHS_RESERVADOS.has(p) && !p.includes(".") && /^[a-z0-9-]{3,40}$/.test(p)) {
+            return p;
+        }
+    }
     const params = new URLSearchParams(window.location.search);
-    const q = (params.get("site") || params.get("siteId") || "").trim().toLowerCase();
-    if (q) return q;
+    return (params.get("site") || params.get("siteId") || "").trim().toLowerCase();
+}
+
+/** Slug do casamento: path /slug, ?site=, ou config.js padrão */
+function resolverSiteId() {
+    const daUrl = slugDaUrl();
+    if (daUrl) return daUrl;
     return (window.SITE_CONFIG?.siteId || "rafaekevin").trim().toLowerCase();
 }
 
@@ -445,10 +463,7 @@ async function carregarConfigRemota() {
     }
 }
 
-const SITE_VIA_URL = (() => {
-    const params = new URLSearchParams(window.location.search);
-    return !!(params.get("site") || params.get("siteId") || "").trim();
-})();
+const SITE_VIA_URL = !!slugDaUrl();
 
 /** Qualquer casal que não seja a vitrine: não pinta Rafa/Kevin antes da API. */
 const USAR_LAYOUT_NEUTRO = SITE_VIA_URL && !ehSiteVitrine();

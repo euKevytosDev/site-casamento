@@ -23,7 +23,7 @@
                 <label for="slug">Link do site</label>
                 <input type="text" id="slug" required placeholder="maria-e-joao"
                     title="Só o slug, ou cole a URL completa">
-                <p class="campo-dica-admin">Ex.: <code>luizaericardo</code> ou a URL com <code>?site=…</code></p>
+                <p class="campo-dica-admin">Ex.: <code>luizaericardo</code> ou a URL completa do site</p>
 
                 <label for="novaSenha">Nova senha</label>
                 <input type="password" id="novaSenha" autocomplete="new-password" required minlength="6">
@@ -50,9 +50,19 @@
         const slugInput = document.getElementById("slug");
 
         slugInput.addEventListener("blur", () => {
-            const v = slugInput.value.trim();
-            const m = v.match(/[?&]site=([a-z0-9-]+)/i);
-            if (m) slugInput.value = m[1].toLowerCase();
+            let v = slugInput.value.trim();
+            const q = v.match(/[?&]site=([a-z0-9-]+)/i);
+            if (q) {
+                slugInput.value = q[1].toLowerCase();
+                return;
+            }
+            try {
+                if (v.includes("://") || v.startsWith("/")) {
+                    const path = v.includes("://") ? new URL(v).pathname : v;
+                    const parts = path.replace(/^\/+|\/+$/g, "").split("/").filter(Boolean);
+                    if (parts.length) slugInput.value = parts[parts.length - 1].toLowerCase();
+                }
+            } catch (_) { /* ignore */ }
         });
 
         form.addEventListener("submit", async (e) => {
