@@ -477,7 +477,7 @@
 
         function linkPublicoDoSite() {
             const slug = getSiteIdAtivo();
-            const base = (window.SITE_CONFIG?.siteUrl || "https://rafaekevin.com.br/").replace(/\/?$/, "/");
+            const base = (window.SITE_CONFIG?.siteUrl || "https://app.somosloven.com/").replace(/\/?$/, "/");
             if (slug === "rafaekevin") return base;
             return `${base}index.html?site=${encodeURIComponent(slug)}`;
         }
