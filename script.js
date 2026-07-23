@@ -183,9 +183,13 @@ function aplicarConfigDoSite() {
     if (nomeFesFoto) nomeFesFoto.textContent = c.localNomeFesta || "Local da festa";
 
     const cenaLocal = document.getElementById("local-cena");
+    const containerLocal = document.querySelector(".container-local");
     const fotoFestaEl = document.querySelector(".local-foto--festa");
     if (cenaLocal) {
         cenaLocal.dataset.doisLocais = mesmoLocal ? "false" : "true";
+    }
+    if (containerLocal) {
+        containerLocal.dataset.doisLocais = mesmoLocal ? "false" : "true";
     }
     if (fotoFestaEl) {
         fotoFestaEl.hidden = mesmoLocal;
