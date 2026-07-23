@@ -594,6 +594,16 @@ btnAbrirConvite.addEventListener("click", () => {
     }, 800); // tempo igual ao CSS
 });
 
+/* Feedback de aperto no selo (melhor no toque do celular) */
+if (btnAbrirConvite) {
+    const pressOn = () => btnAbrirConvite.classList.add("selo-pressionado");
+    const pressOff = () => btnAbrirConvite.classList.remove("selo-pressionado");
+    btnAbrirConvite.addEventListener("pointerdown", pressOn);
+    btnAbrirConvite.addEventListener("pointerup", pressOff);
+    btnAbrirConvite.addEventListener("pointercancel", pressOff);
+    btnAbrirConvite.addEventListener("pointerleave", pressOff);
+}
+
 // EVENTO DE LOOP
 if (musica) {
     musica.addEventListener("ended", () => {
