@@ -2762,14 +2762,14 @@ button.linha-interacao:focus-visible,
     }
 
     .selo-convite:hover {
-        transform: translateZ(0) scale(1.06) translateY(-2px);
-        filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.36));
+        transform: translateZ(0) scale(1.04) translateY(-1px);
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.34));
     }
 
     .selo-convite:hover:active,
     .selo-convite.selo-pressionado {
-        transform: translateZ(0) scale(0.84) translateY(5px);
-        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.24));
+        transform: translateZ(0) scale(0.9) translateY(3px);
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.26));
     }
 
     /* —— Conteúdo com coluna editorial —— */
