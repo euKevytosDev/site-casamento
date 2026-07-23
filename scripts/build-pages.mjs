@@ -32,7 +32,10 @@ for (const f of ["index.html", "sucesso.html", "landing.css", "landing.js"]) {
   cpSync(join(LANDING, f), join(OUT, f));
 }
 cpSync(join(LANDING, "imagens"), join(OUT, "imagens"), { recursive: true });
-
+const landingFavicon = join(LANDING, "favicon.ico");
+if (existsSync(landingFavicon)) {
+  cpSync(landingFavicon, join(OUT, "favicon.ico"));
+}
 const APP = join(OUT, "app");
 mkdirSync(APP, { recursive: true });
 
