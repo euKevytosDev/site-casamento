@@ -208,8 +208,8 @@
                             <input type="hidden" id="cfg-musica-url">
                             <p class="dica-admin" id="musica-atual-dica">A música começa quando o convidado abre o selo.</p>
 
-                            <h3 class="subtitulo-card">Fonte dos nomes (bloco principal)</h3>
-                            <p class="dica-admin">Só altera os nomes dos noivos <strong>abaixo dos pais</strong>. A capa (hero) continua com Playfair itálico.</p>
+                            <h3 class="subtitulo-card">Fonte dos nomes (capa e bloco principal)</h3>
+                            <p class="dica-admin">Na capa (selo) os nomes são sempre <strong>branco puro</strong> — aqui você escolhe só o estilo da letra.</p>
                             <div class="fontes-nomes" id="fontes-nomes" role="listbox" aria-label="Fontes dos nomes dos noivos"></div>
                             <input type="hidden" id="cfg-fonte-nomes" value="great-vibes">
 
@@ -236,10 +236,8 @@
                                 <label>Cor do texto
                                     <input type="color" id="cfg-cor-texto">
                                 </label>
-                                <label>Nomes na capa
-                                    <input type="color" id="cfg-cor-texto-hero">
-                                </label>
                             </div>
+                            <p class="dica-admin" style="margin-top:10px;">Os nomes na capa (ao lado do selo) ficam sempre em <strong>branco puro</strong>. Dá para trocar só a fonte abaixo.</p>
 
                             <button type="submit" class="btn-primario" id="btn-salvar-personalizar">Salvar personalização</button>
                             <p id="msg-personalizar" class="mensagem"></p>
@@ -758,7 +756,7 @@
         }
 
         function coresIguais(a, b) {
-            const chaves = ["verde", "verdeEscuro", "verdeClaro", "fundo", "fundoBege", "texto", "textoHero"];
+            const chaves = ["verde", "verdeEscuro", "verdeClaro", "fundo", "fundoBege", "texto"];
             return chaves.every((k) => normalizarHex(a[k]) === normalizarHex(b[k]));
         }
 
@@ -769,7 +767,6 @@
             setCor("cfg-cor-fundo", cores.fundo);
             setCor("cfg-cor-fundo-bege", cores.fundoBege);
             setCor("cfg-cor-texto", cores.texto);
-            setCor("cfg-cor-texto-hero", cores.textoHero);
         }
 
         function marcarPaletaAtiva(id) {
@@ -1124,7 +1121,8 @@
                     fundo: getCor("cfg-cor-fundo", CORES_PADRAO.fundo),
                     fundoBege: getCor("cfg-cor-fundo-bege", CORES_PADRAO.fundoBege),
                     texto: getCor("cfg-cor-texto", CORES_PADRAO.texto),
-                    textoHero: getCor("cfg-cor-texto-hero", CORES_PADRAO.textoHero)
+                    // Nomes na capa: sempre branco (não editável no painel)
+                    textoHero: "#ffffff"
                 }
             };
 

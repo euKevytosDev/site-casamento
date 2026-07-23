@@ -303,8 +303,8 @@ function aplicarConfigDoSite() {
             verdeClaro: "--cor-verde-claro",
             fundo: "--cor-fundo",
             fundoBege: "--cor-fundo-bege",
-            texto: "--cor-texto",
-            textoHero: "--cor-texto-hero"
+            texto: "--cor-texto"
+            // textoHero ignorado: nomes na capa (#cfg-nomes-hero) são sempre #fff
         };
         Object.entries(map).forEach(([chave, cssVar]) => {
             if (c.cores[chave]) root.setProperty(cssVar, c.cores[chave]);
