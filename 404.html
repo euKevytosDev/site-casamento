@@ -8,7 +8,7 @@
         /* Layout neutro ao abrir outro casal (/slug ou ?site=) — não flasha fotos da vitrine */
         (function () {
             try {
-                var reserved = { admin:1, imagens:1, musicas:1, landing:1, api:1, assets:1 };
+                var reserved = { admin:1, app:1, imagens:1, musicas:1, landing:1, api:1, assets:1 };
                 var parts = location.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
                 var fromPath = "";
                 if (parts.length === 1) {

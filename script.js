@@ -6,7 +6,7 @@ const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-
 
 /** Paths reservados — não são slug de casamento (ex.: /admin, /imagens). */
 const PATHS_RESERVADOS = new Set([
-    "admin", "imagens", "musicas", "landing", "api", "assets", "css", "js",
+    "admin", "app", "imagens", "musicas", "landing", "api", "assets", "css", "js",
     "sucesso", "sucesso.html", "index.html", "favicon.ico", "robots.txt"
 ]);
 
