@@ -73,16 +73,36 @@ if (existsSync(join(APP, "404.html"))) {
 // Rewrites Cloudflare Pages (arquivo estático ganha de redirect)
 writeFileSync(
   join(OUT, "_redirects"),
-  `# Painel
+  `# Painel (arquivos estáticos têm prioridade; isso só cobre /admin)
 /admin /app/admin/index.html 200
 /admin/ /app/admin/index.html 200
 /admin/* /app/admin/:splat 200
+`
+);
 
-# Assets do convite
-/app/* /app/:splat 200
+// Function: /sofiaelucas → convite (não mexe em landing.css, imagens, etc.)
+const fnDir = join(OUT, "functions");
+mkdirSync(fnDir, { recursive: true });
+writeFileSync(
+  join(fnDir, "[slug].js"),
+  `const RESERVED = new Set([
+  "admin", "app", "imagens", "musicas", "landing", "api", "assets",
+  "favicon.ico", "robots.txt", "sucesso.html", "index.html",
+  "landing.css", "landing.js", "_headers", "_redirects"
+]);
 
-# Convite por slug: somosloven.com.br/nome-do-casal
-/:slug /app/index.html 200
+export async function onRequest(context) {
+  const slug = String(context.params.slug || "").toLowerCase();
+  if (!slug || slug.includes(".") || RESERVED.has(slug)) {
+    return context.next();
+  }
+  if (!/^[a-z0-9-]{3,40}$/.test(slug)) {
+    return context.next();
+  }
+
+  const url = new URL(context.request.url);
+  return context.env.ASSETS.fetch(new URL("/app/index.html", url.origin));
+}
 `
 );
 
