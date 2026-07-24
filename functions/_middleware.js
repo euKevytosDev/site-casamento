@@ -84,14 +84,19 @@ export async function onRequest(context) {
           cfg.ogDescricao ||
           `Convite de casamento de ${nomes}. Confirme presença e veja os detalhes.`;
         const pageUrl = `${url.origin}/${slug}`;
-        // Preferência: foto do casal; fallback: OG padrão do app
         const image =
           cfg.fotoHeroUrl ||
           cfg.fotoSecundariaUrl ||
           absUrl(url.origin, "app/imagens/og-image.jpg");
         html = injectOg(html, { title, description, url: pageUrl, image });
+      } else if (slug === "sofiaelucas") {
+        html = injectOg(html, {
+          title: "Sofia & Lucas · Casamento",
+          description: "Demonstração Loven — site de casamento com RSVP e lista de presentes.",
+          url: `${url.origin}/${slug}`,
+          image: absUrl(url.origin, "imagens/og-image.jpg"),
+        });
       } else {
-        // Fallback se a API estiver fora: pelo menos não mostra Rafa & Kevin
         html = injectOg(html, {
           title: "Casamento · Loven",
           description: "Convite de casamento digital.",
