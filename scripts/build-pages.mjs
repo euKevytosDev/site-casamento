@@ -28,7 +28,15 @@ mustExist(join(ROOT, "functions", "_middleware.js"), "functions/_middleware.js")
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
-for (const f of ["index.html", "sucesso.html", "landing.css", "landing.js"]) {
+for (const f of [
+  "index.html",
+  "sucesso.html",
+  "privacidade.html",
+  "termos.html",
+  "exclusao-de-conta.html",
+  "landing.css",
+  "landing.js",
+]) {
   cpSync(join(LANDING, f), join(OUT, f));
 }
 cpSync(join(LANDING, "imagens"), join(OUT, "imagens"), { recursive: true });
@@ -75,6 +83,9 @@ writeFileSync(
         "/landing.css",
         "/landing.js",
         "/sucesso.html",
+        "/privacidade.html",
+        "/termos.html",
+        "/exclusao-de-conta.html",
         "/favicon.ico",
         "/index.html",
       ],
