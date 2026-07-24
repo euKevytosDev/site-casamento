@@ -101,7 +101,7 @@ a:hover {
 .links-login {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     margin-top: 24px;
     padding-top: 20px;
     border-top: 1px solid var(--border);
@@ -109,10 +109,11 @@ a:hover {
 }
 
 .links-login .link-voltar {
-    margin-top: 0;
+    margin: 0;
     color: var(--text-muted);
     text-decoration: none;
     font-size: 13px;
+    line-height: 1.4;
 }
 
 .links-login .link-voltar:hover {
