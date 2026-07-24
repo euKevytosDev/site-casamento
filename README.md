@@ -1,111 +1,88 @@
 # Rafaella & Kevin — Site de Casamento
 
-Site de casamento completo com design **mobile-first**, animações suaves, confirmação de presença, lista de presentes e painel administrativo. Desenvolvido como projeto pessoal para o casamento de Rafaella e Kevin (24.04.2027).
+Site do nosso casamento (24/04/2027): convite animado, galeria, confirmação de presença, lista de presentes e painel admin. Feito mobile-first porque praticamente todo mundo abre pelo celular.
 
-## Demo
+O front é HTML/CSS/JS puro. Os dados vêm de uma API Spring Boot em repositório separado.
 
-- Casamento Rafa & Kevin: https://rafaekevin.com.br/
-- Landing Loven: https://somosloven.com.br/
-- Site da noiva (exemplo): https://somosloven.com.br/sofiaelucas
+## Links
+
+- Nosso site: https://rafaekevin.com.br/
+- Landing da marca (Loven): https://somosloven.com.br/
+- Demo de outro casal: https://somosloven.com.br/sofiaelucas
 - Painel: https://somosloven.com.br/admin/
-- Repositório: https://github.com/euKevytosDev/site-casamento
-- API (backend): https://site-casamento-backend-nrfb.onrender.com
+- API: https://site-casamento-backend-nrfb.onrender.com
+- Backend: [site-casamento-backend](https://github.com/euKevytosDev/site-casamento-backend)
 
-## Sobre o projeto
+## O que o convidado vê
 
-Experiência interativa para convidados: abertura com convite animado, galeria de fotos, confirmação de presença em família, lista de presentes com compra online e trilha sonora ambiente.
+- Abertura com selo de convite
+- Galeria de fotos
+- Confirmação de presença (sozinho ou em família)
+- Lista de presentes com reserva
+- Música de fundo
+- Layout pensado pra tela pequena
 
-O front-end consome uma **API REST** em Spring Boot (repositório separado) hospedada na Render, com banco PostgreSQL no Neon.
+## Painel admin (`/admin`)
+
+Login com JWT. Dá pra ver/remover confirmações e cadastrar, editar ou apagar presentes (com upload de imagem via Cloudinary).
 
 ## Stack
 
-| Tecnologia | Uso |
-|---|---|
-| HTML5 | Estrutura das seções |
-| CSS3 | Layout, animações, responsividade |
-| JavaScript (vanilla) | Convite, presença, presentes, fetch à API |
-| Spring Boot + PostgreSQL | Backend (repo separado) |
-| Cloudinary | Upload de imagens dos presentes |
-| GitHub Pages | Hospedagem do front-end |
-| Render + Neon | Hospedagem da API e banco |
+| Camada | Tecnologia |
+|--------|------------|
+| Front | HTML, CSS, JavaScript (vanilla) |
+| Back | Spring Boot + PostgreSQL (Neon) |
+| Imagens | Cloudinary |
+| Host front | GitHub Pages / Hostinger (domínio próprio) |
+| Host API | Render |
 
-## Funcionalidades
-
-### Para convidados
-- Hero com selo de convite interativo
-- Galeria de fotos do casal
-- Confirmação de presença (individual ou em família)
-- Lista de presentes com reserva/compra
-- Player de músicas ambiente
-- Layout otimizado para celular
-
-### Painel admin (`/admin`)
-- Login com JWT
-- Gerenciar confirmações de presença
-- Cadastrar, editar e remover presentes (com upload de imagem)
-
-## Estrutura de pastas
+## Estrutura
 
 ```text
-site-casamento/
-├── index.html          # Site principal para convidados
-├── style.css           # Estilos e animações
-├── script.js           # Lógica do site + integração com API
-├── imagens/            # Fotos do casal e elementos visuais
-├── musicas/            # Trilha sonora do site
+├── index.html      # site dos convidados
+├── style.css
+├── script.js       # convite, presença, presentes, fetch
+├── imagens/
+├── musicas/
 └── admin/
-    ├── index.html      # Tela de login
-    ├── painel.html     # Painel administrativo
+    ├── index.html  # login
+    ├── painel.html
     ├── admin.css
     └── admin.js
 ```
 
-## Integração com a API
-
-O front-end aponta para a API em produção:
+## Como o front fala com a API
 
 ```javascript
 const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 ```
 
-### Principais endpoints usados
+Endpoints que o site mais usa:
 
-| Método | Rota | Função |
-|---|---|---|
+| Método | Rota | Uso |
+|--------|------|-----|
 | GET | `/api/presenca` | Listar confirmações |
-| POST | `/api/presenca/confirmar-familia` | Confirmar família inteira |
+| POST | `/api/presenca/confirmar-familia` | Confirmar família |
 | GET | `/api/presentes` | Listar presentes |
-| POST | `/api/presentes/{id}/comprar` | Reservar presente |
+| POST | `/api/presentes/{id}/comprar` | Reservar |
 
-Backend completo: [site-casamento-backend](https://github.com/euKevytosDev/site-casamento-backend)
+Pra testar com API local, troca o `API_BASE` em `script.js` para `http://localhost:8080`.
 
-## Como rodar localmente
+## Rodar local
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/euKevytosDev/site-casamento.git
-   ```
-2. Abra `index.html` no navegador ou use **Live Server**.
-3. Para testar com API local, altere `API_BASE` em `script.js` para `http://localhost:8080`.
+```bash
+git clone https://github.com/euKevytosDev/site-casamento.git
+```
 
-> **Nota:** a API na Render pode demorar ~30s na primeira requisição (plano gratuito).
+Abre o `index.html` no navegador ou com Live Server. Se a API na Render estiver “fria”, a primeira resposta pode demorar uns 30s (plano free).
 
-## Deploy
+## Por que vanilla?
 
-- **Front-end:** GitHub Pages (branch `main`)
-- **Back-end:** Render — ver README do repositório `site-casamento-backend`
-
-## Conceitos de JavaScript usados
-
-- `fetch` para comunicação com API REST
-- `addEventListener` para interações (convite, modais, formulários)
-- Manipulação do DOM (`querySelector`, `innerHTML`, classes)
-- `setTimeout` e funções autoexecutáveis (IIFE)
-- Validação e feedback visual para o usuário
+Queria controle total do visual e das animações sem carregar framework pra um site de uma página. O JS fica em cima de `fetch`, DOM e eventos — o suficiente pro fluxo dos convidados e do admin.
 
 ## Autor
 
-**Raian Kevin** — Desenvolvedor Full Stack
+Raian Kevin — Full Stack
 
 - GitHub: [@euKevytosDev](https://github.com/euKevytosDev)
 - Portfólio: [portfolio-raian](https://github.com/euKevytosDev/portfolio-raian)
