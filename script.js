@@ -315,6 +315,33 @@ function aplicarConfigDoSite() {
 
     aplicarFotosDoSite(c);
     atualizarOpcaoCartaoPresente(c);
+    atualizarPrazoConfirmacao(c);
+}
+
+function formatarDataLimiteConfirmacao(iso) {
+    if (!iso || typeof iso !== "string") return "";
+    const partes = iso.trim().split("-");
+    if (partes.length !== 3) return "";
+    const data = new Date(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2]));
+    if (Number.isNaN(data.getTime())) return "";
+    return data.toLocaleDateString("pt-BR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+}
+
+function atualizarPrazoConfirmacao(c) {
+    const el = document.getElementById("prazo-confirmacao");
+    if (!el) return;
+    const formatada = formatarDataLimiteConfirmacao(c?.dataLimiteConfirmacao);
+    if (!formatada) {
+        el.hidden = true;
+        el.textContent = "";
+        return;
+    }
+    el.textContent = `Confirme sua presença até ${formatada}.`;
+    el.hidden = false;
 }
 
 function atualizarOpcaoCartaoPresente(c) {
@@ -918,6 +945,7 @@ const formulario = document.getElementById("form-presenca"); // Captura o formul
 
 // FUNÇÃO PARA ABRIR O MODAL
 botaoPresenca.addEventListener("click", () => {
+    atualizarPrazoConfirmacao(window.SITE_CONFIG);
     abrirModal(modalPresenca);
     atualizarInterfaceLista();
 });

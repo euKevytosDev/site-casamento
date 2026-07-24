@@ -94,6 +94,10 @@
                                 </div>
                             </div>
 
+                            <label for="cfg-data-limite-confirmacao">Confirmar presença até</label>
+                            <input type="date" id="cfg-data-limite-confirmacao">
+                            <p class="dica-admin">Opcional. Aparece no topo do modal de presença. Deixe vazio para não mostrar.</p>
+
                             <div class="linha-dupla">
                                 <div>
                                     <label for="cfg-dia-semana">Dia da semana</label>
@@ -874,6 +878,7 @@
             document.getElementById("cfg-nome-curto").value = cfg.nomeCurto || "";
             document.getElementById("cfg-data").value = cfg.dataCasamento || "";
             document.getElementById("cfg-hora").value = cfg.horaCasamento || "";
+            document.getElementById("cfg-data-limite-confirmacao").value = cfg.dataLimiteConfirmacao || "";
             document.getElementById("cfg-dia-semana").value = cfg.diaSemana || "";
             document.getElementById("cfg-mes").value = cfg.mesExtenso || "";
             document.getElementById("cfg-pais-noiva").value = cfg.paisNoiva || "";
@@ -1095,6 +1100,7 @@
                 nomeCurto: document.getElementById("cfg-nome-curto").value.trim(),
                 dataCasamento: document.getElementById("cfg-data").value || null,
                 horaCasamento: document.getElementById("cfg-hora").value.trim(),
+                dataLimiteConfirmacao: document.getElementById("cfg-data-limite-confirmacao")?.value || null,
                 diaSemana: document.getElementById("cfg-dia-semana").value.trim(),
                 mesExtenso: document.getElementById("cfg-mes").value.trim(),
                 paisNoiva: document.getElementById("cfg-pais-noiva").value.trim(),

@@ -1809,6 +1809,18 @@ button.linha-interacao:focus-visible,
     margin: 0 0 5px 0;
 }
 
+.prazo-confirmacao {
+    font-family: "Playfair", serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cor-verde);
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    background: rgba(97, 110, 72, 0.12);
+    border-radius: 8px;
+    line-height: 1.35;
+}
+
 .subtitulo-modal {
     font-family: "Playfair", serif;
     font-style: italic;
