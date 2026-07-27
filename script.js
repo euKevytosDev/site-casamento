@@ -23,10 +23,19 @@ function slugDaUrl() {
     return (params.get("site") || params.get("siteId") || "").trim().toLowerCase();
 }
 
-/** Slug do casamento: path /slug, ?site=, ou config.js padrão */
+/** Domínio próprio do casal (ex.: rafaekevin.com.br → rafaekevin) */
+function slugDoHost() {
+    const h = window.location.hostname.toLowerCase();
+    if (h === "rafaekevin.com.br" || h === "www.rafaekevin.com.br") return "rafaekevin";
+    return "";
+}
+
+/** Slug do casamento: path /slug, domínio próprio, ?site=, ou config.js */
 function resolverSiteId() {
     const daUrl = slugDaUrl();
     if (daUrl) return daUrl;
+    const doHost = slugDoHost();
+    if (doHost) return doHost;
     return (window.SITE_CONFIG?.siteId || "rafaekevin").trim().toLowerCase();
 }
 
