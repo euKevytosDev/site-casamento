@@ -1,15 +1,71 @@
-const RESERVED = new Set([
-  "admin", "app", "imagens", "musicas", "landing", "api", "assets",
-  "favicon.ico", "robots.txt", "sucesso.html", "index.html",
-  "landing.css", "landing.js", "privacidade.html", "termos.html",
-  "exclusao-de-conta.html"
+/**
+ * Host routing:
+ * - casamento.somosloven.com.br / rafaekevin.com.br → SaaS casamento (/casamento/*)
+ * - somosloven.com.br → surpresas (raiz)
+ */
+
+const WEDDING_DOMAINS = new Set([
+  "casamento.somosloven.com.br",
+  "rafaekevin.com.br",
+  "www.rafaekevin.com.br",
 ]);
 
-/** Domínio próprio → slug do casamento no banco */
-const CUSTOM_DOMAINS = {
+const CUSTOM_DOMAIN_SLUG = {
   "rafaekevin.com.br": "rafaekevin",
   "www.rafaekevin.com.br": "rafaekevin",
 };
+
+const WEDDING_RESERVED = new Set([
+  "admin",
+  "app",
+  "imagens",
+  "musicas",
+  "landing",
+  "api",
+  "assets",
+  "favicon.ico",
+  "robots.txt",
+  "sucesso.html",
+  "index.html",
+  "landing.css",
+  "landing.js",
+  "privacidade.html",
+  "termos.html",
+  "exclusao-de-conta.html",
+  "casamento",
+]);
+
+const SURPRESA_PAGE_MAP = {
+  criar: "/criar.html",
+  login: "/login.html",
+  pricing: "/pricing.html",
+  conta: "/conta.html",
+  historia: "/historia.html",
+};
+
+const SURPRESA_RESERVED = new Set([
+  "",
+  "index",
+  "index.html",
+  "criar",
+  "criar.html",
+  "login",
+  "login.html",
+  "pricing",
+  "pricing.html",
+  "historia",
+  "historia.html",
+  "conta",
+  "conta.html",
+  "amizade",
+  "amizade.html",
+  "css",
+  "js",
+  "assets",
+  "api",
+  "favicon.ico",
+  "casamento",
+]);
 
 const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 
@@ -25,11 +81,6 @@ function absUrl(origin, path) {
   if (!path) return "";
   if (/^https?:\/\//i.test(path)) return path;
   return `${origin}/${String(path).replace(/^\//, "")}`;
-}
-
-function slugFromHost(hostname) {
-  const h = String(hostname || "").toLowerCase();
-  return CUSTOM_DOMAINS[h] || null;
 }
 
 function injectOg(html, { title, description, url, image }) {
@@ -74,50 +125,68 @@ async function fetchSiteConfig(slug) {
   }
 }
 
-async function serveConvite(context, url, slug) {
-  const assetRes = await context.env.ASSETS.fetch(new URL("/app/convite.html", url.origin));
+async function serveHtmlAsset(context, assetPath) {
+  const url = new URL(context.request.url);
+  const assetRes = await context.env.ASSETS.fetch(new URL(assetPath, url.origin));
+  if (!assetRes.ok) return assetRes;
+  const html = await assetRes.text();
+  const headers = new Headers(assetRes.headers);
+  headers.set("content-type", "text/html; charset=utf-8");
+  headers.delete("Location");
+  return new Response(html, { status: 200, headers });
+}
+
+async function serveWeddingConvite(context, url, slug) {
+  const assetRes = await context.env.ASSETS.fetch(
+    new URL("/casamento/app/convite.html", url.origin)
+  );
   let html = await assetRes.text();
 
   const cfg = await fetchSiteConfig(slug);
-  const pageUrl = slugFromHost(url.hostname)
-    ? `${url.origin}/`
-    : `${url.origin}/${slug}`;
+  const hostSlug = CUSTOM_DOMAIN_SLUG[url.hostname.toLowerCase()];
+  const pageUrl = hostSlug ? `${url.origin}/` : `${url.origin}/${slug}`;
 
   if (cfg) {
     const noiva = (cfg.nomeNoiva || "").trim();
     const noivo = (cfg.nomeNoivo || "").trim();
     const nomes = [noiva, noivo].filter(Boolean).join(" & ") || "Casamento";
-    const title = `${nomes} · Casamento`;
-    const description =
-      cfg.ogDescricao ||
-      `Convite de casamento de ${nomes}. Confirme presença e veja os detalhes.`;
-    const image =
-      cfg.fotoHeroUrl ||
-      cfg.fotoSecundariaUrl ||
-      absUrl(url.origin, "app/imagens/og-image.jpg");
-    html = injectOg(html, { title, description, url: pageUrl, image });
+    html = injectOg(html, {
+      title: `${nomes} · Casamento`,
+      description:
+        cfg.ogDescricao ||
+        `Convite de casamento de ${nomes}. Confirme presença e veja os detalhes.`,
+      url: pageUrl,
+      image:
+        cfg.fotoHeroUrl ||
+        cfg.fotoSecundariaUrl ||
+        absUrl(url.origin, "casamento/app/imagens/og-image.jpg"),
+    });
   } else if (slug === "sofiaelucas") {
     html = injectOg(html, {
       title: "Sofia & Lucas · Casamento",
       description: "Demonstração Loven — site de casamento com RSVP e lista de presentes.",
       url: pageUrl,
-      image: absUrl(url.origin, "imagens/og-image.jpg"),
+      image: absUrl(url.origin, "casamento/imagens/og-image.jpg"),
     });
   } else if (slug === "rafaekevin") {
     html = injectOg(html, {
       title: "Rafaella & Kevin · Casamento",
       description: "Com a bênção de Deus, convidamos você para o nosso casamento.",
       url: pageUrl,
-      image: absUrl(url.origin, "app/imagens/og-image.jpg"),
+      image: absUrl(url.origin, "casamento/app/imagens/og-image.jpg"),
     });
   } else {
     html = injectOg(html, {
       title: "Casamento · Loven",
       description: "Convite de casamento digital.",
       url: pageUrl,
-      image: absUrl(url.origin, "app/imagens/og-image.jpg"),
+      image: absUrl(url.origin, "casamento/app/imagens/og-image.jpg"),
     });
   }
+
+  // Assets do convite ficam em /casamento/app/ — ajusta paths relativos comuns
+  html = html.replace(/(href|src)="\/(?!casamento\/)/g, '$1="/casamento/');
+  html = html.replace(/(href|src)='\/(?!casamento\/)/g, "$1='/casamento/");
 
   const headers = new Headers(assetRes.headers);
   headers.set("content-type", "text/html; charset=utf-8");
@@ -125,33 +194,71 @@ async function serveConvite(context, url, slug) {
   return new Response(html, { status: 200, headers });
 }
 
-export async function onRequest(context) {
+async function handleWedding(context) {
   const url = new URL(context.request.url);
+  const host = url.hostname.toLowerCase();
   const parts = url.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
-  const hostSlug = slugFromHost(url.hostname);
+  const hostSlug = CUSTOM_DOMAIN_SLUG[host];
 
-  // Domínio próprio do casal: raiz = convite (não a landing Loven)
   if (hostSlug) {
     const first = parts[0];
     if (
       !first ||
       (!first.includes(".") &&
-        !RESERVED.has(first) &&
+        !WEDDING_RESERVED.has(first) &&
         /^[a-z0-9-]{3,40}$/.test(first))
     ) {
-      // / ou /qualquer-slug-ignorado no domínio do casal → sempre o site certo
-      return serveConvite(context, url, hostSlug);
+      return serveWeddingConvite(context, url, hostSlug);
     }
-    return context.next();
   }
 
-  // somosloven.com.br/{slug}
   if (parts.length === 1) {
     const slug = parts[0].toLowerCase();
-    if (!slug.includes(".") && !RESERVED.has(slug) && /^[a-z0-9-]{3,40}$/.test(slug)) {
-      return serveConvite(context, url, slug);
+    if (!slug.includes(".") && !WEDDING_RESERVED.has(slug) && /^[a-z0-9-]{3,40}$/.test(slug)) {
+      return serveWeddingConvite(context, url, slug);
     }
+  }
+
+  if (parts.length === 0) {
+    return serveHtmlAsset(context, "/casamento/index.html");
+  }
+
+  // /admin → /casamento/app/admin (legado do _redirects)
+  if (parts[0] === "admin") {
+    const rest = parts.slice(1).join("/");
+    const assetPath = rest
+      ? `/casamento/app/admin/${rest}`
+      : "/casamento/app/admin/index.html";
+    return context.env.ASSETS.fetch(new URL(assetPath + url.search, url.origin));
+  }
+
+  // restante → /casamento{pathname}
+  const assetPath = `/casamento${url.pathname}`.replace(/\/+/g, "/");
+  return context.env.ASSETS.fetch(new URL(assetPath + url.search, url.origin));
+}
+
+async function handleSurpresa(context) {
+  const url = new URL(context.request.url);
+  const parts = url.pathname.split("/").filter(Boolean);
+  const first = (parts[0] || "").toLowerCase();
+
+  if (parts.length === 0) return context.next();
+  if (parts.length > 1 || first.includes(".")) return context.next();
+
+  const mapped = SURPRESA_PAGE_MAP[first];
+  if (mapped) return serveHtmlAsset(context, mapped);
+
+  if (!SURPRESA_RESERVED.has(first)) {
+    return serveHtmlAsset(context, "/historia.html");
   }
 
   return context.next();
+}
+
+export async function onRequest(context) {
+  const host = new URL(context.request.url).hostname.toLowerCase();
+  if (WEDDING_DOMAINS.has(host) || host.startsWith("casamento.")) {
+    return handleWedding(context);
+  }
+  return handleSurpresa(context);
 }

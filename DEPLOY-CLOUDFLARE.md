@@ -1,12 +1,31 @@
 # Cloudflare Pages — Loven
 
-## O que sobe
+## Deploy unificado (surpresas + casamento)
+
+O projeto Pages **`loven`** serve os dois produtos por hostname:
+
+| Host | Conteúdo |
+|------|----------|
+| `somosloven.com.br` | Surpresas |
+| `casamento.somosloven.com.br` | Landing + convites + admin |
+
+```bash
+node scripts/build-unified-pages.mjs
+npx wrangler pages deploy dist-unified --project-name=loven
+```
+
+Se `casamento.somosloven.com.br` ficar pending, crie no DNS da zona:
+
+- `casamento` → CNAME `loven.pages.dev` (proxied)
+- `www` → CNAME `loven.pages.dev` (proxied)
+
+## O que sobe (legado / referência)
 
 | URL | Conteúdo |
 |-----|----------|
-| `somosloven.com.br/` | Landing |
-| `somosloven.com.br/sofiaelucas` | Convite |
-| `somosloven.com.br/admin/` | Painel |
+| `casamento.somosloven.com.br/` | Landing |
+| `casamento.somosloven.com.br/sofiaelucas` | Convite |
+| `casamento.somosloven.com.br/admin/` | Painel |
 
 ## Build local
 
@@ -28,13 +47,15 @@ npx wrangler pages deploy dist-pages --project-name=loven
 ```
 
 3. No dashboard Cloudflare → **Workers & Pages** → projeto **loven** → **Custom domains**  
-   → adiciona `somosloven.com.br` e `www.somosloven.com.br`
+   → adiciona `casamento.somosloven.com.br`
+
+> O apex `somosloven.com.br` fica no projeto **loven-surpresa** (produto de surpresas).
 
 4. No registrador do domínio, aponta DNS conforme o Cloudflare mostrar (geralmente nameservers Cloudflare **ou** registro CNAME/`A`).
 
 ## Domínio do casamento (ex.: rafaekevin.com.br)
 
-O site do casal já roda em `somosloven.com.br/rafaekevin`. Para o domínio próprio:
+O site do casal já roda em `casamento.somosloven.com.br/rafaekevin`. Para o domínio próprio:
 
 1. Cloudflare → **Workers & Pages** → **loven** → **Custom domains** → **Set up a custom domain**
 2. Adiciona `rafaekevin.com.br` e `www.rafaekevin.com.br`

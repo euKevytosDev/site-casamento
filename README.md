@@ -7,9 +7,9 @@ O front é HTML/CSS/JS puro. Os dados vêm de uma API Spring Boot em repositóri
 ## Links
 
 - Nosso site: https://rafaekevin.com.br/
-- Landing da marca (Loven): https://somosloven.com.br/
-- Demo de outro casal: https://somosloven.com.br/sofiaelucas
-- Painel: https://somosloven.com.br/admin/
+- Landing da marca (Loven): https://casamento.somosloven.com.br/
+- Demo de outro casal: https://casamento.somosloven.com.br/sofiaelucas
+- Painel: https://casamento.somosloven.com.br/admin/
 - API: https://site-casamento-backend-nrfb.onrender.com
 - Backend: [site-casamento-backend](https://github.com/euKevytosDev/site-casamento-backend)
 
