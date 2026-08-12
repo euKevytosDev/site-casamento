@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build unificado Pages `loven`:
- * - apex somosloven.com.br → surpresas (dearyou-clone/frontend)
+ * - apex somosloven.com.br → surpresas (somosloven/frontend)
  * - casamento.somosloven.com.br → SaaS casamento (dist-pages)
  */
 import { cpSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync } from "fs";
@@ -11,7 +11,7 @@ import { spawnSync } from "child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const SURPRESA = join(ROOT, "../dearyou-clone/frontend");
+const SURPRESA = join(ROOT, "../somosloven/frontend");
 const OUT = join(ROOT, "dist-unified");
 const WEDDING_DIST = join(ROOT, "dist-pages");
 
@@ -44,11 +44,21 @@ for (const f of ["_routes.json", "_redirects", "_headers"]) {
   rmSync(join(OUT, "casamento", f), { force: true });
 }
 
-// 4) headers
+// 4) headers — HTML sem cache longo; assets versionados podem cachear
 writeFileSync(
   join(OUT, "_headers"),
-  `/*
-  Cache-Control: public, max-age=300
+  `/criar
+  Cache-Control: no-cache, no-store, must-revalidate
+/criar.html
+  Cache-Control: no-cache, no-store, must-revalidate
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+/js/criar.*
+  Cache-Control: public, max-age=31536000, immutable
+/css/criar.*
+  Cache-Control: public, max-age=31536000, immutable
+/*
+  Cache-Control: public, max-age=60
 `
 );
 
