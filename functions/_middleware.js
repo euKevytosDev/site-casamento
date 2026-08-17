@@ -41,6 +41,10 @@ const SURPRESA_PAGE_MAP = {
   pricing: "/pricing.html",
   conta: "/conta.html",
   historia: "/historia.html",
+  privacidade: "/privacidade.html",
+  termos: "/termos.html",
+  cookies: "/cookies.html",
+  amizade: "/amizade.html",
 };
 
 const SURPRESA_RESERVED = new Set([
@@ -59,15 +63,26 @@ const SURPRESA_RESERVED = new Set([
   "conta.html",
   "amizade",
   "amizade.html",
+  "privacidade",
+  "privacidade.html",
+  "termos",
+  "termos.html",
+  "cookies",
+  "cookies.html",
   "css",
   "js",
   "assets",
   "api",
   "favicon.ico",
+  "icon-share.png",
+  "og.jpg",
+  "apple-touch-icon.png",
+  "site.webmanifest",
   "casamento",
 ]);
 
 const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
+const SURPRESA_API = "https://loven-surpresa-api.onrender.com";
 
 function esc(s) {
   return String(s || "")
@@ -81,6 +96,24 @@ function absUrl(origin, path) {
   if (!path) return "";
   if (/^https?:\/\//i.test(path)) return path;
   return `${origin}/${String(path).replace(/^\//, "")}`;
+}
+
+function injectBrandIcons(html, origin) {
+  const icons = [
+    `<link rel="icon" href="${origin}/assets/icons/favicon.svg" type="image/svg+xml">`,
+    `<link rel="icon" href="${origin}/assets/icons/favicon-32.png" type="image/png" sizes="32x32">`,
+    `<link rel="shortcut icon" href="${origin}/favicon.ico">`,
+    `<link rel="apple-touch-icon" href="${origin}/icon-share.png">`,
+    `<meta name="theme-color" content="#ed68ae">`,
+  ].join("\n    ");
+
+  let out = html;
+  out = out.replace(/<link[^>]+rel=["'][^"']*icon[^"']*["'][^>]*>\s*/gi, "");
+  out = out.replace(/<meta\s+name=["']theme-color["'][^>]*>\s*/gi, "");
+  if (/<\/head>/i.test(out)) {
+    out = out.replace(/<\/head>/i, `    ${icons}\n</head>`);
+  }
+  return out;
 }
 
 function injectOg(html, { title, description, url, image }) {
@@ -103,14 +136,82 @@ function injectOg(html, { title, description, url, image }) {
   let out = html;
   out = out.replace(/<meta[^>]*(property|name)="(og:[^"]+|twitter:[^"]+)"[^>]*>\s*/gi, "");
   out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>${esc(title)}</title>`);
-  out = out.replace(
-    /<meta\s+name="description"[^>]*>/i,
-    `<meta name="description" content="${esc(description)}">`
-  );
+  if (/<meta\s+name="description"/i.test(out)) {
+    out = out.replace(
+      /<meta\s+name="description"[^>]*>/i,
+      `<meta name="description" content="${esc(description)}">`
+    );
+  } else if (/<\/head>/i.test(out)) {
+    out = out.replace(/<\/head>/i, `    <meta name="description" content="${esc(description)}">\n</head>`);
+  }
   if (/<\/head>/i.test(out)) {
     out = out.replace(/<\/head>/i, `    ${block}\n</head>`);
   }
   return out;
+}
+
+async function fetchSurpresaPublic(slug) {
+  try {
+    const res = await fetch(
+      `${SURPRESA_API}/api/surprises/public/${encodeURIComponent(slug)}`,
+      { headers: { Accept: "application/json" } }
+    );
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+async function serveSurpresaHistoria(context, slug) {
+  const url = new URL(context.request.url);
+  const origin = url.origin;
+  const assetRes = await context.env.ASSETS.fetch(new URL("/historia.html", origin));
+  if (!assetRes.ok) return assetRes;
+
+  let html = await assetRes.text();
+  const data = await fetchSurpresaPublic(slug);
+  const pageUrl = `${origin}/${slug}`;
+  const defaultImage = `${origin}/og.jpg`;
+
+  let title = "Surpresa especial — Loven";
+  let description = "Alguém preparou uma surpresa linda para você ♡ Abra o link.";
+  let image = defaultImage;
+
+  if (data) {
+    const loved = String(data.lovedName || "").trim();
+    const pageTitle = String(data.title || "").trim();
+    const friendship = /amig|friend/i.test(String(data.intent || ""));
+    const lovedIsGeneric = !loved || /^(você|voce|you)$/i.test(loved);
+    title = pageTitle
+      ? !lovedIsGeneric
+        ? `${pageTitle} · Para ${loved}`
+        : pageTitle
+      : !lovedIsGeneric
+        ? `Surpresa para ${loved}`
+        : title;
+    description = friendship
+      ? !lovedIsGeneric
+        ? `${loved}, alguém preparou uma surpresa de amizade especial para você ♡`
+        : "Alguém preparou uma surpresa de amizade especial para você ♡"
+      : !lovedIsGeneric
+        ? `${loved}, alguém preparou uma surpresa de amor especial para você ♡`
+        : "Alguém preparou uma surpresa de amor especial para você ♡";
+
+    const photos = Array.isArray(data.photos) ? data.photos : [];
+    const photo = photos.find((p) => /^https?:\/\//i.test(String(p || "")));
+    // Foto do casal como preview quando existir; senão o card da marca
+    if (photo) image = String(photo);
+  }
+
+  html = injectBrandIcons(html, origin);
+  html = injectOg(html, { title, description, url: pageUrl, image });
+
+  const headers = new Headers(assetRes.headers);
+  headers.set("content-type", "text/html; charset=utf-8");
+  headers.set("cache-control", "public, max-age=0, must-revalidate");
+  headers.delete("Location");
+  return new Response(html, { status: 200, headers });
 }
 
 async function fetchSiteConfig(slug) {
@@ -249,7 +350,7 @@ async function handleSurpresa(context) {
   if (mapped) return serveHtmlAsset(context, mapped);
 
   if (!SURPRESA_RESERVED.has(first)) {
-    return serveHtmlAsset(context, "/historia.html");
+    return serveSurpresaHistoria(context, first);
   }
 
   return context.next();
