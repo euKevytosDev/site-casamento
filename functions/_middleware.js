@@ -333,9 +333,20 @@ async function handleWedding(context) {
     return context.env.ASSETS.fetch(new URL(assetPath + url.search, url.origin));
   }
 
-  // restante → /casamento{pathname}
+  // Já está em /casamento/... (CSS/JS/imagens do convite) — NÃO prefixar de novo
+  // (senão vira /casamento/casamento/app/style.css e o CSS volta como HTML).
+  if (parts[0] === "casamento") {
+    return context.env.ASSETS.fetch(context.request);
+  }
+
+  // restante → /casamento{pathname}  (ex.: /landing.css → /casamento/landing.css)
   const assetPath = `/casamento${url.pathname}`.replace(/\/+/g, "/");
-  return context.env.ASSETS.fetch(new URL(assetPath + url.search, url.origin));
+  const assetRes = await context.env.ASSETS.fetch(new URL(assetPath + url.search, url.origin));
+  if (assetRes.status === 404 && /\.[a-z0-9]+$/i.test(parts[parts.length - 1] || "")) {
+    // tenta path original antes de devolver HTML de fallback
+    return context.env.ASSETS.fetch(context.request);
+  }
+  return assetRes;
 }
 
 async function handleSurpresa(context) {

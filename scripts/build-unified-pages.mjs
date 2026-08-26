@@ -44,7 +44,13 @@ for (const f of ["_routes.json", "_redirects", "_headers"]) {
   rmSync(join(OUT, "casamento", f), { force: true });
 }
 
-// 4) headers — HTML sem cache longo; assets versionados podem cachear
+// 4) Functions na raiz do deploy (host routing surpresa vs casamento)
+const FN = join(ROOT, "functions");
+if (existsSync(FN)) {
+  cpSync(FN, join(OUT, "functions"), { recursive: true });
+}
+
+// 5) headers — HTML sem cache longo; assets versionados podem cachear
 writeFileSync(
   join(OUT, "_headers"),
   `/criar
@@ -53,6 +59,8 @@ writeFileSync(
   Cache-Control: no-cache, no-store, must-revalidate
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
+/casamento/app/*
+  Cache-Control: public, max-age=300
 /js/criar.*
   Cache-Control: public, max-age=31536000, immutable
 /css/criar.*
@@ -60,6 +68,31 @@ writeFileSync(
 /*
   Cache-Control: public, max-age=60
 `
+);
+
+// 6) _routes: worker só em HTML/slugs; assets estáticos do convite passam direto
+writeFileSync(
+  join(OUT, "_routes.json"),
+  JSON.stringify(
+    {
+      version: 1,
+      include: ["/*"],
+      exclude: [
+        "/casamento/app/*",
+        "/casamento/imagens/*",
+        "/casamento/landing.css",
+        "/casamento/landing.js",
+        "/css/*",
+        "/js/*",
+        "/assets/*",
+        "/favicon.ico",
+        "/og.jpg",
+        "/icon-share.png",
+      ],
+    },
+    null,
+    2
+  )
 );
 
 console.log("OK →", OUT);

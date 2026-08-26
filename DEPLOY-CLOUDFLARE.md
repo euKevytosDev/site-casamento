@@ -70,6 +70,6 @@ O middleware já trata `rafaekevin.com.br` → slug `rafaekevin` (raiz = convite
 ## Depois de cada alteração
 
 ```bash
-node scripts/build-pages.mjs
-npx wrangler pages deploy dist-pages --project-name=loven
+node scripts/build-unified-pages.mjs
+npx wrangler pages deploy dist-unified --project-name=loven
 ```
