@@ -3,3 +3,5 @@ imagens/backup-fundo-branco/
 **/ .DS_Store
 dist-pages/
 .wrangler/
+
+dist-unified/
