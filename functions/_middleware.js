@@ -83,6 +83,17 @@ const SURPRESA_RESERVED = new Set([
 
 const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
 const SURPRESA_API = "https://loven-surpresa-api.onrender.com";
+const API_TIMEOUT_MS = 4000;
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = API_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 function esc(s) {
   return String(s || "")
@@ -152,7 +163,7 @@ function injectOg(html, { title, description, url, image }) {
 
 async function fetchSurpresaPublic(slug) {
   try {
-    const res = await fetch(
+    const res = await fetchWithTimeout(
       `${SURPRESA_API}/api/surprises/public/${encodeURIComponent(slug)}`,
       { headers: { Accept: "application/json" } }
     );
@@ -216,7 +227,7 @@ async function serveSurpresaHistoria(context, slug) {
 
 async function fetchSiteConfig(slug) {
   try {
-    const res = await fetch(`${API_BASE}/api/site/config`, {
+    const res = await fetchWithTimeout(`${API_BASE}/api/site/config`, {
       headers: { "X-Site-Id": slug, Accept: "application/json" },
     });
     if (!res.ok) return null;
