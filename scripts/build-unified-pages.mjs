@@ -95,5 +95,17 @@ writeFileSync(
   )
 );
 
+const middlewarePath = join(OUT, "functions", "_middleware.js");
+const convitePath = join(OUT, "casamento", "app", "convite.html");
+if (!existsSync(middlewarePath) || !existsSync(convitePath)) {
+  console.error("Build incompleto: middleware ou convite ausente em dist-unified.");
+  process.exit(1);
+}
+const mw = readFileSync(middlewarePath, "utf8");
+if (!mw.includes("rafaekevin.com.br") || !mw.includes("handleWedding")) {
+  console.error("Middleware sem roteamento de casamento — abortando build.");
+  process.exit(1);
+}
+
 console.log("OK →", OUT);
-console.log("Deploy: npx wrangler pages deploy dist-unified --project-name=loven");
+console.log("Deploy: node scripts/deploy-loven.mjs");

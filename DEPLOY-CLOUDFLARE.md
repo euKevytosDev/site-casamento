@@ -10,9 +10,11 @@ O projeto Pages **`loven`** serve os dois produtos por hostname:
 | `casamento.somosloven.com.br` | Landing + convites + admin |
 
 ```bash
-node scripts/build-unified-pages.mjs
-npx wrangler pages deploy dist-unified --project-name=loven
+node scripts/deploy-loven.mjs
 ```
+
+> **Importante:** nunca faça `wrangler pages deploy` direto na pasta `somosloven/frontend`.
+> Isso sobrescreve o middleware e faz `rafaekevin.com.br` cair na página de surpresas de novo.
 
 Se `casamento.somosloven.com.br` ficar pending, crie no DNS da zona:
 
@@ -70,6 +72,8 @@ O middleware já trata `rafaekevin.com.br` → slug `rafaekevin` (raiz = convite
 ## Depois de cada alteração
 
 ```bash
-node scripts/build-unified-pages.mjs
-npx wrangler pages deploy dist-unified --project-name=loven
+node scripts/deploy-loven.mjs
 ```
+
+> **Importante:** nunca faça `wrangler pages deploy` direto na pasta `somosloven/frontend`.
+> Isso sobrescreve o middleware e faz `rafaekevin.com.br` cair na página de surpresas de novo.
