@@ -38,6 +38,10 @@ window.SITE_CONFIG = {
     mapsUrlFesta: "",
     fotoLocalFestaUrl: "",
 
+    // Foto do local (fallback se a API demorar — Render free “dorme”)
+    fotoLocalUrl:
+        "https://res.cloudinary.com/ppkccbhu/image/upload/c_limit,w_1600,h_2000,q_auto:good/v1784839755/site-rafaekevin/3e6adc7c-d893-4df9-a9ed-36b60ef6a3f1.jpg",
+
     // Pais (opcional — cada casal muda)
     paisNoiva: "Warlen e Rosimar",
     paisNoivo: "Ricardo e Luiza",

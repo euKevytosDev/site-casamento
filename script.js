@@ -52,6 +52,35 @@ function apiHeaders(extras = {}) {
     };
 }
 
+const API_FETCH_TIMEOUT_MS = 30000;
+const API_FETCH_TENTATIVAS = 8;
+
+/** Fetch na API com timeout e retentativas (Render free demora ~40s para acordar). */
+async function apiFetch(path, options = {}, tentativas = API_FETCH_TENTATIVAS) {
+    let ultimoErro;
+    for (let i = 0; i < tentativas; i++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), API_FETCH_TIMEOUT_MS);
+        try {
+            const res = await fetch(`${API_BASE}${path}`, {
+                ...options,
+                headers: apiHeaders(options.headers || {}),
+                signal: controller.signal
+            });
+            clearTimeout(timer);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res;
+        } catch (erro) {
+            clearTimeout(timer);
+            ultimoErro = erro;
+            if (i < tentativas - 1) {
+                await new Promise((r) => setTimeout(r, 2000 * (i + 1)));
+            }
+        }
+    }
+    throw ultimoErro;
+}
+
 /** Escapa texto para uso seguro em HTML (previne XSS). */
 function escapeHtml(valor) {
     return String(valor ?? "")
@@ -472,13 +501,10 @@ function aplicarFotosDoSite(c) {
  * Retenta em cold start do Render; se falhar de vez, tira o layout neutro
  * e mostra placeholders (nunca as fotos da vitrine Rafa & Kevin).
  */
-async function carregarConfigRemota(tentativas = 5) {
+async function carregarConfigRemota(tentativas = API_FETCH_TENTATIVAS) {
     for (let i = 0; i < tentativas; i++) {
         try {
-            const res = await fetch(`${API_BASE}/api/site/config`, {
-                headers: apiHeaders()
-            });
-            if (!res.ok) throw new Error(`config ${res.status}`);
+            const res = await apiFetch("/api/site/config", {}, 1);
             const remoto = await res.json();
             window.SITE_CONFIG = {
                 ...(window.SITE_CONFIG || {}),
@@ -498,7 +524,7 @@ async function carregarConfigRemota(tentativas = 5) {
             return true;
         } catch (_) {
             if (i < tentativas - 1) {
-                await new Promise((r) => setTimeout(r, 700 * (i + 1)));
+                await new Promise((r) => setTimeout(r, 2000 * (i + 1)));
             }
         }
     }
@@ -1385,17 +1411,12 @@ function carregarPresentes() {
     loadingPresentes.style.display = "flex";
     listaPresentes.innerHTML = "";
 
-    fetch(`${API_BASE}/api/presentes`, {
-        headers: apiHeaders()
-    })
-        .then(resposta => {
-            if (!resposta.ok) throw new Error("Erro ao buscar presentes");
-            return resposta.json();
-        })
+    apiFetch("/api/presentes")
+        .then(resposta => resposta.json())
         .then(renderizarPresentes)
         .catch(() => {
             loadingPresentes.style.display = "none";
-            listaPresentes.innerHTML = `<p class="aviso-presentes">Não foi possível carregar os presentes. Tente novamente em instantes.</p>`;
+            listaPresentes.innerHTML = `<p class="aviso-presentes">Não foi possível carregar os presentes. Aguarde alguns segundos e tente de novo — o servidor pode estar acordando.</p>`;
         });
 }
 
