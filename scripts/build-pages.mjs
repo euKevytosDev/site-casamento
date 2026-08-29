@@ -103,5 +103,11 @@ writeFileSync(
 `
 );
 
+// Middleware só casamento (surpresas = projeto loven-surpresa)
+const mwCasamento = join(ROOT, "functions", "_middleware.casamento.js");
+mustExist(mwCasamento, "functions/_middleware.casamento.js");
+mkdirSync(join(OUT, "functions"), { recursive: true });
+cpSync(mwCasamento, join(OUT, "functions", "_middleware.js"));
+
 console.log("OK →", OUT);
-console.log("Deploy: npx wrangler pages deploy");
+console.log("Deploy casamento: node scripts/deploy-loven.mjs");

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Build unificado Pages `loven`:
- * - apex somosloven.com.br → surpresas (somosloven/frontend)
- * - casamento.somosloven.com.br → SaaS casamento (dist-pages)
+ * @deprecated Use scripts/deploy-loven.mjs (dist-pages, só casamento).
+ * Surpresas → somosloven/scripts/deploy-pages.mjs → loven-surpresa.
+ *
+ * Build unificado legado — NÃO usar em produção (causa conflito com surpresas).
  */
 import { cpSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
