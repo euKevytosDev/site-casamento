@@ -1,38 +1,79 @@
-# Deploy — dois projetos Cloudflare (definitivo)
+# Cloudflare Pages — Loven
 
-## Regra de ouro
+## Deploy unificado (surpresas + casamento)
 
-| Produto | Repositório | Comando | Projeto Cloudflare | Domínios |
-|---------|-------------|---------|-------------------|----------|
-| **Casamento** | `site-casamento-mobile-novo` | `node scripts/deploy-loven.mjs` | `loven` | `casamento.somosloven.com.br`, `rafaekevin.com.br` |
-| **Surpresas** | `somosloven` | `node scripts/deploy-pages.mjs` | `loven-surpresa` | `somosloven.com.br`, `www.somosloven.com.br` |
+O projeto Pages **`loven`** serve os dois produtos por hostname:
 
-**Nunca** rode `wrangler pages deploy` manualmente no frontend da surpresa apontando para `loven` — isso quebra o `rafaekevin.com.br`.
-
-## Casamento (SaaS + seu convite)
+| Host | Conteúdo |
+|------|----------|
+| `somosloven.com.br` | Surpresas |
+| `casamento.somosloven.com.br` | Landing + convites + admin |
 
 ```bash
-cd site-casamento-mobile-novo
 node scripts/deploy-loven.mjs
 ```
 
-- `casamento.somosloven.com.br/` → landing do SaaS
-- `casamento.somosloven.com.br/rafaekevin` → seu convite
-- `rafaekevin.com.br/` → mesmo convite (domínio personalizado)
+> **Importante:** nunca faça `wrangler pages deploy` direto na pasta `somosloven/frontend`.
+> Isso sobrescreve o middleware e faz `rafaekevin.com.br` cair na página de surpresas de novo.
 
-## Surpresas
+Se `casamento.somosloven.com.br` ficar pending, crie no DNS da zona:
+
+- `casamento` → CNAME `loven.pages.dev` (proxied)
+- `www` → CNAME `loven.pages.dev` (proxied)
+
+## O que sobe (legado / referência)
+
+| URL | Conteúdo |
+|-----|----------|
+| `casamento.somosloven.com.br/` | Landing |
+| `casamento.somosloven.com.br/sofiaelucas` | Convite |
+| `casamento.somosloven.com.br/admin/` | Painel |
+
+## Build local
 
 ```bash
-cd somosloven
-node scripts/deploy-pages.mjs
+node scripts/build-pages.mjs
 ```
 
-## DNS (uma vez no Cloudflare)
+Gera a pasta `dist-pages/` (não versionada).
 
-| Domínio | CNAME |
-|---------|-------|
-| `casamento.somosloven.com.br` | `loven.pages.dev` |
-| `rafaekevin.com.br` / `www` | `loven.pages.dev` |
-| `somosloven.com.br` / `www` | `loven-surpresa.pages.dev` |
+## Deploy (primeira vez)
 
-No dashboard Cloudflare → Workers & Pages → cada projeto → Custom domains → confira que **somosloven.com.br não está no projeto `loven`**, só no `loven-surpresa`.
+1. Conta em https://dash.cloudflare.com (grátis)
+2. No terminal:
+
+```bash
+npx wrangler login
+node scripts/build-pages.mjs
+npx wrangler pages deploy dist-pages --project-name=loven
+```
+
+3. No dashboard Cloudflare → **Workers & Pages** → projeto **loven** → **Custom domains**  
+   → adiciona `casamento.somosloven.com.br`
+
+> O apex `somosloven.com.br` fica no projeto **loven-surpresa** (produto de surpresas).
+
+4. No registrador do domínio, aponta DNS conforme o Cloudflare mostrar (geralmente nameservers Cloudflare **ou** registro CNAME/`A`).
+
+## Domínio do casamento (ex.: rafaekevin.com.br)
+
+O site do casal já roda em `casamento.somosloven.com.br/rafaekevin`. Para o domínio próprio:
+
+1. Cloudflare → **Workers & Pages** → **loven** → **Custom domains** → **Set up a custom domain**
+2. Adiciona `rafaekevin.com.br` e `www.rafaekevin.com.br`
+3. No DNS do domínio (Hostinger/Registro.br/etc.), **remove** o apontamento antigo do GitHub Pages (`eukevytosdev.github.io`)
+4. Cria o que o Cloudflare pedir (em geral):
+   - `rafaekevin.com.br` → CNAME para `loven.pages.dev` **ou** nameservers Cloudflare
+   - `www` → CNAME para `loven.pages.dev`
+5. Espera SSL Active (pode levar alguns minutos)
+
+O middleware já trata `rafaekevin.com.br` → slug `rafaekevin` (raiz = convite, não a landing).
+
+## Depois de cada alteração
+
+```bash
+node scripts/deploy-loven.mjs
+```
+
+> **Importante:** nunca faça `wrangler pages deploy` direto na pasta `somosloven/frontend`.
+> Isso sobrescreve o middleware e faz `rafaekevin.com.br` cair na página de surpresas de novo.
