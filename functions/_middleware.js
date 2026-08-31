@@ -66,6 +66,7 @@ const SURPRESA_RESERVED = new Set([
   "conta.html",
   "pagar",
   "pagar.html",
+  "p",
   "recuperar-senha",
   "recuperar-senha.html",
   "redefinir-senha",
@@ -369,10 +370,16 @@ async function handleWedding(context) {
   return assetRes;
 }
 
+const PAY_CODE_RE = /^[0-9A-Za-z]{8}$/;
+
 async function handleSurpresa(context) {
   const url = new URL(context.request.url);
   const parts = url.pathname.split("/").filter(Boolean);
   const first = (parts[0] || "").toLowerCase();
+
+  if (parts.length === 2 && first === "p" && PAY_CODE_RE.test(parts[1])) {
+    return serveHtmlAsset(context, "/pagar.html");
+  }
 
   if (parts.length === 0) return context.next();
   if (parts.length > 1 || first.includes(".")) return context.next();
