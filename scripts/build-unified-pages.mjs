@@ -57,6 +57,10 @@ writeFileSync(
   Cache-Control: no-cache, no-store, must-revalidate
 /criar.html
   Cache-Control: no-cache, no-store, must-revalidate
+/editar
+  Cache-Control: no-cache, no-store, must-revalidate
+/editar.html
+  Cache-Control: no-cache, no-store, must-revalidate
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
 /casamento/app/*
