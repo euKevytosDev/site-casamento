@@ -1,13 +1,13 @@
 # Cloudflare Pages — Loven
 
-## Deploy unificado (surpresas + casamento)
+## Deploy unificado (SaaS casamento)
 
-O projeto Pages **`loven`** serve os dois produtos por hostname:
+O projeto Pages **`loven`** serve o casamento em todos os hosts da marca:
 
 | Host | Conteúdo |
 |------|----------|
-| `somosloven.com.br` | Surpresas |
-| `casamento.somosloven.com.br` | Landing + convites + admin |
+| `somosloven.com.br` | Landing + convites `/{slug}` + admin |
+| `casamento.somosloven.com.br` | Mesmo app (subdomínio) |
 
 ```bash
 node scripts/deploy-loven.mjs
@@ -25,9 +25,9 @@ Se `casamento.somosloven.com.br` ficar pending, crie no DNS da zona:
 
 | URL | Conteúdo |
 |-----|----------|
-| `casamento.somosloven.com.br/` | Landing |
-| `casamento.somosloven.com.br/sofiaelucas` | Convite |
-| `casamento.somosloven.com.br/admin/` | Painel |
+| `somosloven.com.br/` | Landing |
+| `somosloven.com.br/sofiaelucas` | Convite (demo) |
+| `somosloven.com.br/admin/` | Painel |
 
 ## Build local
 
