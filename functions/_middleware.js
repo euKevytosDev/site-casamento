@@ -1,13 +1,19 @@
 /**
  * Host routing:
- * - casamento.somosloven.com.br / rafaekevin.com.br → SaaS casamento (/casamento/*)
- * - somosloven.com.br → surpresas (raiz)
+ * - casamento.somosloven.com.br / rafaekevin.com.br → SaaS casamento
+ * - somosloven.com.br / www → landing de casamento na raiz;
+ *   rotas da surpresa (/criar, /{slug}, …) continuam na surpresa
  */
 
 const WEDDING_DOMAINS = new Set([
   "casamento.somosloven.com.br",
   "rafaekevin.com.br",
   "www.rafaekevin.com.br",
+]);
+
+const APEX_DOMAINS = new Set([
+  "somosloven.com.br",
+  "www.somosloven.com.br",
 ]);
 
 const CUSTOM_DOMAIN_SLUG = {
@@ -397,9 +403,21 @@ async function handleSurpresa(context) {
   return context.next();
 }
 
+function isApexWeddingPath(pathname) {
+  const parts = pathname.replace(/\/+$/, "").split("/").filter(Boolean);
+  if (parts.length === 0) return true;
+  const first = parts[0].toLowerCase();
+  if (first === "casamento" || first === "admin" || first === "app") return true;
+  return WEDDING_RESERVED.has(first);
+}
+
 export async function onRequest(context) {
-  const host = new URL(context.request.url).hostname.toLowerCase();
+  const url = new URL(context.request.url);
+  const host = url.hostname.toLowerCase();
   if (WEDDING_DOMAINS.has(host) || host.startsWith("casamento.")) {
+    return handleWedding(context);
+  }
+  if (APEX_DOMAINS.has(host) && isApexWeddingPath(url.pathname)) {
     return handleWedding(context);
   }
   return handleSurpresa(context);

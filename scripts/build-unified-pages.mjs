@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Build unificado Pages `loven`:
- * - apex somosloven.com.br → surpresas (somosloven/frontend)
+ * - apex somosloven.com.br / → landing de casamento
+ * - apex /criar, /{slug} surpresa → surpresas (somosloven/frontend)
  * - casamento.somosloven.com.br → SaaS casamento (dist-pages)
  */
 import { cpSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync } from "fs";
