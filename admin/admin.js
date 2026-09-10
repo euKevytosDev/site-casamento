@@ -1,4 +1,4 @@
-const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
+const API_BASE = window.SITE_CONFIG?.apiBase || "https://api.somosloven.com.br";
 const TOKEN_KEY = "casamento_admin_token";
 const LOGIN_KEY = "casamento_admin_login";
 const SITE_KEY = "casamento_admin_site";

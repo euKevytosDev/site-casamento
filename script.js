@@ -2,7 +2,7 @@ const hero = document.querySelector(".hero");
 const site = document.querySelector(".site");
 const btnAbrirConvite = document.getElementById("btn-abrir-convite");
 
-const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
+const API_BASE = window.SITE_CONFIG?.apiBase || "https://api.somosloven.com.br";
 
 /** Paths reservados — não são slug de casamento (ex.: /admin, /imagens). */
 const PATHS_RESERVADOS = new Set([

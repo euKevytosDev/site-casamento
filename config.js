@@ -2,7 +2,7 @@
 // Quando vender pra outra noiva: copia o site e muda SÓ este arquivo (+ fotos).
 window.SITE_CONFIG = {
     // Backend (igual pra todos os clientes)
-    apiBase: "https://site-casamento-backend-nrfb.onrender.com",
+    apiBase: "https://api.somosloven.com.br",
     // Local:
     // apiBase: "http://localhost:8080",
 

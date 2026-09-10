@@ -95,7 +95,7 @@ const SURPRESA_RESERVED = new Set([
   "casamento",
 ]);
 
-const API_BASE = "https://site-casamento-backend-nrfb.onrender.com";
+const API_BASE = "https://api.somosloven.com.br";
 const SURPRESA_API = "https://api.somosloven.com.br";
 const API_TIMEOUT_MS = 4000;
 

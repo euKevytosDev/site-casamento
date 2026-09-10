@@ -1,4 +1,4 @@
-const API_BASE = window.SITE_CONFIG?.apiBase || "https://site-casamento-backend-nrfb.onrender.com";
+const API_BASE = window.SITE_CONFIG?.apiBase || "https://api.somosloven.com.br";
 
 const form = document.getElementById("form-checkout");
 const msg = document.getElementById("msg-checkout");
