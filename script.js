@@ -1007,23 +1007,52 @@ function iniciarCarrosselMomentos(opts = {}) {
             const active = cardByRole("is-active");
             const prev = cardByRole("is-prev");
             const next = cardByRole("is-next");
-            const t = Math.max(-1, Math.min(1, dx / 180));
-            if (active) {
-                active.classList.add("is-dragging");
-                active.style.transform = `translateX(${t * 42}%) scale(${1 - Math.abs(t) * 0.06})`;
-                active.style.opacity = String(1 - Math.abs(t) * 0.15);
-            }
-            if (prev && t > 0) {
-                prev.classList.add("is-dragging");
-                prev.style.transform = `translateX(${-38 + t * 38}%) scale(${0.84 + t * 0.16})`;
-                prev.style.opacity = String(0.78 + t * 0.22);
-                prev.style.zIndex = "6";
-            }
-            if (next && t < 0) {
+            if (!active) return;
+
+            // Centro sempre na frente no arraste; a lateral só “vira” meio no go()
+            active.classList.add("is-dragging");
+            active.style.transform = `translateX(${dx}px) scale(1)`;
+            active.style.zIndex = "6";
+            active.style.opacity = "1";
+
+            const travel = Math.max(140, root.clientWidth * 0.38);
+            if (dx < 0 && next) {
+                const p = Math.min(1, -dx / travel);
                 next.classList.add("is-dragging");
-                next.style.transform = `translateX(${38 + t * 38}%) scale(${0.84 - t * 0.16})`;
-                next.style.opacity = String(0.78 - t * 0.22);
-                next.style.zIndex = "6";
+                next.style.transform = `translateX(${38 * (1 - p)}%) scale(${0.84 + 0.16 * p})`;
+                next.style.opacity = String(0.72 + 0.28 * p);
+                next.style.zIndex = p > 0.2 ? "4" : "2";
+                if (prev) {
+                    prev.classList.add("is-dragging");
+                    prev.style.transform = `translateX(${-38 - p * 24}%) scale(${0.84 - 0.06 * p})`;
+                    prev.style.opacity = String(0.72 * (1 - p * 0.55));
+                    prev.style.zIndex = "2";
+                }
+            } else if (dx > 0 && prev) {
+                const p = Math.min(1, dx / travel);
+                prev.classList.add("is-dragging");
+                prev.style.transform = `translateX(${-38 * (1 - p)}%) scale(${0.84 + 0.16 * p})`;
+                prev.style.opacity = String(0.72 + 0.28 * p);
+                prev.style.zIndex = p > 0.2 ? "4" : "2";
+                if (next) {
+                    next.classList.add("is-dragging");
+                    next.style.transform = `translateX(${38 + p * 24}%) scale(${0.84 - 0.06 * p})`;
+                    next.style.opacity = String(0.72 * (1 - p * 0.55));
+                    next.style.zIndex = "2";
+                }
+            } else {
+                if (prev) {
+                    prev.classList.add("is-dragging");
+                    prev.style.transform = "translateX(-38%) scale(0.84)";
+                    prev.style.opacity = "0.72";
+                    prev.style.zIndex = "2";
+                }
+                if (next) {
+                    next.classList.add("is-dragging");
+                    next.style.transform = "translateX(38%) scale(0.84)";
+                    next.style.opacity = "0.72";
+                    next.style.zIndex = "2";
+                }
             }
         };
 
