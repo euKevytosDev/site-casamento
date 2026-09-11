@@ -469,30 +469,19 @@ function aplicarFotosDoSite(c) {
     }
 
     const fotos = Array.isArray(c.fotosCarrossel) ? c.fotosCarrossel.filter(Boolean) : [];
-    const slidesWrap = document.querySelector("#carrossel-momentos .carrossel-slides");
-    const dotsWrap = document.querySelector("#carrossel-momentos .carrossel-dots");
-    if (!slidesWrap) return;
-
-    if (fotos.length) {
-        slidesWrap.innerHTML = fotos.map((url, i) => {
-            const src = escapeHtml(safeUrl(url, "imagens/flor-central2.png"));
-            return `
-            <figure class="carrossel-slide${i === 0 ? " ativo" : ""}">
-                <img src="${src}" alt="Momento ${i + 1}">
-            </figure>
-        `;
-        }).join("");
-        if (dotsWrap) dotsWrap.innerHTML = "";
-        if (typeof iniciarCarrosselMomentos === "function") {
-            iniciarCarrosselMomentos();
+    const rootCarrossel = document.getElementById("carrossel-momentos");
+    if (rootCarrossel) {
+        if (fotos.length) {
+            rootCarrossel.dataset.fotos = JSON.stringify(fotos.map((url) => safeUrl(url, "")));
+            if (typeof iniciarCarrosselMomentos === "function") {
+                iniciarCarrosselMomentos();
+            }
+        } else if (!vitrine) {
+            rootCarrossel.dataset.fotos = "[]";
+            if (typeof iniciarCarrosselMomentos === "function") {
+                iniciarCarrosselMomentos({ placeholder: true });
+            }
         }
-    } else if (!vitrine) {
-        slidesWrap.innerHTML = `
-            <figure class="carrossel-slide ativo">
-                <div class="placeholder-foto placeholder-foto--carrossel">Suas fotos aqui</div>
-            </figure>
-        `;
-        if (dotsWrap) dotsWrap.innerHTML = "";
     }
 }
 
@@ -756,8 +745,8 @@ if (elementosRevelar.length > 0) {
     elementosRevelar.forEach((el) => observadorScroll.observe(el));
 }
 
-/** Carrossel "Nossos momentos": fade + autoplay + swipe + setas */
-function iniciarCarrosselMomentos() {
+/** Carrossel "Nossos momentos": peek (central + laterais) + swipe, sem setas */
+function iniciarCarrosselMomentos(opts = {}) {
     const root = document.getElementById("carrossel-momentos");
     if (!root) return;
 
@@ -766,58 +755,188 @@ function iniciarCarrosselMomentos() {
         root._carrosselCleanup = null;
     }
 
-    const slides = Array.from(root.querySelectorAll(".carrossel-slide"));
+    const track = root.querySelector(".carrossel-track");
     const dotsWrap = root.querySelector(".carrossel-dots");
     const contadorEl = root.querySelector(".carrossel-contador") || document.getElementById("carrossel-contador");
-    const btnPrev = root.querySelector(".carrossel-nav--prev");
-    const btnNext = root.querySelector(".carrossel-nav--next");
-    if (!dotsWrap) return;
-    dotsWrap.innerHTML = "";
-    if (slides.length < 1) return;
+    if (!track || !dotsWrap) return;
 
-    function atualizarContador(i) {
-        if (!contadorEl) return;
-        const atual = String(i + 1).padStart(2, "0");
-        const total = String(slides.length).padStart(2, "0");
-        contadorEl.textContent = `${atual} / ${total}`;
+    let photos = [];
+    try {
+        const raw = root.dataset.fotos || "[]";
+        photos = JSON.parse(raw).filter(Boolean);
+    } catch (_) {
+        photos = [];
     }
 
-    if (slides.length === 1) {
-        slides[0].classList.add("ativo");
-        atualizarContador(0);
-        if (btnPrev) btnPrev.hidden = true;
-        if (btnNext) btnNext.hidden = true;
+    if (opts.placeholder || photos.length === 0) {
+        root.classList.add("is-solo", "is-peek");
+        root.classList.remove("is-dragging");
+        track.innerHTML = `
+            <figure class="carrossel-card is-active">
+                <div class="placeholder-foto placeholder-foto--carrossel">Suas fotos aqui</div>
+            </figure>
+        `;
+        dotsWrap.innerHTML = "";
+        if (contadorEl) contadorEl.textContent = "00 / 00";
         return;
     }
 
-    const intervaloMs = Number(root.dataset.intervalo) || 3360;
-    const reduzirMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let indice = slides.findIndex((s) => s.classList.contains("ativo"));
-    if (indice < 0) indice = 0;
-    slides.forEach((s, i) => s.classList.toggle("ativo", i === indice));
-    atualizarContador(indice);
-
-    slides.forEach((_, i) => {
-        const dot = document.createElement("button");
-        dot.type = "button";
-        dot.className = "carrossel-dot" + (i === indice ? " ativo" : "");
-        dot.setAttribute("role", "tab");
-        dot.setAttribute("aria-label", `Foto ${i + 1}`);
-        dot.addEventListener("click", () => irPara(i, true));
-        dotsWrap.appendChild(dot);
+    photos.forEach((src) => {
+        const img = new Image();
+        img.src = src;
     });
 
-    const dots = Array.from(dotsWrap.querySelectorAll(".carrossel-dot"));
+    const wrap = (i) => ((i % photos.length) + photos.length) % photos.length;
+    let index = 0;
+    let busy = false;
+    const intervaloMs = Number(root.dataset.intervalo) || 4200;
+    const reduzirMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    function irPara(novo, reiniciarTimer) {
-        if (novo === indice) return;
-        slides[indice].classList.remove("ativo");
-        dots[indice].classList.remove("ativo");
-        indice = (novo + slides.length) % slides.length;
-        slides[indice].classList.add("ativo");
-        dots[indice].classList.add("ativo");
-        atualizarContador(indice);
-        if (reiniciarTimer) reiniciar();
+    root.classList.add("is-peek");
+    root.classList.toggle("is-solo", photos.length < 2);
+
+    function atualizarContador() {
+        if (!contadorEl) return;
+        const atual = String(index + 1).padStart(2, "0");
+        const total = String(photos.length).padStart(2, "0");
+        contadorEl.textContent = `${atual} / ${total}`;
+    }
+
+    function syncDots() {
+        dotsWrap.innerHTML = "";
+        if (photos.length < 2) return;
+        photos.forEach((_, i) => {
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.className = "carrossel-dot" + (i === index ? " ativo" : "");
+            dot.setAttribute("role", "tab");
+            dot.setAttribute("aria-label", `Foto ${i + 1}`);
+            dot.addEventListener("click", () => {
+                if (i === index || busy) return;
+                index = i;
+                syncCards({ animated: true });
+                reiniciar();
+            });
+            dotsWrap.appendChild(dot);
+        });
+    }
+
+    function setImg(el, photoIndex) {
+        if (!el) return;
+        el.dataset.i = String(photoIndex);
+        let img = el.querySelector("img.carrossel-card-photo");
+        if (!img) {
+            el.innerHTML = `<img class="carrossel-card-photo" alt="" draggable="false" />`;
+            img = el.querySelector("img");
+        }
+        const src = photos[photoIndex];
+        if (img.getAttribute("src") !== src) img.src = src;
+        img.alt = `Momento ${photoIndex + 1}`;
+    }
+
+    function clearInline(el) {
+        if (!el) return;
+        el.classList.remove("is-dragging");
+        el.style.transform = "";
+        el.style.opacity = "";
+        el.style.zIndex = "";
+        el.style.transition = "";
+    }
+
+    function clearAllInline() {
+        track.querySelectorAll(".carrossel-card").forEach(clearInline);
+    }
+
+    function cardByRole(role) {
+        return track.querySelector(`.carrossel-card.${role}`);
+    }
+
+    function syncCards({ animated = true } = {}) {
+        const need = photos.length < 2 ? 1 : 3;
+        while (track.querySelectorAll(".carrossel-card").length < need) {
+            const fig = document.createElement("figure");
+            fig.className = "carrossel-card";
+            fig.innerHTML = `<img class="carrossel-card-photo" alt="" draggable="false" />`;
+            track.appendChild(fig);
+        }
+        [...track.querySelectorAll(".carrossel-card")].slice(need).forEach((el) => el.remove());
+
+        const cards = [...track.querySelectorAll(".carrossel-card")];
+        if (!animated) {
+            cards.forEach((el) => {
+                el.style.transition = "none";
+            });
+        }
+
+        clearAllInline();
+        if (photos.length < 2) {
+            cards[0].className = "carrossel-card is-active";
+            setImg(cards[0], 0);
+        } else {
+            cards[0].className = "carrossel-card is-prev";
+            cards[1].className = "carrossel-card is-active";
+            cards[2].className = "carrossel-card is-next";
+            setImg(cards[0], wrap(index - 1));
+            setImg(cards[1], index);
+            setImg(cards[2], wrap(index + 1));
+        }
+
+        if (!animated) {
+            void track.offsetWidth;
+            cards.forEach((el) => {
+                el.style.transition = "";
+            });
+        }
+        atualizarContador();
+        syncDots();
+    }
+
+    function go(dir) {
+        if (busy || photos.length < 2) return;
+        busy = true;
+        clearAllInline();
+
+        const prevEl = cardByRole("is-prev");
+        const activeEl = cardByRole("is-active");
+        const nextEl = cardByRole("is-next");
+        if (!prevEl || !activeEl || !nextEl) {
+            index = wrap(index + dir);
+            syncCards({ animated: true });
+            busy = false;
+            return;
+        }
+
+        if (dir > 0) {
+            const incoming = wrap(index + 2);
+            activeEl.className = "carrossel-card is-prev";
+            nextEl.className = "carrossel-card is-active";
+            prevEl.style.transition = "none";
+            setImg(prevEl, incoming);
+            prevEl.className = "carrossel-card is-exit-right";
+            void prevEl.offsetWidth;
+            prevEl.style.transition = "";
+            prevEl.className = "carrossel-card is-next";
+            track.appendChild(prevEl);
+            index = wrap(index + 1);
+        } else {
+            const incoming = wrap(index - 2);
+            activeEl.className = "carrossel-card is-next";
+            prevEl.className = "carrossel-card is-active";
+            nextEl.style.transition = "none";
+            setImg(nextEl, incoming);
+            nextEl.className = "carrossel-card is-exit-left";
+            void nextEl.offsetWidth;
+            nextEl.style.transition = "";
+            nextEl.className = "carrossel-card is-prev";
+            track.insertBefore(nextEl, track.firstChild);
+            index = wrap(index - 1);
+        }
+
+        atualizarContador();
+        syncDots();
+        window.setTimeout(() => {
+            busy = false;
+        }, 420);
     }
 
     let timer = null;
@@ -829,40 +948,127 @@ function iniciarCarrosselMomentos() {
     }
     function reiniciar() {
         parar();
-        if (reduzirMotion) return;
-        timer = setInterval(() => irPara(indice + 1, false), intervaloMs);
+        if (reduzirMotion || photos.length < 2) return;
+        timer = setInterval(() => go(1), intervaloMs);
     }
 
-    const onPrev = () => irPara(indice - 1, true);
-    const onNext = () => irPara(indice + 1, true);
-    btnPrev?.addEventListener("click", onPrev);
-    btnNext?.addEventListener("click", onNext);
+    function bindDrag() {
+        if (photos.length < 2) return;
 
-    let toqueX = null;
-    const viewport = root.querySelector(".carrossel-viewport");
-    const onTouchStart = (e) => {
-        toqueX = e.changedTouches[0].clientX;
-        parar();
-    };
-    const onTouchEnd = (e) => {
-        if (toqueX == null) return;
-        const delta = e.changedTouches[0].clientX - toqueX;
-        toqueX = null;
-        if (Math.abs(delta) > 40) {
-            irPara(indice + (delta < 0 ? 1 : -1), true);
-        } else {
+        let startX = 0;
+        let startY = 0;
+        let dx = 0;
+        let dragging = false;
+        let axis = null;
+        let pointerId = null;
+        let captured = false;
+
+        const clearListeners = () => {
+            window.removeEventListener("pointermove", onProbe);
+            window.removeEventListener("pointermove", onDrag);
+            window.removeEventListener("pointerup", onUp);
+            window.removeEventListener("pointercancel", onUp);
+        };
+
+        const onProbe = (e) => {
+            if (!dragging || e.pointerId !== pointerId) return;
+            dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+
+            if (Math.abs(dy) >= Math.abs(dx) * 0.75) {
+                axis = "y";
+                dragging = false;
+                clearListeners();
+                clearAllInline();
+                root.classList.remove("is-dragging");
+                return;
+            }
+
+            axis = "x";
+            window.removeEventListener("pointermove", onProbe);
+            if (!captured) {
+                try {
+                    root.setPointerCapture?.(pointerId);
+                    captured = true;
+                } catch (_) {}
+            }
+            window.addEventListener("pointermove", onDrag, { passive: false });
+            onDrag(e);
+        };
+
+        const onDrag = (e) => {
+            if (!dragging || axis !== "x" || e.pointerId !== pointerId) return;
+            dx = e.clientX - startX;
+            e.preventDefault();
+            root.classList.add("is-dragging");
+            parar();
+
+            const active = cardByRole("is-active");
+            const prev = cardByRole("is-prev");
+            const next = cardByRole("is-next");
+            const t = Math.max(-1, Math.min(1, dx / 180));
+            if (active) {
+                active.classList.add("is-dragging");
+                active.style.transform = `translateX(${t * 42}%) scale(${1 - Math.abs(t) * 0.06})`;
+                active.style.opacity = String(1 - Math.abs(t) * 0.15);
+            }
+            if (prev && t > 0) {
+                prev.classList.add("is-dragging");
+                prev.style.transform = `translateX(${-38 + t * 38}%) scale(${0.84 + t * 0.16})`;
+                prev.style.opacity = String(0.78 + t * 0.22);
+                prev.style.zIndex = "6";
+            }
+            if (next && t < 0) {
+                next.classList.add("is-dragging");
+                next.style.transform = `translateX(${38 + t * 38}%) scale(${0.84 - t * 0.16})`;
+                next.style.opacity = String(0.78 - t * 0.22);
+                next.style.zIndex = "6";
+            }
+        };
+
+        const onUp = (e) => {
+            if (e.pointerId !== pointerId) return;
+            clearListeners();
+            root.classList.remove("is-dragging");
+            if (captured) {
+                try {
+                    root.releasePointerCapture?.(pointerId);
+                } catch (_) {}
+            }
+            const shouldFlip = axis === "x" && Math.abs(dx) > 56;
+            clearAllInline();
+            if (shouldFlip) go(dx < 0 ? 1 : -1);
+            dragging = false;
+            axis = null;
+            pointerId = null;
+            captured = false;
             reiniciar();
-        }
-    };
-    if (viewport) {
-        viewport.addEventListener("touchstart", onTouchStart, { passive: true });
-        viewport.addEventListener("touchend", onTouchEnd, { passive: true });
+        };
+
+        const onDown = (e) => {
+            if (busy || e.button != null && e.button !== 0) return;
+            dragging = true;
+            axis = null;
+            pointerId = e.pointerId;
+            captured = false;
+            startX = e.clientX;
+            startY = e.clientY;
+            dx = 0;
+            window.addEventListener("pointermove", onProbe, { passive: true });
+            window.addEventListener("pointerup", onUp, { passive: true });
+            window.addEventListener("pointercancel", onUp, { passive: true });
+        };
+
+        root.addEventListener("pointerdown", onDown);
+        root._carrosselDragOff = () => {
+            root.removeEventListener("pointerdown", onDown);
+            clearListeners();
+        };
     }
 
-    const onEnter = () => parar();
-    const onLeave = () => reiniciar();
-    root.addEventListener("mouseenter", onEnter);
-    root.addEventListener("mouseleave", onLeave);
+    syncCards({ animated: false });
+    bindDrag();
 
     const observador = new IntersectionObserver((entradas) => {
         entradas.forEach((entrada) => {
@@ -871,19 +1077,14 @@ function iniciarCarrosselMomentos() {
         });
     }, { threshold: 0.35 });
     observador.observe(root);
+    reiniciar();
 
     root._carrosselCleanup = () => {
         parar();
         observador.disconnect();
-        root.removeEventListener("mouseenter", onEnter);
-        root.removeEventListener("mouseleave", onLeave);
-        btnPrev?.removeEventListener("click", onPrev);
-        btnNext?.removeEventListener("click", onNext);
-        if (viewport) {
-            viewport.removeEventListener("touchstart", onTouchStart);
-            viewport.removeEventListener("touchend", onTouchEnd);
-        }
+        if (typeof root._carrosselDragOff === "function") root._carrosselDragOff();
         dotsWrap.innerHTML = "";
+        root.classList.remove("is-dragging");
     };
 }
 
